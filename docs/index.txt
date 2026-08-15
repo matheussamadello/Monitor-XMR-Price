@@ -1,31 +1,80 @@
-MONITOR XMR — gerado em 2026-08-15 14:27 UTC
-velas diarias (1440 min) da Kraken, indicadores com periodo 14 (Wilder)
-a vela em formacao NAO entra no calculo dos indicadores
+timestamp: 2026-08-15 15:17 UTC
+fonte: Kraken OHLC interval=1440 (velas diarias)
+indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial
+nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
 
-### XMR/USD
-preco atual (vela em formacao): 402.12
-ultimo fechamento diario (2026-08-14 00:00 UTC): 399.42
-variacao desde esse fechamento: +0.68%
+XMR/USD
+preco_atual: 405.25
+candle_atual_data: 2026-08-15
+candle_atual_open: 399.39
+candle_atual_high: 408.86
+candle_atual_low: 399.16
+candle_atual_close_provisorio: 405.25
+candle_atual_var_pct_desde_abertura: 1.47
+ema89: 354.39
+posicao_vs_ema89: acima
+distancia_ema89_pct: 14.35
 
-                 ult.fechada  anterior
-RSI(14)          66.11        63.87
-DI+(14)          27.85        29.55
-DI-(14)          14.64        14.35
-ADX(14)          28.31        28.09
+# principais: calculados SOMENTE com velas fechadas
+rsi14_fechado: 66.11
+di_plus14_fechado: 27.85
+di_minus14_fechado: 14.64
+adx14_fechado: 28.31
+ultimo_fechamento_data: 2026-08-14
+ultimo_fechamento_close: 399.42
+
+# PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
+# fechamento diario. NAO sao a referencia principal.
+rsi14_provisorio: 68.01
+di_plus14_provisorio: 29.86
+di_minus14_provisorio: 13.98
+adx14_provisorio: 28.87
+
+candle_fechado_1: data=2026-08-14 open=393.16 high=401.81 low=389.01 close=399.42 direcao=alta corpo=6.26 sombra_sup=2.39 sombra_inf=4.15
+candle_fechado_2: data=2026-08-13 open=392.31 high=408.66 low=391.48 close=392.85 direcao=alta corpo=0.54 sombra_sup=15.81 sombra_inf=0.83
+candle_fechado_3: data=2026-08-12 open=376.89 high=399.77 low=374.00 close=392.04 direcao=alta corpo=15.15 sombra_sup=7.73 sombra_inf=2.89
 
 eventos: nenhum cruzamento nesta vela
+padrao_candles: nenhum
+padrao_em_formacao: nenhum
+alertas_tecnicos: adx_subindo_com_di_plus_dominante
 
-### XMR/BTC
-preco atual (vela em formacao): 0.00639500
-ultimo fechamento diario (2026-08-14 00:00 UTC): 0.00634000
-variacao desde esse fechamento: +0.87%
+XMR/BTC
+preco_atual: 0.00642900
+candle_atual_data: 2026-08-15
+candle_atual_open: 0.00634000
+candle_atual_high: 0.00647700
+candle_atual_low: 0.00634000
+candle_atual_close_provisorio: 0.00642900
+candle_atual_var_pct_desde_abertura: 1.40
+ema89: 0.00539292
+posicao_vs_ema89: acima
+distancia_ema89_pct: 19.21
 
-                 ult.fechada  anterior
-RSI(14)          68.26        65.56
-DI+(14)          27.89        29.80
-DI-(14)          9.69         10.35
-ADX(14)          36.98        36.10
+# principais: calculados SOMENTE com velas fechadas
+rsi14_fechado: 68.26
+di_plus14_fechado: 27.89
+di_minus14_fechado: 9.69
+adx14_fechado: 36.98
+ultimo_fechamento_data: 2026-08-14
+ultimo_fechamento_close: 0.00634000
+
+# PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
+# fechamento diario. NAO sao a referencia principal.
+rsi14_provisorio: 69.95
+di_plus14_provisorio: 29.07
+di_minus14_provisorio: 9.29
+adx14_provisorio: 38.02
+
+candle_fechado_1: data=2026-08-14 open=0.00620600 high=0.00640000 low=0.00618100 close=0.00634000 direcao=alta corpo=0.00013400 sombra_sup=0.00006000 sombra_inf=0.00002500
+candle_fechado_2: data=2026-08-13 open=0.00618900 high=0.00643200 low=0.00616000 close=0.00620600 direcao=alta corpo=0.00001700 sombra_sup=0.00022600 sombra_inf=0.00002900
+candle_fechado_3: data=2026-08-12 open=0.00594300 high=0.00629400 low=0.00589600 close=0.00618900 direcao=alta corpo=0.00024600 sombra_sup=0.00010500 sombra_inf=0.00004700
 
 eventos: nenhum cruzamento nesta vela
+padrao_candles: nenhum
+padrao_em_formacao: nenhum
+alertas_tecnicos: rompimento_intradiario_000644, adx_subindo_com_di_plus_dominante
+
+GATILHOS ATIVOS: nenhum
 
 fim do relatorio
