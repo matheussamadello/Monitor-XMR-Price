@@ -1,19 +1,19 @@
-timestamp: 2026-08-15 18:36 UTC
+timestamp: 2026-08-15 19:24 UTC
 fonte: Kraken OHLC interval=1440 (velas diarias)
 indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial
 nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
 
 XMR/USD
-preco_atual: 409.98
+preco_atual: 408.79
 candle_atual_data: 2026-08-15
 candle_atual_open: 399.39
-candle_atual_high: 410.00
+candle_atual_high: 410.82
 candle_atual_low: 399.16
-candle_atual_close_provisorio: 409.98
-candle_atual_var_pct_desde_abertura: 2.65
+candle_atual_close_provisorio: 408.79
+candle_atual_var_pct_desde_abertura: 2.35
 ema89: 354.39
 posicao_vs_ema89: acima
-distancia_ema89_pct: 15.69
+distancia_ema89_pct: 15.35
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 66.11
@@ -25,10 +25,10 @@ ultimo_fechamento_close: 399.42
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 69.40
-di_plus14_provisorio: 30.23
-di_minus14_provisorio: 13.91
-adx14_provisorio: 28.93
+rsi14_provisorio: 69.06
+di_plus14_provisorio: 30.49
+di_minus14_provisorio: 13.86
+adx14_provisorio: 28.96
 
 candle_fechado_1: data=2026-08-14 open=393.16 high=401.81 low=389.01 close=399.42 direcao=alta corpo=6.26 sombra_sup=2.39 sombra_inf=4.15
 candle_fechado_2: data=2026-08-13 open=392.31 high=408.66 low=391.48 close=392.85 direcao=alta corpo=0.54 sombra_sup=15.81 sombra_inf=0.83
@@ -37,19 +37,19 @@ candle_fechado_3: data=2026-08-12 open=376.89 high=399.77 low=374.00 close=392.0
 eventos: nenhum cruzamento nesta vela
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: adx_subindo_com_di_plus_dominante
+alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_dominante
 
 XMR/BTC
-preco_atual: 0.00649600
+preco_atual: 0.00648800
 candle_atual_data: 2026-08-15
 candle_atual_open: 0.00634000
-candle_atual_high: 0.00650000
+candle_atual_high: 0.00651200
 candle_atual_low: 0.00634000
-candle_atual_close_provisorio: 0.00649600
-candle_atual_var_pct_desde_abertura: 2.46
+candle_atual_close_provisorio: 0.00648800
+candle_atual_var_pct_desde_abertura: 2.33
 ema89: 0.00539292
 posicao_vs_ema89: acima
-distancia_ema89_pct: 20.45
+distancia_ema89_pct: 20.31
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 68.26
@@ -61,10 +61,10 @@ ultimo_fechamento_close: 0.00634000
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 71.10
-di_plus14_provisorio: 29.55
-di_minus14_provisorio: 9.23
-adx14_provisorio: 38.08
+rsi14_provisorio: 70.97
+di_plus14_provisorio: 29.81
+di_minus14_provisorio: 9.19
+adx14_provisorio: 38.11
 
 candle_fechado_1: data=2026-08-14 open=0.00620600 high=0.00640000 low=0.00618100 close=0.00634000 direcao=alta corpo=0.00013400 sombra_sup=0.00006000 sombra_inf=0.00002500
 candle_fechado_2: data=2026-08-13 open=0.00618900 high=0.00643200 low=0.00616000 close=0.00620600 direcao=alta corpo=0.00001700 sombra_sup=0.00022600 sombra_inf=0.00002900
