@@ -187,11 +187,11 @@ function readPair(cfg, data) {
     `variacao desde esse fechamento: ${changePct >= 0 ? "+" : ""}${num(changePct, 2)}%`
   );
   L.push("");
-  L.push(`                 hoje      vela anterior`);
-  L.push(`RSI(14)          ${num(rsi[i], 2).padEnd(10)}${num(rsi[j], 2)}`);
-  L.push(`DI+(14)          ${num(plusDI[i], 2).padEnd(10)}${num(plusDI[j], 2)}`);
-  L.push(`DI-(14)          ${num(minusDI[i], 2).padEnd(10)}${num(minusDI[j], 2)}`);
-  L.push(`ADX(14)          ${num(adx[i], 2).padEnd(10)}${num(adx[j], 2)}`);
+  L.push(`                 ult.fechada  anterior`);
+  L.push(`RSI(14)          ${num(rsi[i], 2).padEnd(13)}${num(rsi[j], 2)}`);
+  L.push(`DI+(14)          ${num(plusDI[i], 2).padEnd(13)}${num(plusDI[j], 2)}`);
+  L.push(`DI-(14)          ${num(minusDI[i], 2).padEnd(13)}${num(minusDI[j], 2)}`);
+  L.push(`ADX(14)          ${num(adx[i], 2).padEnd(13)}${num(adx[j], 2)}`);
   L.push("");
   L.push(
     `eventos: ${notes.length ? notes.join(" | ") : "nenhum cruzamento nesta vela"}`
@@ -232,7 +232,6 @@ export async function build(fetchImpl = fetch) {
 function toHTML(text) {
   return (
     "<!doctype html>\n<meta charset=utf-8>\n<title>Monitor XMR</title>\n" +
-    '<meta name="robots" content="noindex">\n' +
     '<pre style="font:14px/1.5 ui-monospace,monospace;padding:1rem;white-space:pre-wrap">' +
     text.replace(/&/g, "&amp;").replace(/</g, "&lt;") +
     "</pre>\n"
