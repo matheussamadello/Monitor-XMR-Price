@@ -1,22 +1,26 @@
 <!doctype html>
 <meta charset=utf-8>
 <title>Monitor XMR</title>
-<pre style="font:14px/1.5 ui-monospace,monospace;padding:1rem;white-space:pre-wrap">timestamp: 2026-08-16 01:41 UTC
-fonte: Kraken OHLC interval=1440 (velas diarias)
+<pre style="font:14px/1.5 ui-monospace,monospace;padding:1rem;white-space:pre-wrap">timestamp: 2026-08-16 02:25 UTC
+fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)
 indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial
 nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
+nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eventos_semanal:"
+
+========== GRAFICO DIARIO ==========
 
 XMR/USD
-preco_atual: 411.69
+timeframe: diario
+preco_atual: 410.92
 candle_atual_data: 2026-08-16
 candle_atual_open: 410.65
-candle_atual_high: 411.69
+candle_atual_high: 411.93
 candle_atual_low: 407.77
-candle_atual_close_provisorio: 411.69
-candle_atual_var_pct_desde_abertura: 0.25
+candle_atual_close_provisorio: 410.92
+candle_atual_var_pct_desde_abertura: 0.07
 ema89: 355.63
 posicao_vs_ema89: acima
-distancia_ema89_pct: 15.76
+distancia_ema89_pct: 15.55
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 69.39
@@ -28,9 +32,9 @@ ultimo_fechamento_close: 409.97
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 69.91
-di_plus14_provisorio: 30.59
-di_minus14_provisorio: 13.46
+rsi14_provisorio: 69.68
+di_plus14_provisorio: 30.56
+di_minus14_provisorio: 13.45
 adx14_provisorio: 29.76
 
 candle_fechado_1: data=2026-08-15 open=399.39 high=413.00 low=399.16 close=409.97 direcao=alta corpo=10.58 sombra_sup=3.03 sombra_inf=0.23
@@ -43,16 +47,17 @@ padrao_em_formacao: nenhum
 alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_dominante
 
 XMR/BTC
-preco_atual: 0.00652600
+timeframe: diario
+preco_atual: 0.00653300
 candle_atual_data: 2026-08-16
 candle_atual_open: 0.00651700
-candle_atual_high: 0.00652600
+candle_atual_high: 0.00654700
 candle_atual_low: 0.00647600
-candle_atual_close_provisorio: 0.00652600
-candle_atual_var_pct_desde_abertura: 0.14
+candle_atual_close_provisorio: 0.00653300
+candle_atual_var_pct_desde_abertura: 0.25
 ema89: 0.00541801
 posicao_vs_ema89: acima
-distancia_ema89_pct: 20.45
+distancia_ema89_pct: 20.58
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 71.53
@@ -64,10 +69,10 @@ ultimo_fechamento_close: 0.00652200
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 71.60
-di_plus14_provisorio: 29.99
-di_minus14_provisorio: 8.96
-adx14_provisorio: 39.32
+rsi14_provisorio: 71.72
+di_plus14_provisorio: 29.89
+di_minus14_provisorio: 8.90
+adx14_provisorio: 39.33
 
 candle_fechado_1: data=2026-08-15 open=0.00634000 high=0.00654400 low=0.00634000 close=0.00652200 direcao=alta corpo=0.00018200 sombra_sup=0.00002200 sombra_inf=0.00000000
 candle_fechado_2: data=2026-08-14 open=0.00620600 high=0.00640000 low=0.00618100 close=0.00634000 direcao=alta corpo=0.00013400 sombra_sup=0.00006000 sombra_inf=0.00002500
@@ -77,6 +82,82 @@ eventos: RSI entrou em sobrecompra (>=70)
 padrao_candles: nenhum
 padrao_em_formacao: possiveis_tres_soldados_brancos
 alertas_tecnicos: rompimento_confirmado_fraco_000644, rsi_acima_70, adx_subindo_com_di_plus_dominante
+
+========== GRAFICO SEMANAL ==========
+
+XMR/USD
+timeframe: semanal
+preco_atual: 410.92
+candle_atual_data: 2026-08-13
+candle_atual_open: 392.31
+candle_atual_high: 413.00
+candle_atual_low: 389.01
+candle_atual_close_provisorio: 410.92
+candle_atual_var_pct_desde_abertura: 4.74
+ema89: 320.04
+posicao_vs_ema89: acima
+distancia_ema89_pct: 28.40
+
+# principais: calculados SOMENTE com velas semanais fechadas
+rsi14_fechado: 56.42
+di_plus14_fechado: 28.14
+di_minus14_fechado: 15.11
+adx14_fechado: 21.55
+ultimo_fechamento_data: 2026-08-06
+ultimo_fechamento_close: 392.04
+
+# PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
+# fechamento semanal. NAO sao a referencia principal.
+rsi14_provisorio: 59.44
+di_plus14_provisorio: 27.19
+di_minus14_provisorio: 14.60
+adx14_provisorio: 22.16
+
+candle_fechado_1: data=2026-08-06 open=366.06 high=413.57 low=358.80 close=392.04 direcao=alta corpo=25.98 sombra_sup=21.53 sombra_inf=7.26
+candle_fechado_2: data=2026-07-30 open=353.13 high=367.84 low=346.74 close=365.72 direcao=alta corpo=12.59 sombra_sup=2.12 sombra_inf=6.39
+candle_fechado_3: data=2026-07-23 open=352.30 high=372.68 low=333.97 close=353.32 direcao=alta corpo=1.02 sombra_sup=19.36 sombra_inf=18.33
+
+eventos_semanal: nenhum cruzamento nesta vela
+padrao_candles: nenhum
+padrao_em_formacao: nenhum
+alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_dominante
+
+XMR/BTC
+timeframe: semanal
+preco_atual: 0.00653300
+candle_atual_data: 2026-08-13
+candle_atual_open: 0.00618900
+candle_atual_high: 0.00654700
+candle_atual_low: 0.00616000
+candle_atual_close_provisorio: 0.00653300
+candle_atual_var_pct_desde_abertura: 5.56
+ema89: 0.00424892
+posicao_vs_ema89: acima
+distancia_ema89_pct: 53.76
+
+# principais: calculados SOMENTE com velas semanais fechadas
+rsi14_fechado: 69.67
+di_plus14_fechado: 28.53
+di_minus14_fechado: 6.57
+adx14_fechado: 50.03
+ultimo_fechamento_data: 2026-08-06
+ultimo_fechamento_close: 0.00618900
+
+# PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
+# fechamento semanal. NAO sao a referencia principal.
+rsi14_provisorio: 73.13
+di_plus14_provisorio: 29.53
+di_minus14_provisorio: 6.27
+adx14_provisorio: 51.10
+
+candle_fechado_1: data=2026-08-06 open=0.00567000 high=0.00635000 low=0.00557500 close=0.00618900 direcao=alta corpo=0.00051900 sombra_sup=0.00016100 sombra_inf=0.00009500
+candle_fechado_2: data=2026-07-30 open=0.00554100 high=0.00583500 low=0.00542000 close=0.00567300 direcao=alta corpo=0.00013200 sombra_sup=0.00016200 sombra_inf=0.00012100
+candle_fechado_3: data=2026-07-23 open=0.00532900 high=0.00580500 low=0.00526200 close=0.00555100 direcao=alta corpo=0.00022200 sombra_sup=0.00025400 sombra_inf=0.00006700
+
+eventos_semanal: nenhum cruzamento nesta vela
+padrao_candles: nenhum
+padrao_em_formacao: nenhum
+alertas_tecnicos: rompimento_intradiario_000644, adx_subindo_com_di_plus_dominante
 
 GATILHOS ATIVOS: btc_rompe_00644
 
