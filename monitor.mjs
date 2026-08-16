@@ -13,11 +13,28 @@ import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
 const PERIOD = 14;
 const EMA_PERIOD = 89;
 
+const TIMEFRAMES = [
+  {
+    key: "diario",
+    titulo: "GRAFICO DIARIO",
+    interval: 1440,
+    // A automacao externa le a linha "eventos:" do bloco diario.
+    // Por isso o semanal usa um nome diferente, para nunca colidir.
+    campoEventos: "eventos",
+  },
+  {
+    key: "semanal",
+    titulo: "GRAFICO SEMANAL",
+    interval: 10080,
+    campoEventos: "eventos_semanal",
+  },
+];
+
 const PAIRS = [
   {
     key: "usd",
     label: "XMR/USD",
-    url: "https://api.kraken.com/0/public/OHLC?pair=XMRUSD&interval=1440&assetVersion=1",
+    par: "XMRUSD",
     dec: 2,
     niveis: {
       faixas: [
@@ -34,7 +51,7 @@ const PAIRS = [
   {
     key: "btc",
     label: "XMR/BTC",
-    url: "https://api.kraken.com/0/public/OHLC?pair=XMRBTC&interval=1440&assetVersion=1",
+    par: "XMRBTC",
     dec: 8,
     niveis: {
       faixas: [[0.00575, 0.00585, "zona_000575_000585"]],
@@ -46,6 +63,10 @@ const PAIRS = [
     },
   },
 ];
+
+function urlKraken(cfg, tf) {
+  return `https://api.kraken.com/0/public/OHLC?pair=${cfg.par}&interval=${tf.interval}&assetVersion=1`;
+}
 
 // ------------------------------------------------------------
 // Indicadores (suavizacao de Wilder / RMA, igual TradingView)
@@ -371,7 +392,7 @@ function alertasTecnicos(cfg, d, ind) {
 // Bloco de texto por par
 // ------------------------------------------------------------
 
-function readPair(cfg, d) {
+function readPair(cfg, d, tf) {
   const { highs, lows, closes, opens, times, live } = d;
   const D = cfg.dec;
 
@@ -432,6 +453,7 @@ function readPair(cfg, d) {
 
   const L = [];
   L.push(cfg.label);
+  L.push(`timeframe: ${tf.key}`);
   L.push(`preco_atual: ${num(live.close, D)}`);
   L.push(`candle_atual_data: ${fmtDia(live.time)}`);
   L.push(`candle_atual_open: ${num(live.open, D)}`);
@@ -447,7 +469,7 @@ function readPair(cfg, d) {
   );
   L.push(`distancia_ema89_pct: ${num(distEma, 2)}`);
   L.push("");
-  L.push("# principais: calculados SOMENTE com velas fechadas");
+  L.push(`# principais: calculados SOMENTE com velas ${tf.key === "semanal" ? "semanais " : ""}fechadas`);
   L.push(`rsi14_fechado: ${num(rsi[i], 2)}`);
   L.push(`di_plus14_fechado: ${num(plusDI[i], 2)}`);
   L.push(`di_minus14_fechado: ${num(minusDI[i], 2)}`);
@@ -456,7 +478,7 @@ function readPair(cfg, d) {
   L.push(`ultimo_fechamento_close: ${num(closes[i], D)}`);
   L.push("");
   L.push("# PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o");
-  L.push("# fechamento diario. NAO sao a referencia principal.");
+  L.push(`# fechamento ${tf.key}. NAO sao a referencia principal.`);
   L.push(`rsi14_provisorio: ${num(rsiP[k], 2)}`);
   L.push(`di_plus14_provisorio: ${num(dmiP.plusDI[k], 2)}`);
   L.push(`di_minus14_provisorio: ${num(dmiP.minusDI[k], 2)}`);
@@ -472,7 +494,7 @@ function readPair(cfg, d) {
     );
   });
   L.push("");
-  L.push(`eventos: ${linhaEventos}`);
+  L.push(`${tf.campoEventos}: ${linhaEventos}`);
   L.push(`padrao_candles: ${padroes.length ? padroes.join(", ") : "nenhum"}`);
   L.push(
     `padrao_em_formacao: ${formacao.length ? formacao.join(", ") : "nenhum"}`
@@ -535,27 +557,34 @@ export async function build(fetchImpl = fetch) {
   const dados = {};
 
   blocks.push(`timestamp: ${fmtUTC(Math.floor(Date.now() / 1000))}`);
-  blocks.push(`fonte: Kraken OHLC interval=1440 (velas diarias)`);
+  blocks.push(`fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)`);
   blocks.push(`indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial`);
   blocks.push(`nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao`);
+  blocks.push(`nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eventos_semanal:"`);
   blocks.push("");
 
-  for (const cfg of PAIRS) {
-    try {
-      const res = await fetchImpl(cfg.url, {
-        headers: { "User-Agent": "xmr-monitor/1.0" },
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const parsed = parseKraken(await res.json());
-      dados[cfg.key] = parsed;
-      blocks.push(readPair(cfg, parsed).texto);
-    } catch (err) {
-      blocks.push(`${cfg.label}\nFALHA: ${err.message}`);
-    }
+  for (const tf of TIMEFRAMES) {
+    dados[tf.key] = {};
+    blocks.push(`========== ${tf.titulo} ==========`);
     blocks.push("");
+    for (const cfg of PAIRS) {
+      try {
+        const res = await fetchImpl(urlKraken(cfg, tf), {
+          headers: { "User-Agent": "xmr-monitor/1.0" },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const parsed = parseKraken(await res.json());
+        dados[tf.key][cfg.key] = parsed;
+        blocks.push(readPair(cfg, parsed, tf).texto);
+      } catch (err) {
+        blocks.push(`${cfg.label}\ntimeframe: ${tf.key}\nFALHA: ${err.message}`);
+      }
+      blocks.push("");
+    }
   }
 
-  const gatilhos = avaliarGatilhos(dados);
+  // Gatilhos do alerta continuam olhando SOMENTE o diario.
+  const gatilhos = avaliarGatilhos(dados.diario || {});
   blocks.push(
     gatilhos.length
       ? "GATILHOS ATIVOS: " + gatilhos.map((g) => g.id).join(", ")
