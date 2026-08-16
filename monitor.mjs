@@ -268,43 +268,83 @@ function velasFechadas(d, quantas) {
   return out; // out[0] = mais recente
 }
 
-function tresSoldados(v) {
-  // v[0] mais recente. Exige 3 de alta, fechamentos progressivos,
-  // corpos relevantes, abertura dentro/proxima do corpo anterior,
-  // sombras superiores pequenas.
-  if (v.length < 3) return false;
-  const [c3, c2, c1] = [v[0], v[1], v[2]]; // c1 mais antiga
-  const seq = [c1, c2, c3];
-  if (!seq.every((c) => c.alta && c.corpoRelevante)) return false;
-  if (!(c2.close > c1.close && c3.close > c2.close)) return false;
-  if (!seq.every((c) => c.corpo > 0 && c.sombraSup <= c.corpo * 0.5)) return false;
-  const abreDentro = (atual, ant) =>
-    atual.open >= Math.min(ant.open, ant.close) &&
-    atual.open <= ant.close * 1.01;
-  return abreDentro(c2, c1) && abreDentro(c3, c2);
+// Mediana dos corpos das ultimas N velas fechadas. Serve de escala
+// relativa: XMR/USD e XMR/BTC vivem em ordens de grandeza diferentes,
+// entao qualquer limiar absoluto seria arbitrario num deles.
+function medianaCorpos(opens, closes, n = 20) {
+  const corpos = [];
+  for (let i = Math.max(0, closes.length - n); i < closes.length; i++) {
+    corpos.push(Math.abs(closes[i] - opens[i]));
+  }
+  if (!corpos.length) return null;
+  corpos.sort((a, b) => a - b);
+  const m = Math.floor(corpos.length / 2);
+  return corpos.length % 2 ? corpos[m] : (corpos[m - 1] + corpos[m]) / 2;
 }
 
-function tresCorvos(v) {
+// Criterios geometricos de "vela compradora forte".
+// Nao e' Marubozu: sombras sao toleradas, so nao podem dominar.
+const CORPO_RANGE_MIN = 0.55; // corpo / (high - low)
+const FECHA_PERTO_MAX = 0.70; // (close - low) / (high - low)
+const SOMBRA_SUP_MAX = 0.40; // sombra superior / corpo
+const CORPO_VS_MEDIANA = 0.75; // corpo / mediana dos ultimos 20 corpos
+
+function compradoraForte(v, mediana) {
+  if (!v.alta) return false;
+  if (!(v.amplitude > 0) || !(v.corpo > 0)) return false;
+  if (v.corpo / v.amplitude < CORPO_RANGE_MIN) return false;
+  if ((v.close - v.low) / v.amplitude < FECHA_PERTO_MAX) return false;
+  if (v.sombraSup > SOMBRA_SUP_MAX * v.corpo) return false;
+  if (mediana && mediana > 0 && v.corpo < CORPO_VS_MEDIANA * mediana) return false;
+  return true;
+}
+
+function vendedoraForte(v, mediana) {
+  if (!v.baixa) return false;
+  if (!(v.amplitude > 0) || !(v.corpo > 0)) return false;
+  if (v.corpo / v.amplitude < CORPO_RANGE_MIN) return false;
+  if ((v.high - v.close) / v.amplitude < FECHA_PERTO_MAX) return false;
+  if (v.sombraInf > SOMBRA_SUP_MAX * v.corpo) return false;
+  if (mediana && mediana > 0 && v.corpo < CORPO_VS_MEDIANA * mediana) return false;
+  return true;
+}
+
+// Abertura dentro (ou muito proxima) do corpo real da vela anterior.
+function abreNoCorpoAnterior(atual, ant, alta) {
+  const topoCorpo = Math.max(ant.open, ant.close);
+  const baseCorpo = Math.min(ant.open, ant.close);
+  const folga = 0.1 * ant.corpo;
+  return alta
+    ? atual.open >= baseCorpo && atual.open <= topoCorpo + folga
+    : atual.open <= topoCorpo && atual.open >= baseCorpo - folga;
+}
+
+function tresSoldados(v, mediana) {
+  if (v.length < 3) return false;
+  const [c3, c2, c1] = [v[0], v[1], v[2]]; // c1 = mais antiga
+  const seq = [c1, c2, c3];
+  if (!seq.every((c) => compradoraForte(c, mediana))) return false;
+  if (!(c2.close > c1.close && c3.close > c2.close)) return false;
+  return abreNoCorpoAnterior(c2, c1, true) && abreNoCorpoAnterior(c3, c2, true);
+}
+
+function tresCorvos(v, mediana) {
   if (v.length < 3) return false;
   const [c3, c2, c1] = [v[0], v[1], v[2]];
   const seq = [c1, c2, c3];
-  if (!seq.every((c) => c.baixa && c.corpoRelevante)) return false;
+  if (!seq.every((c) => vendedoraForte(c, mediana))) return false;
   if (!(c2.close < c1.close && c3.close < c2.close)) return false;
-  if (!seq.every((c) => c.corpo > 0 && c.sombraInf <= c.corpo * 0.5)) return false;
-  const abreDentro = (atual, ant) =>
-    atual.open <= Math.max(ant.open, ant.close) &&
-    atual.open >= ant.close * 0.99;
-  return abreDentro(c2, c1) && abreDentro(c3, c2);
+  return abreNoCorpoAnterior(c2, c1, false) && abreNoCorpoAnterior(c3, c2, false);
 }
 
-function detectarPadroes(v) {
+function detectarPadroes(v, mediana) {
   const achados = [];
   if (v.length < 2) return achados;
   const a = v[0]; // mais recente fechada
   const b = v[1]; // anterior
 
-  if (tresSoldados(v)) achados.push("tres_soldados_brancos");
-  if (tresCorvos(v)) achados.push("tres_corvos_negros");
+  if (tresSoldados(v, mediana)) achados.push("tres_soldados_brancos");
+  if (tresCorvos(v, mediana)) achados.push("tres_corvos_negros");
 
   if (b.baixa && a.alta && a.close > b.open && a.open < b.close)
     achados.push("bullish_engulfing");
@@ -319,22 +359,42 @@ function detectarPadroes(v) {
   return achados;
 }
 
-function padraoEmFormacao(v, live) {
-  // Duas fechadas compatíveis com soldados + terceira (viva) na mesma direcao.
+function padraoEmFormacao(v, live, mediana) {
+  // Duas fechadas ja validas como soldados/corvos + a vela em formacao
+  // atendendo AGORA aos mesmos criterios geometricos. Se ela perder
+  // forca durante o dia, o padrao some sozinho na proxima execucao.
   if (v.length < 2) return [];
-  const [c2, c1] = [v[0], v[1]];
+  const [c2, c1] = [v[0], v[1]]; // c1 = mais antiga das duas
   const viva = anatomia(live.open, live.high, live.low, live.close);
   const fora = [];
 
   const duasAltas =
-    c1.alta && c2.alta && c1.corpoRelevante && c2.corpoRelevante && c2.close > c1.close;
-  if (duasAltas && viva.alta && viva.close > c2.close)
+    compradoraForte(c1, mediana) &&
+    compradoraForte(c2, mediana) &&
+    c2.close > c1.close &&
+    abreNoCorpoAnterior(c2, c1, true);
+  if (
+    duasAltas &&
+    compradoraForte(viva, mediana) &&
+    viva.close > c2.close &&
+    abreNoCorpoAnterior(viva, c2, true)
+  ) {
     fora.push("possiveis_tres_soldados_brancos");
+  }
 
   const duasBaixas =
-    c1.baixa && c2.baixa && c1.corpoRelevante && c2.corpoRelevante && c2.close < c1.close;
-  if (duasBaixas && viva.baixa && viva.close < c2.close)
+    vendedoraForte(c1, mediana) &&
+    vendedoraForte(c2, mediana) &&
+    c2.close < c1.close &&
+    abreNoCorpoAnterior(c2, c1, false);
+  if (
+    duasBaixas &&
+    vendedoraForte(viva, mediana) &&
+    viva.close < c2.close &&
+    abreNoCorpoAnterior(viva, c2, false)
+  ) {
     fora.push("possiveis_tres_corvos_negros");
+  }
 
   return fora;
 }
@@ -761,8 +821,9 @@ function readPair(cfg, d, tf) {
 
   // --- velas fechadas recentes e padroes ---
   const ult = velasFechadas(d, 3);
-  const padroes = detectarPadroes(ult);
-  const formacao = padraoEmFormacao(ult, live);
+  const medCorpo = medianaCorpos(opens, closes, 20);
+  const padroes = detectarPadroes(ult, medCorpo);
+  const formacao = padraoEmFormacao(ult, live, medCorpo);
 
   // --- pivos, estrutura, divergencias e volume (SO velas fechadas) ---
   const pivos = acharPivos(highs, lows);
@@ -891,6 +952,7 @@ function readPair(cfg, d, tf) {
 
   L.push("");
   L.push(`${tf.campoEventos}: ${linhaEventos}`);
+  L.push(`mediana_corpo_20: ${num(medCorpo, Math.max(D, 6))}`);
   L.push(`padrao_candles: ${padroes.length ? padroes.join(", ") : "nenhum"}`);
   L.push(
     `padrao_em_formacao: ${formacao.length ? formacao.join(", ") : "nenhum"}`
