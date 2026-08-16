@@ -17,22 +17,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Gerar pagina
-        run: node monitor.mjs
-
-      - name: Publicar se mudou
+      - name: Gerar e publicar
         run: |
           git config user.name "monitor-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
-          if git diff --staged --quiet; then
-            echo "nada mudou"
-          else
+          for tentativa in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            node monitor.mjs
+            git add docs
+            if git diff --staged --quiet; then
+              echo "nada mudou"
+              exit 0
+            fi
             git commit -m "monitor: $(date -u +%Y-%m-%dT%H:%MZ)"
-            git push
-          fi
+            if git push; then
+              echo "publicado na tentativa $tentativa"
+              exit 0
+            fi
+            echo "push recusado, sincronizando e tentando de novo"
+            sleep 5
+          done
+          echo "falhou apos 3 tentativas"
+          exit 1
