@@ -203,12 +203,17 @@ function parseKraken(json) {
       high: Number(liveRow[2]),
       low: Number(liveRow[3]),
       close: Number(liveRow[4]),
+      // Kraken OHLC: [time, open, high, low, close, vwap, volume, count]
+      volume: Number(liveRow[6]),
+      trades: Number(liveRow[7]),
     },
     times: closed.map((r) => Number(r[0])),
     opens: closed.map((r) => Number(r[1])),
     highs: closed.map((r) => Number(r[2])),
     lows: closed.map((r) => Number(r[3])),
     closes: closed.map((r) => Number(r[4])),
+    volumes: closed.map((r) => Number(r[6])),
+    trades: closed.map((r) => Number(r[7])),
   };
 }
 
@@ -257,6 +262,7 @@ function velasFechadas(d, quantas) {
     if (i < 0) break;
     const v = anatomia(d.opens[i], d.highs[i], d.lows[i], d.closes[i]);
     v.time = d.times[i];
+    v.volume = d.volumes ? d.volumes[i] : null;
     out.push(v);
   }
   return out; // out[0] = mais recente
@@ -334,6 +340,271 @@ function padraoEmFormacao(v, live) {
 }
 
 // ------------------------------------------------------------
+// Pivos, estrutura de mercado, divergencias de RSI e volume
+//
+// METODOLOGIA DE PIVOS (fractal com confirmacao a direita):
+// um indice p e' pivo de topo se high[p] for estritamente maior que
+// os PIVO_ESQ candles anteriores e MAIOR OU IGUAL aos PIVO_DIR
+// posteriores. Pivo de fundo e' o espelho, com low.
+// Como sao exigidos PIVO_DIR candles POSTERIORES, um pivo so existe
+// depois que essas velas fecharam. Isso elimina look-ahead: os
+// ultimos PIVO_DIR candles fechados nunca sao classificados como
+// pivo, e a vela em formacao nunca entra nesse calculo.
+// ------------------------------------------------------------
+
+const PIVO_ESQ = 2;
+const PIVO_DIR = 2;
+const DIV_JANELA = 60; // pivos mais antigos que isso sao ignorados
+const DIV_SEP_MIN = 5; // distancia minima, em velas, entre os dois pivos
+const DIV_MIN_PRECO_PCT = 0.3; // variacao minima de preco entre pivos, em %
+const DIV_MIN_RSI = 2; // variacao minima de RSI entre pivos, em pontos
+const VOL_MEDIA = 20;
+
+export function acharPivos(highs, lows, esq = PIVO_ESQ, dir = PIVO_DIR) {
+  const altos = [];
+  const baixos = [];
+  const n = highs.length;
+  for (let p = esq; p < n - dir; p++) {
+    let topo = true;
+    let fundo = true;
+    for (let k = 1; k <= esq; k++) {
+      if (!(highs[p] > highs[p - k])) topo = false;
+      if (!(lows[p] < lows[p - k])) fundo = false;
+    }
+    for (let k = 1; k <= dir; k++) {
+      if (!(highs[p] >= highs[p + k])) topo = false;
+      if (!(lows[p] <= lows[p + k])) fundo = false;
+    }
+    if (topo) altos.push(p);
+    if (fundo) baixos.push(p);
+  }
+  return { altos, baixos };
+}
+
+// HH/HL/LH/LL a partir dos dois ultimos pivos de cada tipo.
+export function classificarEstrutura(highs, lows, pivos) {
+  const { altos, baixos } = pivos;
+  const topo =
+    altos.length >= 2
+      ? highs[altos[altos.length - 1]] > highs[altos[altos.length - 2]]
+        ? "HH"
+        : "LH"
+      : null;
+  const fundo =
+    baixos.length >= 2
+      ? lows[baixos[baixos.length - 1]] > lows[baixos[baixos.length - 2]]
+        ? "HL"
+        : "LL"
+      : null;
+
+  let tendencia = "lateral_indefinida";
+  if (topo === "HH" && fundo === "HL") tendencia = "alta";
+  else if (topo === "LH" && fundo === "LL") tendencia = "baixa";
+
+  const rotulo = topo && fundo ? `${topo}_${fundo}` : "indefinida";
+  return { topo, fundo, rotulo, tendencia };
+}
+
+// Quebra de estrutura: LL logo depois de uma sequencia de HL, ou
+// HH logo depois de uma sequencia de LH.
+export function mudancaEstrutura(highs, lows, pivos) {
+  const { altos, baixos } = pivos;
+  const eventos = [];
+  if (baixos.length >= 3) {
+    const [a, b, c] = baixos.slice(-3).map((p) => lows[p]);
+    if (b > a && c < b) eventos.push("perda_estrutura_alta_novo_LL");
+    if (b < a && c > b) eventos.push("novo_HL_apos_fundo_mais_baixo");
+  }
+  if (altos.length >= 3) {
+    const [a, b, c] = altos.slice(-3).map((p) => highs[p]);
+    if (b < a && c > b) eventos.push("novo_HH_apos_topo_mais_baixo");
+    if (b > a && c < b) eventos.push("topo_mais_baixo_apos_HH");
+  }
+  return eventos;
+}
+
+// ------------------------------------------------------------
+// Divergencias de RSI, comparando pivo com pivo
+// ------------------------------------------------------------
+
+function variacaoPct(a, b) {
+  return b === 0 ? 0 : ((a - b) / Math.abs(b)) * 100;
+}
+
+export function detectarDivergencias(highs, lows, rsi, pivos) {
+  const achadas = [];
+  const n = lows.length;
+  const ultimo = n - 1;
+
+  const valido = (p) =>
+    rsi[p] !== null && rsi[p] !== undefined && ultimo - p <= DIV_JANELA;
+
+  // --- fundos: bullish regular e bearish oculta ---
+  const fundos = pivos.baixos.filter(valido);
+  if (fundos.length >= 2) {
+    const p2 = fundos[fundos.length - 1];
+    const p1 = fundos[fundos.length - 2];
+    if (p2 - p1 >= DIV_SEP_MIN) {
+      const dPreco = variacaoPct(lows[p2], lows[p1]);
+      const dRsi = rsi[p2] - rsi[p1];
+      if (Math.abs(dPreco) >= DIV_MIN_PRECO_PCT && Math.abs(dRsi) >= DIV_MIN_RSI) {
+        if (dPreco < 0 && dRsi > 0)
+          achadas.push(det("bullish_regular", p1, p2, lows, rsi, "fundo"));
+        if (dPreco > 0 && dRsi < 0)
+          achadas.push(det("bullish_oculta", p1, p2, lows, rsi, "fundo"));
+      }
+    }
+  }
+
+  // --- topos: bearish regular e bullish oculta ---
+  const topos = pivos.altos.filter(valido);
+  if (topos.length >= 2) {
+    const p2 = topos[topos.length - 1];
+    const p1 = topos[topos.length - 2];
+    if (p2 - p1 >= DIV_SEP_MIN) {
+      const dPreco = variacaoPct(highs[p2], highs[p1]);
+      const dRsi = rsi[p2] - rsi[p1];
+      if (Math.abs(dPreco) >= DIV_MIN_PRECO_PCT && Math.abs(dRsi) >= DIV_MIN_RSI) {
+        if (dPreco > 0 && dRsi < 0)
+          achadas.push(det("bearish_regular", p1, p2, highs, rsi, "topo"));
+        if (dPreco < 0 && dRsi > 0)
+          achadas.push(det("bearish_oculta", p1, p2, highs, rsi, "topo"));
+      }
+    }
+  }
+
+  return achadas;
+}
+
+function det(tipo, p1, p2, precos, rsi, lado) {
+  return {
+    tipo,
+    lado,
+    confirmada: true,
+    idxAnterior: p1,
+    idxAtual: p2,
+    precoAnterior: precos[p1],
+    precoAtual: precos[p2],
+    rsiAnterior: rsi[p1],
+    rsiAtual: rsi[p2],
+  };
+}
+
+// Divergencia PROVISORIA: compara o ultimo pivo confirmado com a
+// vela em formacao. Nunca confirmada — a vela ainda pode mudar.
+export function divergenciaProvisoria(highs, lows, rsi, rsiProv, pivos, live) {
+  const n = lows.length;
+  const idxViva = n; // posicao da vela em formacao na serie estendida
+  const out = [];
+
+  const fundos = pivos.baixos.filter((p) => rsi[p] !== null && n - p <= DIV_JANELA);
+  if (fundos.length) {
+    const p1 = fundos[fundos.length - 1];
+    if (idxViva - p1 >= DIV_SEP_MIN && rsiProv !== null) {
+      const dPreco = variacaoPct(live.low, lows[p1]);
+      const dRsi = rsiProv - rsi[p1];
+      if (
+        Math.abs(dPreco) >= DIV_MIN_PRECO_PCT &&
+        Math.abs(dRsi) >= DIV_MIN_RSI &&
+        dPreco < 0 &&
+        dRsi > 0
+      ) {
+        out.push({
+          tipo: "bullish_regular",
+          lado: "fundo",
+          confirmada: false,
+          idxAnterior: p1,
+          idxAtual: idxViva,
+          precoAnterior: lows[p1],
+          precoAtual: live.low,
+          rsiAnterior: rsi[p1],
+          rsiAtual: rsiProv,
+        });
+      }
+    }
+  }
+
+  const topos = pivos.altos.filter((p) => rsi[p] !== null && n - p <= DIV_JANELA);
+  if (topos.length) {
+    const p1 = topos[topos.length - 1];
+    if (idxViva - p1 >= DIV_SEP_MIN && rsiProv !== null) {
+      const dPreco = variacaoPct(live.high, highs[p1]);
+      const dRsi = rsiProv - rsi[p1];
+      if (
+        Math.abs(dPreco) >= DIV_MIN_PRECO_PCT &&
+        Math.abs(dRsi) >= DIV_MIN_RSI &&
+        dPreco > 0 &&
+        dRsi < 0
+      ) {
+        out.push({
+          tipo: "bearish_regular",
+          lado: "topo",
+          confirmada: false,
+          idxAnterior: p1,
+          idxAtual: idxViva,
+          precoAnterior: highs[p1],
+          precoAtual: live.high,
+          rsiAnterior: rsi[p1],
+          rsiAtual: rsiProv,
+        });
+      }
+    }
+  }
+
+  return out;
+}
+
+// ------------------------------------------------------------
+// Volume
+// ------------------------------------------------------------
+
+export function analisarVolume(volumes, volumeVivo, media = VOL_MEDIA) {
+  const n = volumes.length;
+  if (n < 2) {
+    return {
+      atual: volumeVivo,
+      ultimaFechada: null,
+      media: null,
+      vsMediaPct: null,
+      classificacao: "indefinido",
+      tendencia: "indefinida",
+    };
+  }
+  const usa = Math.min(media, n);
+  const janela = volumes.slice(n - usa);
+  const med = janela.reduce((a, b) => a + b, 0) / usa;
+  const ultima = volumes[n - 1];
+  const vsMedia = med === 0 ? null : ((volumeVivo - med) / med) * 100;
+
+  let classificacao = "normal";
+  if (vsMedia !== null) {
+    if (vsMedia >= 50) classificacao = "expansao_forte";
+    else if (vsMedia >= 20) classificacao = "acima_da_media";
+    else if (vsMedia <= -50) classificacao = "contracao_forte";
+    else if (vsMedia <= -20) classificacao = "abaixo_da_media";
+  }
+
+  // tendencia das ultimas 3 fechadas
+  let tendencia = "indefinida";
+  if (n >= 3) {
+    const [a, b, c] = volumes.slice(-3);
+    if (c < b && b < a) tendencia = "decrescente";
+    else if (c > b && b > a) tendencia = "crescente";
+    else tendencia = "irregular";
+  }
+
+  return {
+    atual: volumeVivo,
+    ultimaFechada: ultima,
+    media: med,
+    periodoMedia: usa,
+    vsMediaPct: vsMedia,
+    classificacao,
+    tendencia,
+  };
+}
+
+// ------------------------------------------------------------
 // Alertas tecnicos (linha NOVA, separada de "eventos")
 // ------------------------------------------------------------
 
@@ -385,12 +656,70 @@ function alertasTecnicos(cfg, d, ind) {
     if (subindo && ind.diMinus > ind.diPlus) a.push("adx_subindo_com_di_minus_dominante");
   }
 
+  // --- divergencias (so as confirmadas viram alerta) ---
+  for (const dv of ind.divergencias || []) {
+    a.push(`divergencia_${dv.tipo}_confirmada`);
+  }
+
+  // --- estrutura de mercado ---
+  for (const ev of ind.estruturaEventos || []) a.push(ev);
+
+  // --- volume como CONFIRMACAO, nunca sozinho ---
+  const vol = ind.volume;
+  const houveRompimento = a.some((x) => x.startsWith("rompimento_"));
+  const houvePerda = a.some((x) => x.startsWith("perda_suporte_") || x.startsWith("toque_suporte_"));
+  if (vol && vol.vsMediaPct !== null) {
+    if (houveRompimento && vol.vsMediaPct >= 20) a.push("rompimento_com_volume_acima_da_media");
+    if (houveRompimento && vol.vsMediaPct <= -20) a.push("rompimento_com_volume_fraco");
+    if (houvePerda && vol.vsMediaPct >= 50) a.push("queda_com_expansao_de_volume");
+  }
+  if (
+    vol &&
+    vol.tendencia === "decrescente" &&
+    ind.estruturaTendencia === "alta" &&
+    !houveRompimento
+  ) {
+    a.push("pullback_com_volume_decrescente");
+  }
+
+  // --- confluencia: so quando varios elementos apontam junto ---
+  const temHL = (ind.estruturaEventos || []).some((e) => e.includes("HL"));
+  const pullbackBullish =
+    ind.estruturaTendencia === "alta" &&
+    ind.diPlus > ind.diMinus &&
+    vol &&
+    vol.tendencia === "decrescente" &&
+    (temHL || (ind.divergencias || []).some((d) => d.tipo.startsWith("bullish")));
+  if (pullbackBullish) a.push("confluencia_pullback_bullish");
+
   return a;
 }
 
 // ------------------------------------------------------------
 // Bloco de texto por par
 // ------------------------------------------------------------
+
+function descrevePivos(idxs, precos, times, dec) {
+  if (!idxs.length) return "nenhum";
+  return idxs
+    .slice(-3)
+    .map((p) => `${fmtDia(times[p])}=${num(precos[p], dec)}`)
+    .join(" ");
+}
+
+function detalheDiv(x, times, dec, timeViva) {
+  const dataAnt = fmtDia(times[x.idxAnterior]);
+  const dataAtual =
+    x.idxAtual < times.length ? fmtDia(times[x.idxAtual]) : fmtDia(timeViva);
+  return (
+    `tipo=${x.tipo} lado=${x.lado} ` +
+    `status=${x.confirmada ? "confirmada" : "PROVISORIA"} ` +
+    `pivo_anterior=${dataAnt} preco_anterior=${num(x.precoAnterior, dec)} ` +
+    `rsi_anterior=${num(x.rsiAnterior, 2)} ` +
+    `pivo_atual=${dataAtual} preco_atual=${num(x.precoAtual, dec)} ` +
+    `rsi_atual=${num(x.rsiAtual, 2)}`
+  );
+}
 
 function readPair(cfg, d, tf) {
   const { highs, lows, closes, opens, times, live } = d;
@@ -435,6 +764,21 @@ function readPair(cfg, d, tf) {
   const padroes = detectarPadroes(ult);
   const formacao = padraoEmFormacao(ult, live);
 
+  // --- pivos, estrutura, divergencias e volume (SO velas fechadas) ---
+  const pivos = acharPivos(highs, lows);
+  const estrutura = classificarEstrutura(highs, lows, pivos);
+  const estruturaEventos = mudancaEstrutura(highs, lows, pivos);
+  const divergencias = detectarDivergencias(highs, lows, rsi, pivos);
+  const divProvisorias = divergenciaProvisoria(
+    highs,
+    lows,
+    rsi,
+    rsiP[k],
+    pivos,
+    live
+  );
+  const vol = analisarVolume(d.volumes || [], live.volume);
+
   // --- alertas tecnicos (linha nova) ---
   const alertas = alertasTecnicos(cfg, d, {
     rsi: rsi[i],
@@ -444,6 +788,10 @@ function readPair(cfg, d, tf) {
     diMinus: minusDI[i],
     crossUp,
     crossDown,
+    divergencias,
+    estruturaEventos,
+    estruturaTendencia: estrutura.tendencia,
+    volume: vol,
   });
 
   const emaAtual = ema[i];
@@ -490,9 +838,57 @@ function readPair(cfg, d, tf) {
         `high=${num(v.high, D)} low=${num(v.low, D)} close=${num(v.close, D)} ` +
         `direcao=${v.alta ? "alta" : v.baixa ? "baixa" : "neutra"} ` +
         `corpo=${num(v.corpo, D)} sombra_sup=${num(v.sombraSup, D)} ` +
-        `sombra_inf=${num(v.sombraInf, D)}`
+        `sombra_inf=${num(v.sombraInf, D)} volume=${num(v.volume, 4)}`
     );
   });
+  L.push("");
+  // ---- volume ----
+  L.push("");
+  L.push(`volume_atual: ${num(vol.atual, 4)}`);
+  L.push(`volume_ultima_fechada: ${num(vol.ultimaFechada, 4)}`);
+  L.push(`volume_media${vol.periodoMedia || VOL_MEDIA}: ${num(vol.media, 4)}`);
+  L.push(`volume_vs_media_pct: ${num(vol.vsMediaPct, 2)}`);
+  L.push(`volume_classificacao: ${vol.classificacao}`);
+  L.push(`volume_tendencia_3_fechadas: ${vol.tendencia}`);
+  L.push(`trades_vela_atual: ${num(live.trades, 0)}`);
+
+  // ---- estrutura de mercado ----
+  L.push("");
+  L.push(`estrutura_preco: ${estrutura.rotulo}`);
+  L.push(`estrutura_tendencia: ${estrutura.tendencia}`);
+  L.push(`estrutura_ultimo_topo: ${estrutura.topo || "--"}`);
+  L.push(`estrutura_ultimo_fundo: ${estrutura.fundo || "--"}`);
+  L.push(
+    `estrutura_eventos: ${estruturaEventos.length ? estruturaEventos.join(", ") : "nenhum"}`
+  );
+  L.push(`pivos_topos_recentes: ${descrevePivos(pivos.altos, highs, times, D)}`);
+  L.push(`pivos_fundos_recentes: ${descrevePivos(pivos.baixos, lows, times, D)}`);
+
+  // ---- divergencias de RSI ----
+  L.push("");
+  L.push(
+    `divergencia_rsi: ${
+      divergencias.length
+        ? divergencias.map((x) => `${x.tipo}_confirmada`).join(", ")
+        : "nenhuma"
+    }`
+  );
+  divergencias.forEach((x, idx) => {
+    L.push(`divergencia_rsi_detalhe_${idx + 1}: ${detalheDiv(x, times, D)}`);
+  });
+  L.push(
+    `divergencia_rsi_provisoria: ${
+      divProvisorias.length
+        ? divProvisorias.map((x) => `${x.tipo}_PROVISORIA`).join(", ")
+        : "nenhuma"
+    }`
+  );
+  divProvisorias.forEach((x, idx) => {
+    L.push(
+      `divergencia_rsi_provisoria_detalhe_${idx + 1}: ${detalheDiv(x, times, D, live.time)}`
+    );
+  });
+
   L.push("");
   L.push(`${tf.campoEventos}: ${linhaEventos}`);
   L.push(`padrao_candles: ${padroes.length ? padroes.join(", ") : "nenhum"}`);
