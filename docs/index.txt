@@ -1,4 +1,4 @@
-timestamp: 2026-08-16 06:48 UTC
+timestamp: 2026-08-16 07:35 UTC
 fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)
 indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial
 nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
@@ -8,16 +8,16 @@ nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eve
 
 XMR/USD
 timeframe: diario
-preco_atual: 409.72
+preco_atual: 411.93
 candle_atual_data: 2026-08-16
 candle_atual_open: 410.65
 candle_atual_high: 413.18
 candle_atual_low: 407.77
-candle_atual_close_provisorio: 409.72
-candle_atual_var_pct_desde_abertura: -0.23
+candle_atual_close_provisorio: 411.93
+candle_atual_var_pct_desde_abertura: 0.31
 ema89: 355.63
 posicao_vs_ema89: acima
-distancia_ema89_pct: 15.21
+distancia_ema89_pct: 15.83
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 69.39
@@ -29,7 +29,7 @@ ultimo_fechamento_close: 409.97
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 69.22
+rsi14_provisorio: 69.98
 di_plus14_provisorio: 30.46
 di_minus14_provisorio: 13.37
 adx14_provisorio: 29.77
@@ -45,16 +45,16 @@ alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_domina
 
 XMR/BTC
 timeframe: diario
-preco_atual: 0.00652800
+preco_atual: 0.00654700
 candle_atual_data: 2026-08-16
 candle_atual_open: 0.00651700
 candle_atual_high: 0.00654900
 candle_atual_low: 0.00647600
-candle_atual_close_provisorio: 0.00652800
-candle_atual_var_pct_desde_abertura: 0.17
+candle_atual_close_provisorio: 0.00654700
+candle_atual_var_pct_desde_abertura: 0.46
 ema89: 0.00541801
 posicao_vs_ema89: acima
-distancia_ema89_pct: 20.49
+distancia_ema89_pct: 20.84
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 71.53
@@ -66,7 +66,7 @@ ultimo_fechamento_close: 0.00652200
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 71.63
+rsi14_provisorio: 71.96
 di_plus14_provisorio: 29.93
 di_minus14_provisorio: 8.90
 adx14_provisorio: 39.33
@@ -84,16 +84,16 @@ alertas_tecnicos: rompimento_confirmado_fraco_000644, rsi_acima_70, adx_subindo_
 
 XMR/USD
 timeframe: semanal
-preco_atual: 409.72
+preco_atual: 411.93
 candle_atual_data: 2026-08-13
 candle_atual_open: 392.31
 candle_atual_high: 413.18
 candle_atual_low: 389.01
-candle_atual_close_provisorio: 409.72
-candle_atual_var_pct_desde_abertura: 4.44
+candle_atual_close_provisorio: 411.93
+candle_atual_var_pct_desde_abertura: 5.00
 ema89: 320.04
 posicao_vs_ema89: acima
-distancia_ema89_pct: 28.02
+distancia_ema89_pct: 28.71
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi14_fechado: 56.42
@@ -105,7 +105,7 @@ ultimo_fechamento_close: 392.04
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi14_provisorio: 59.26
+rsi14_provisorio: 59.59
 di_plus14_provisorio: 27.18
 di_minus14_provisorio: 14.60
 adx14_provisorio: 22.16
@@ -121,16 +121,16 @@ alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_domina
 
 XMR/BTC
 timeframe: semanal
-preco_atual: 0.00652800
+preco_atual: 0.00654700
 candle_atual_data: 2026-08-13
 candle_atual_open: 0.00618900
 candle_atual_high: 0.00654900
 candle_atual_low: 0.00616000
-candle_atual_close_provisorio: 0.00652800
-candle_atual_var_pct_desde_abertura: 5.48
+candle_atual_close_provisorio: 0.00654700
+candle_atual_var_pct_desde_abertura: 5.78
 ema89: 0.00424892
 posicao_vs_ema89: acima
-distancia_ema89_pct: 53.64
+distancia_ema89_pct: 54.09
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi14_fechado: 69.67
@@ -142,7 +142,7 @@ ultimo_fechamento_close: 0.00618900
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi14_provisorio: 73.09
+rsi14_provisorio: 73.26
 di_plus14_provisorio: 29.55
 di_minus14_provisorio: 6.27
 adx14_provisorio: 51.10
