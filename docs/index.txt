@@ -1,4 +1,4 @@
-timestamp: 2026-08-16 22:26 UTC
+timestamp: 2026-08-16 23:02 UTC
 fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)
 indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial
 nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
@@ -8,16 +8,16 @@ nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eve
 
 XMR/USD
 timeframe: diario
-preco_atual: 410.43
+preco_atual: 412.19
 candle_atual_data: 2026-08-16
 candle_atual_open: 410.65
 candle_atual_high: 417.87
 candle_atual_low: 406.12
-candle_atual_close_provisorio: 410.43
-candle_atual_var_pct_desde_abertura: -0.05
+candle_atual_close_provisorio: 412.19
+candle_atual_var_pct_desde_abertura: 0.38
 ema89: 355.63
 posicao_vs_ema89: acima
-distancia_ema89_pct: 15.41
+distancia_ema89_pct: 15.91
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 69.39
@@ -29,32 +29,52 @@ ultimo_fechamento_close: 409.97
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 69.53
+rsi14_provisorio: 70.05
 di_plus14_provisorio: 31.73
 di_minus14_provisorio: 12.97
 adx14_provisorio: 29.98
 
-candle_fechado_1: data=2026-08-15 open=399.39 high=413.00 low=399.16 close=409.97 direcao=alta corpo=10.58 sombra_sup=3.03 sombra_inf=0.23
-candle_fechado_2: data=2026-08-14 open=393.16 high=401.81 low=389.01 close=399.42 direcao=alta corpo=6.26 sombra_sup=2.39 sombra_inf=4.15
-candle_fechado_3: data=2026-08-13 open=392.31 high=408.66 low=391.48 close=392.85 direcao=alta corpo=0.54 sombra_sup=15.81 sombra_inf=0.83
+candle_fechado_1: data=2026-08-15 open=399.39 high=413.00 low=399.16 close=409.97 direcao=alta corpo=10.58 sombra_sup=3.03 sombra_inf=0.23 volume=4664.9110
+candle_fechado_2: data=2026-08-14 open=393.16 high=401.81 low=389.01 close=399.42 direcao=alta corpo=6.26 sombra_sup=2.39 sombra_inf=4.15 volume=6048.0318
+candle_fechado_3: data=2026-08-13 open=392.31 high=408.66 low=391.48 close=392.85 direcao=alta corpo=0.54 sombra_sup=15.81 sombra_inf=0.83 volume=9453.7758
+
+
+volume_atual: 4771.2413
+volume_ultima_fechada: 4664.9110
+volume_media20: 7281.4850
+volume_vs_media_pct: -34.47
+volume_classificacao: abaixo_da_media
+volume_tendencia_3_fechadas: decrescente
+trades_vela_atual: 4784
+
+estrutura_preco: HH_HL
+estrutura_tendencia: alta
+estrutura_ultimo_topo: HH
+estrutura_ultimo_fundo: HL
+estrutura_eventos: novo_HH_apos_topo_mais_baixo
+pivos_topos_recentes: 2026-07-25=372.68 2026-07-30=367.84 2026-08-09=413.57
+pivos_fundos_recentes: 2026-07-28=333.97 2026-08-05=350.00 2026-08-12=374.00
+
+divergencia_rsi: nenhuma
+divergencia_rsi_provisoria: nenhuma
 
 eventos: nenhum cruzamento nesta vela
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_dominante
+alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_dominante, novo_HH_apos_topo_mais_baixo, rompimento_com_volume_fraco
 
 XMR/BTC
 timeframe: diario
-preco_atual: 0.00654200
+preco_atual: 0.00655900
 candle_atual_data: 2026-08-16
 candle_atual_open: 0.00651700
 candle_atual_high: 0.00661900
 candle_atual_low: 0.00647500
-candle_atual_close_provisorio: 0.00654200
-candle_atual_var_pct_desde_abertura: 0.38
+candle_atual_close_provisorio: 0.00655900
+candle_atual_var_pct_desde_abertura: 0.64
 ema89: 0.00541801
 posicao_vs_ema89: acima
-distancia_ema89_pct: 20.75
+distancia_ema89_pct: 21.06
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 71.53
@@ -66,14 +86,34 @@ ultimo_fechamento_close: 0.00652200
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 71.87
+rsi14_provisorio: 72.16
 di_plus14_provisorio: 31.42
 di_minus14_provisorio: 8.71
 adx14_provisorio: 39.51
 
-candle_fechado_1: data=2026-08-15 open=0.00634000 high=0.00654400 low=0.00634000 close=0.00652200 direcao=alta corpo=0.00018200 sombra_sup=0.00002200 sombra_inf=0.00000000
-candle_fechado_2: data=2026-08-14 open=0.00620600 high=0.00640000 low=0.00618100 close=0.00634000 direcao=alta corpo=0.00013400 sombra_sup=0.00006000 sombra_inf=0.00002500
-candle_fechado_3: data=2026-08-13 open=0.00618900 high=0.00643200 low=0.00616000 close=0.00620600 direcao=alta corpo=0.00001700 sombra_sup=0.00022600 sombra_inf=0.00002900
+candle_fechado_1: data=2026-08-15 open=0.00634000 high=0.00654400 low=0.00634000 close=0.00652200 direcao=alta corpo=0.00018200 sombra_sup=0.00002200 sombra_inf=0.00000000 volume=893.0675
+candle_fechado_2: data=2026-08-14 open=0.00620600 high=0.00640000 low=0.00618100 close=0.00634000 direcao=alta corpo=0.00013400 sombra_sup=0.00006000 sombra_inf=0.00002500 volume=915.0787
+candle_fechado_3: data=2026-08-13 open=0.00618900 high=0.00643200 low=0.00616000 close=0.00620600 direcao=alta corpo=0.00001700 sombra_sup=0.00022600 sombra_inf=0.00002900 volume=1508.6364
+
+
+volume_atual: 745.3378
+volume_ultima_fechada: 893.0675
+volume_media20: 643.2904
+volume_vs_media_pct: 15.86
+volume_classificacao: normal
+volume_tendencia_3_fechadas: decrescente
+trades_vela_atual: 3310
+
+estrutura_preco: HH_HL
+estrutura_tendencia: alta
+estrutura_ultimo_topo: HH
+estrutura_ultimo_fundo: HL
+estrutura_eventos: nenhum
+pivos_topos_recentes: 2026-07-25=0.00580500 2026-08-01=0.00583500 2026-08-09=0.00635000
+pivos_fundos_recentes: 2026-07-28=0.00526200 2026-08-05=0.00542000 2026-08-12=0.00589600
+
+divergencia_rsi: nenhuma
+divergencia_rsi_provisoria: nenhuma
 
 eventos: RSI entrou em sobrecompra (>=70)
 padrao_candles: nenhum
@@ -84,16 +124,16 @@ alertas_tecnicos: rompimento_confirmado_fraco_000644, rsi_acima_70, adx_subindo_
 
 XMR/USD
 timeframe: semanal
-preco_atual: 410.43
+preco_atual: 412.19
 candle_atual_data: 2026-08-13
 candle_atual_open: 392.31
 candle_atual_high: 417.87
 candle_atual_low: 389.01
-candle_atual_close_provisorio: 410.43
-candle_atual_var_pct_desde_abertura: 4.62
+candle_atual_close_provisorio: 412.19
+candle_atual_var_pct_desde_abertura: 5.07
 ema89: 320.04
 posicao_vs_ema89: acima
-distancia_ema89_pct: 28.25
+distancia_ema89_pct: 28.79
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi14_fechado: 56.42
@@ -105,32 +145,52 @@ ultimo_fechamento_close: 392.04
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi14_provisorio: 59.37
+rsi14_provisorio: 59.63
 di_plus14_provisorio: 27.61
 di_minus14_provisorio: 14.50
 adx14_provisorio: 22.23
 
-candle_fechado_1: data=2026-08-06 open=366.06 high=413.57 low=358.80 close=392.04 direcao=alta corpo=25.98 sombra_sup=21.53 sombra_inf=7.26
-candle_fechado_2: data=2026-07-30 open=353.13 high=367.84 low=346.74 close=365.72 direcao=alta corpo=12.59 sombra_sup=2.12 sombra_inf=6.39
-candle_fechado_3: data=2026-07-23 open=352.30 high=372.68 low=333.97 close=353.32 direcao=alta corpo=1.02 sombra_sup=19.36 sombra_inf=18.33
+candle_fechado_1: data=2026-08-06 open=366.06 high=413.57 low=358.80 close=392.04 direcao=alta corpo=25.98 sombra_sup=21.53 sombra_inf=7.26 volume=54933.5482
+candle_fechado_2: data=2026-07-30 open=353.13 high=367.84 low=346.74 close=365.72 direcao=alta corpo=12.59 sombra_sup=2.12 sombra_inf=6.39 volume=48215.0021
+candle_fechado_3: data=2026-07-23 open=352.30 high=372.68 low=333.97 close=353.32 direcao=alta corpo=1.02 sombra_sup=19.36 sombra_inf=18.33 volume=52580.3092
+
+
+volume_atual: 24937.9600
+volume_ultima_fechada: 54933.5482
+volume_media20: 66039.0776
+volume_vs_media_pct: -62.24
+volume_classificacao: contracao_forte
+volume_tendencia_3_fechadas: irregular
+trades_vela_atual: 20327
+
+estrutura_preco: LH_HL
+estrutura_tendencia: lateral_indefinida
+estrutura_ultimo_topo: LH
+estrutura_ultimo_fundo: HL
+estrutura_eventos: novo_HL_apos_fundo_mais_baixo, topo_mais_baixo_apos_HH
+pivos_topos_recentes: 2026-03-12=382.12 2026-04-30=437.58 2026-06-11=426.32
+pivos_fundos_recentes: 2026-05-07=358.34 2026-06-04=292.00 2026-06-25=298.95
+
+divergencia_rsi: nenhuma
+divergencia_rsi_provisoria: nenhuma
 
 eventos_semanal: nenhum cruzamento nesta vela
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_dominante
+alertas_tecnicos: rompimento_intradiario_409_410, adx_subindo_com_di_plus_dominante, novo_HL_apos_fundo_mais_baixo, topo_mais_baixo_apos_HH, rompimento_com_volume_fraco
 
 XMR/BTC
 timeframe: semanal
-preco_atual: 0.00654200
+preco_atual: 0.00655900
 candle_atual_data: 2026-08-13
 candle_atual_open: 0.00618900
 candle_atual_high: 0.00661900
 candle_atual_low: 0.00616000
-candle_atual_close_provisorio: 0.00654200
-candle_atual_var_pct_desde_abertura: 5.70
+candle_atual_close_provisorio: 0.00655900
+candle_atual_var_pct_desde_abertura: 5.98
 ema89: 0.00424892
 posicao_vs_ema89: acima
-distancia_ema89_pct: 53.97
+distancia_ema89_pct: 54.37
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi14_fechado: 69.67
@@ -142,19 +202,40 @@ ultimo_fechamento_close: 0.00618900
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi14_provisorio: 73.21
+rsi14_provisorio: 73.36
 di_plus14_provisorio: 30.12
 di_minus14_provisorio: 6.22
 adx14_provisorio: 51.16
 
-candle_fechado_1: data=2026-08-06 open=0.00567000 high=0.00635000 low=0.00557500 close=0.00618900 direcao=alta corpo=0.00051900 sombra_sup=0.00016100 sombra_inf=0.00009500
-candle_fechado_2: data=2026-07-30 open=0.00554100 high=0.00583500 low=0.00542000 close=0.00567300 direcao=alta corpo=0.00013200 sombra_sup=0.00016200 sombra_inf=0.00012100
-candle_fechado_3: data=2026-07-23 open=0.00532900 high=0.00580500 low=0.00526200 close=0.00555100 direcao=alta corpo=0.00022200 sombra_sup=0.00025400 sombra_inf=0.00006700
+candle_fechado_1: data=2026-08-06 open=0.00567000 high=0.00635000 low=0.00557500 close=0.00618900 direcao=alta corpo=0.00051900 sombra_sup=0.00016100 sombra_inf=0.00009500 volume=5558.5334
+candle_fechado_2: data=2026-07-30 open=0.00554100 high=0.00583500 low=0.00542000 close=0.00567300 direcao=alta corpo=0.00013200 sombra_sup=0.00016200 sombra_inf=0.00012100 volume=2745.5149
+candle_fechado_3: data=2026-07-23 open=0.00532900 high=0.00580500 low=0.00526200 close=0.00555100 direcao=alta corpo=0.00022200 sombra_sup=0.00025400 sombra_inf=0.00006700 volume=6082.2722
+
+
+volume_atual: 4062.1204
+volume_ultima_fechada: 5558.5334
+volume_media20: 18710.4897
+volume_vs_media_pct: -78.29
+volume_classificacao: contracao_forte
+volume_tendencia_3_fechadas: irregular
+trades_vela_atual: 15978
+
+estrutura_preco: HH_HL
+estrutura_tendencia: alta
+estrutura_ultimo_topo: HH
+estrutura_ultimo_fundo: HL
+estrutura_eventos: novo_HH_apos_topo_mais_baixo
+pivos_topos_recentes: 2026-03-19=0.00535000 2026-04-30=0.00530000 2026-06-11=0.00670000
+pivos_fundos_recentes: 2026-04-16=0.00446700 2026-05-28=0.00474600 2026-07-09=0.00492600
+
+divergencia_rsi: bullish_oculta_confirmada
+divergencia_rsi_detalhe_1: tipo=bullish_oculta lado=fundo status=confirmada pivo_anterior=2026-05-28 preco_anterior=0.00474600 rsi_anterior=64.61 pivo_atual=2026-07-09 preco_atual=0.00492600 rsi_atual=53.33
+divergencia_rsi_provisoria: nenhuma
 
 eventos_semanal: nenhum cruzamento nesta vela
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: rompimento_intradiario_000644, adx_subindo_com_di_plus_dominante
+alertas_tecnicos: rompimento_intradiario_000644, adx_subindo_com_di_plus_dominante, divergencia_bullish_oculta_confirmada, novo_HH_apos_topo_mais_baixo, rompimento_com_volume_fraco
 
 GATILHOS ATIVOS: btc_rompe_00644
 
