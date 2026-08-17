@@ -1236,6 +1236,100 @@ function sinteses(ctx) {
   };
 }
 
+
+// ------------------------------------------------------------
+// Endpoint estatico JSON
+//
+// Construido a partir do TEXTO ja gerado, e nao recalculando nada.
+// Assim e' impossivel o JSON divergir da pagina: sao a mesma fonte.
+// Nenhum indicador novo, nenhum campo renomeado.
+// ------------------------------------------------------------
+
+// Campos cujo valor e' uma lista separada por virgula.
+const CAMPOS_LISTA = new Set([
+  "alertas_tecnicos",
+  "padrao_candles",
+  "padrao_em_formacao",
+  "padroes_enfraquecimento",
+  "estrutura_eventos",
+  "divergencia_rsi",
+  "divergencia_rsi_provisoria",
+  "niveis_mudancas_nesta_vela",
+  "confluencia_entrada",
+  "confluencia_pullback",
+  "riscos_tecnicos",
+  "deterioracao_tendencia",
+  "padrao_trio_evidencias_fraqueza",
+]);
+
+const VAZIOS = new Set(["nenhum", "nenhuma", "nenhuma_mudanca", "--"]);
+
+function valorJSON(campo, bruto) {
+  const v = bruto.trim();
+  if (v === "--") return null;
+  if (CAMPOS_LISTA.has(campo)) {
+    if (VAZIOS.has(v)) return [];
+    return v.split(",").map((x) => x.trim()).filter(Boolean);
+  }
+  if (/^-?\d+(\.\d+)?$/.test(v)) return Number(v);
+  return v;
+}
+
+export function relatorioParaJSON(texto) {
+  const out = {
+    cabecalho: {},
+    diario: {},
+    semanal: {},
+    gatilhos_ativos: [],
+  };
+  let tfAtual = null;
+  let parAtual = null;
+
+  for (const linhaBruta of texto.split("\n")) {
+    const linha = linhaBruta.trim();
+    if (!linha || linha.startsWith("#")) continue;
+
+    if (linha.startsWith("==========")) {
+      tfAtual = /SEMANAL/.test(linha) ? "semanal" : "diario";
+      parAtual = null;
+      continue;
+    }
+
+    if (linha === "fim do relatorio") continue;
+
+    if (linha.startsWith("GATILHOS ATIVOS:")) {
+      const v = linha.slice("GATILHOS ATIVOS:".length).trim();
+      out.gatilhos_ativos = VAZIOS.has(v)
+        ? []
+        : v.split(",").map((x) => x.trim()).filter(Boolean);
+      continue;
+    }
+
+    if (linha === "XMR/USD" || linha === "XMR/BTC") {
+      parAtual = linha;
+      if (tfAtual) out[tfAtual][parAtual] = {};
+      continue;
+    }
+
+    if (linha.startsWith("FALHA:")) {
+      const msg = linha.slice("FALHA:".length).trim();
+      if (tfAtual && parAtual) out[tfAtual][parAtual].falha = msg;
+      continue;
+    }
+
+    const sep = linha.indexOf(": ");
+    if (sep === -1) continue;
+    const campo = linha.slice(0, sep).trim();
+    const valor = valorJSON(campo, linha.slice(sep + 2));
+
+    if (tfAtual && parAtual) out[tfAtual][parAtual][campo] = valor;
+    else out.cabecalho[campo] = valor;
+  }
+
+  out.timestamp = out.cabecalho.timestamp || null;
+  return out;
+}
+
 // ------------------------------------------------------------
 // Bloco de texto por par
 // ------------------------------------------------------------
@@ -1739,6 +1833,10 @@ if (process.argv[1] && process.argv[1].endsWith("monitor.mjs")) {
 
   writeFileSync("docs/index.html", toHTML(texto));
   writeFileSync("docs/index.txt", texto + "\n");
+  writeFileSync(
+    "docs/relatorio.json",
+    JSON.stringify(relatorioParaJSON(texto), null, 2) + "\n"
+  );
   writeFileSync("docs/.nojekyll", "");
   writeFileSync(
     "docs/estado.json",
