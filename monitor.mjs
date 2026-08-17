@@ -399,6 +399,162 @@ function padraoEmFormacao(v, live, mediana) {
   return fora;
 }
 
+
+// ------------------------------------------------------------
+// Contexto e degradacoes do padrao de tres velas
+//
+// Tres Soldados Brancos e' um padrao de REVERSAO na definicao de
+// Nison: a forma so tem o significado original quando aparece depois
+// de queda ou em regiao de preco deprimida. A mesma geometria no meio
+// de uma alta madura e' continuacao — ou exaustao. Por isso a forma e
+// o contexto sao reportados em campos separados.
+// ------------------------------------------------------------
+
+const CTX_LOOKBACK = 10;
+
+function contextoAntesDoTrio(closes, idxReferencia, lookback = CTX_LOOKBACK) {
+  const fim = idxReferencia;
+  const ini = fim - lookback;
+  if (ini < 0 || fim < 0 || fim >= closes.length) return "indefinido";
+  const janela = closes.slice(ini, fim + 1);
+  const min = Math.min(...janela);
+  const max = Math.max(...janela);
+  const amplitude = max - min;
+  if (!(amplitude > 0)) return "lateral";
+
+  // Inclinacao por media de metades: menos sensivel a ruido de uma
+  // vela isolada do que comparar apenas os dois extremos da janela.
+  const meio = Math.floor(janela.length / 2);
+  const media = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+  const m1 = media(janela.slice(0, meio));
+  const m2 = media(janela.slice(meio));
+  let inclinacao = "lateral";
+  if (m2 < m1 * 0.99) inclinacao = "queda";
+  else if (m2 > m1 * 1.01) inclinacao = "alta";
+
+  // Posicao usa a media das 3 ultimas, nao um fechamento solto.
+  const ref = media(janela.slice(-3));
+  const posicao = (ref - min) / amplitude;
+
+  if (inclinacao === "queda" && posicao <= 0.4) return "queda_regiao_baixa";
+  if (inclinacao === "queda") return "queda";
+  if (posicao <= 0.35) return "regiao_baixa";
+  if (inclinacao === "alta" && posicao >= 0.6) return "alta_regiao_alta";
+  if (inclinacao === "alta") return "alta";
+  if (posicao >= 0.65) return "regiao_alta";
+  return "lateral";
+}
+
+// Evidencias de que a alta esta perdendo forca. Estar em regiao alta
+// NAO e' uma delas: posicao no range diz onde o preco esta, nao que a
+// pressao compradora acabou.
+function evidenciasFraqueza(trio, enfraquecimento, divergencias, estruturaEventos) {
+  const ev = [];
+  for (const e of enfraquecimento || []) ev.push(e);
+
+  for (const d of divergencias || []) {
+    if (d.tipo.startsWith("bearish")) ev.push(`divergencia_${d.tipo}`);
+  }
+
+  if (trio && trio.length >= 3) {
+    const [c3, c2, c1] = [trio[0], trio[1], trio[2]];
+    if (c2.sombraSup > c1.sombraSup && c3.sombraSup > c2.sombraSup)
+      ev.push("sombras_superiores_crescentes");
+  }
+
+  for (const e of estruturaEventos || []) {
+    if (e === "perda_estrutura_alta_novo_LL" || e === "topo_mais_baixo_apos_HH")
+      ev.push(`estrutura_${e}`);
+  }
+
+  return ev;
+}
+
+function classificarContextoSoldados(ctx, fraqueza = []) {
+  if (ctx.includes("queda") || ctx.includes("regiao_baixa"))
+    return "reversao_valida";
+  if (ctx.includes("alta"))
+    return fraqueza.length ? "exaustao_possivel" : "continuacao";
+  if (ctx === "lateral") return "lateral_significado_fraco";
+  return "indefinido";
+}
+
+function classificarContextoCorvosComFraqueza(ctx, forca = []) {
+  if (ctx.includes("alta")) return "reversao_valida";
+  if (ctx.includes("queda") || ctx.includes("regiao_baixa"))
+    return forca.length ? "exaustao_possivel" : "continuacao";
+  if (ctx === "lateral") return "lateral_significado_fraco";
+  return "indefinido";
+}
+
+// A estrutura HH/HL/LH/LL CONFIRMA ou CONTRADIZ a leitura da janela de
+// 10 velas. Nao substitui: os dois campos convivem no relatorio.
+function confirmacaoEstrutural(ctx, tendencia) {
+  if (!tendencia || tendencia === "lateral_indefinida") return "neutro";
+  const ctxBaixa = ctx.includes("queda") || ctx.includes("regiao_baixa");
+  const ctxAlta = ctx.includes("alta");
+  if (ctxBaixa && tendencia === "baixa") return "confirma";
+  if (ctxAlta && tendencia === "alta") return "confirma";
+  if (ctxBaixa && tendencia === "alta") return "contradiz";
+  if (ctxAlta && tendencia === "baixa") return "contradiz";
+  return "neutro";
+}
+
+
+
+// Por que o trio NAO virou padrao. So faz sentido quando a sequencia
+// basica (tres altas com fechamentos progressivos) ja existe.
+function diagnosticoSoldados(v, mediana) {
+  if (v.length < 3) return "velas_insuficientes";
+  const [c3, c2, c1] = [v[0], v[1], v[2]];
+  const seq = [c1, c2, c3];
+  if (!seq.every((c) => c.alta)) return "nao_aplicavel";
+  if (!(c2.close > c1.close && c3.close > c2.close))
+    return "fechamentos_nao_progressivos";
+
+  const falhas = [];
+  seq.forEach((c, idx) => {
+    const nome = `c${idx + 1}`;
+    if (!(c.amplitude > 0) || !(c.corpo > 0)) falhas.push(`${nome}:sem_corpo`);
+    else {
+      if (c.corpo / c.amplitude < CORPO_RANGE_MIN)
+        falhas.push(`${nome}:corpo_range_${(c.corpo / c.amplitude).toFixed(2)}`);
+      if ((c.close - c.low) / c.amplitude < FECHA_PERTO_MAX)
+        falhas.push(
+          `${nome}:fecha_longe_da_maxima_${((c.close - c.low) / c.amplitude).toFixed(2)}`
+        );
+      if (c.sombraSup > SOMBRA_SUP_MAX * c.corpo)
+        falhas.push(`${nome}:sombra_sup_${(c.sombraSup / c.corpo).toFixed(2)}x_corpo`);
+      if (mediana && mediana > 0 && c.corpo < CORPO_VS_MEDIANA * mediana)
+        falhas.push(`${nome}:corpo_pequeno_${(c.corpo / mediana).toFixed(2)}x_mediana`);
+    }
+  });
+  if (!abreNoCorpoAnterior(c2, c1, true)) falhas.push("c2:abre_fora_do_corpo_anterior");
+  if (!abreNoCorpoAnterior(c3, c2, true)) falhas.push("c3:abre_fora_do_corpo_anterior");
+
+  return falhas.length ? falhas.join(" ") : "nenhuma";
+}
+
+// Advance block e stalled pattern: a forma aparece, mas degradando.
+// Sao sinais de ENFRAQUECIMENTO da alta, nao de forca.
+function detectarEnfraquecimento(v) {
+  const out = [];
+  if (v.length < 3) return out;
+  const [c3, c2, c1] = [v[0], v[1], v[2]];
+  const seq = [c1, c2, c3];
+  if (!seq.every((c) => c.alta && c.corpo > 0)) return out;
+  if (!(c2.close > c1.close && c3.close > c2.close)) return out;
+
+  const corposCaindo = c2.corpo < c1.corpo && c3.corpo < c2.corpo;
+  const sombrasCrescendo = c2.sombraSup > c1.sombraSup && c3.sombraSup > c2.sombraSup;
+  if (corposCaindo && sombrasCrescendo) out.push("advance_block");
+
+  if (c3.corpo < 0.5 * c2.corpo && c3.sombraSup > c3.corpo)
+    out.push("stalled_pattern");
+
+  return out;
+}
+
 // ------------------------------------------------------------
 // Pivos, estrutura de mercado, divergencias de RSI e volume
 //
@@ -742,6 +898,19 @@ function alertasTecnicos(cfg, d, ind) {
     a.push("pullback_com_volume_decrescente");
   }
 
+  // --- degradacoes do trio: enfraquecimento, nao forca ---
+  for (const e of ind.enfraquecimento || []) a.push(e);
+  if (ind.padroes && ind.padroes.includes("tres_soldados_brancos")) {
+    if (ind.contextoTrio === "reversao_valida")
+      a.push("tres_soldados_em_contexto_de_reversao");
+    if (ind.contextoTrio === "continuacao")
+      a.push("tres_soldados_em_contexto_de_continuacao");
+    // Exaustao exige evidencia de enfraquecimento, nunca so a posicao
+    // do preco no range.
+    if (ind.contextoTrio === "exaustao_possivel")
+      a.push("tres_soldados_com_sinais_de_exaustao");
+  }
+
   // --- confluencia: so quando varios elementos apontam junto ---
   const temHL = (ind.estruturaEventos || []).some((e) => e.includes("HL"));
   const pullbackBullish =
@@ -825,6 +994,7 @@ function readPair(cfg, d, tf) {
   const padroes = detectarPadroes(ult, medCorpo);
   const formacao = padraoEmFormacao(ult, live, medCorpo);
 
+
   // --- pivos, estrutura, divergencias e volume (SO velas fechadas) ---
   const pivos = acharPivos(highs, lows);
   const estrutura = classificarEstrutura(highs, lows, pivos);
@@ -840,6 +1010,35 @@ function readPair(cfg, d, tf) {
   );
   const vol = analisarVolume(d.volumes || [], live.volume);
 
+  // contexto do trio: o de velas fechadas comeca em closes.length-3,
+  // entao a referencia e' a vela imediatamente anterior a ele.
+  const ctxFechado = contextoAntesDoTrio(closes, closes.length - 4);
+  const ctxFormacao = contextoAntesDoTrio(closes, closes.length - 3);
+  const enfraquecimento = detectarEnfraquecimento(ult);
+  const diagSoldados = diagnosticoSoldados(ult, medCorpo);
+
+  const fraqueza = evidenciasFraqueza(
+    ult,
+    enfraquecimento,
+    divergencias,
+    estruturaEventos
+  );
+
+  let ctxSoldados = "nao_aplicavel";
+  let ctxUsado = ctxFechado;
+  if (padroes.includes("tres_soldados_brancos"))
+    ctxSoldados = classificarContextoSoldados(ctxFechado, fraqueza);
+  else if (padroes.includes("tres_corvos_negros"))
+    ctxSoldados = classificarContextoCorvosComFraqueza(ctxFechado, fraqueza);
+  else if (formacao.includes("possiveis_tres_soldados_brancos")) {
+    ctxUsado = ctxFormacao;
+    ctxSoldados = classificarContextoSoldados(ctxFormacao, fraqueza);
+  } else if (formacao.includes("possiveis_tres_corvos_negros")) {
+    ctxUsado = ctxFormacao;
+    ctxSoldados = classificarContextoCorvosComFraqueza(ctxFormacao, fraqueza);
+  }
+  const confEstrutural = confirmacaoEstrutural(ctxUsado, estrutura.tendencia);
+
   // --- alertas tecnicos (linha nova) ---
   const alertas = alertasTecnicos(cfg, d, {
     rsi: rsi[i],
@@ -853,6 +1052,9 @@ function readPair(cfg, d, tf) {
     estruturaEventos,
     estruturaTendencia: estrutura.tendencia,
     volume: vol,
+    enfraquecimento,
+    padroes,
+    contextoTrio: ctxSoldados,
   });
 
   const emaAtual = ema[i];
@@ -953,6 +1155,18 @@ function readPair(cfg, d, tf) {
   L.push("");
   L.push(`${tf.campoEventos}: ${linhaEventos}`);
   L.push(`mediana_corpo_20: ${num(medCorpo, Math.max(D, 6))}`);
+  L.push(`contexto_antes_do_trio: ${ctxFechado}`);
+  L.push(`padrao_trio_contexto: ${ctxSoldados}`);
+  L.push(`padrao_trio_confirmacao_estrutural: ${confEstrutural}`);
+  L.push(
+    `padrao_trio_evidencias_fraqueza: ${fraqueza.length ? fraqueza.join(", ") : "nenhuma"}`
+  );
+  L.push(
+    `padroes_enfraquecimento: ${
+      enfraquecimento.length ? enfraquecimento.join(", ") : "nenhum"
+    }`
+  );
+  L.push(`tres_soldados_diagnostico: ${diagSoldados}`);
   L.push(`padrao_candles: ${padroes.length ? padroes.join(", ") : "nenhum"}`);
   L.push(
     `padrao_em_formacao: ${formacao.length ? formacao.join(", ") : "nenhum"}`
