@@ -18,6 +18,8 @@ const TIMEFRAMES = [
     key: "diario",
     titulo: "GRAFICO DIARIO",
     interval: 1440,
+    segundos: 86400,
+    retestMaxCandles: 30,
     // A automacao externa le a linha "eventos:" do bloco diario.
     // Por isso o semanal usa um nome diferente, para nunca colidir.
     campoEventos: "eventos",
@@ -26,6 +28,8 @@ const TIMEFRAMES = [
     key: "semanal",
     titulo: "GRAFICO SEMANAL",
     interval: 10080,
+    segundos: 604800,
+    retestMaxCandles: 8,
     campoEventos: "eventos_semanal",
   },
 ];
@@ -880,11 +884,16 @@ function alertasTecnicos(cfg, d, ind) {
   // --- estrutura de mercado ---
   for (const ev of ind.estruturaEventos || []) a.push(ev);
 
+  // --- mudancas de estado de nivel (so quando MUDA) ---
+  for (const m of ind.mudancasNivel || []) a.push(m);
+
   // --- volume como CONFIRMACAO, nunca sozinho ---
   const vol = ind.volume;
   const houveRompimento = a.some((x) => x.startsWith("rompimento_"));
   const houvePerda = a.some((x) => x.startsWith("perda_suporte_") || x.startsWith("toque_suporte_"));
-  if (vol && vol.vsMediaPct !== null) {
+  // Vela muito no inicio do periodo: volume ainda nao e' comparavel
+  // com a media de velas completas. Nada de forte/fraco aqui.
+  if (vol && vol.vsMediaPct !== null && !ind.volumeInconclusivo) {
     if (houveRompimento && vol.vsMediaPct >= 20) a.push("rompimento_com_volume_acima_da_media");
     if (houveRompimento && vol.vsMediaPct <= -20) a.push("rompimento_com_volume_fraco");
     if (houvePerda && vol.vsMediaPct >= 50) a.push("queda_com_expansao_de_volume");
@@ -924,6 +933,309 @@ function alertasTecnicos(cfg, d, ind) {
   return a;
 }
 
+
+// ------------------------------------------------------------
+// Maquina de estados de rompimento / reteste (persistida)
+//
+// Um registro por par + timeframe + nivel. Avaliada sempre sobre a
+// ULTIMA VELA FECHADA, nunca sobre a vela em formacao — o estado nao
+// pode oscilar dentro do dia.
+//
+// Estados: rompimento_candidato -> rompido -> em_reteste
+//          -> reteste_confirmado -> rompimento_falhou -> recuperado
+//
+// DUAS SEVERIDADES, DOIS NOMES. "rompimento_candidato" usa o criterio
+// sensivel (ponto medio do corpo alem do nivel) e serve apenas para
+// armar a maquina, de modo que um reteste no candle seguinte nao seja
+// perdido. "rompido" so e' atribuido quando o criterio RIGOROSO —
+// o mesmo de rompimento_confirmado em alertas_tecnicos, corpo inteiro
+// alem do nivel — for satisfeito. Assim o relatorio nunca diz
+// "sem rompimento confirmado" e "estado: rompido" ao mesmo tempo.
+// ------------------------------------------------------------
+
+const RETEST_TOLERANCE_PCT = 0.5; // largura da zona em torno do nivel
+const RETEST_RESET_DISTANCE_PCT = 3; // afastamento que encerra o ciclo
+const HISTORICO_MAX = 5;
+
+export function chaveNivel(parKey, tfKey, nivel) {
+  return `${parKey}|${tfKey}|${nivel}`;
+}
+
+// Devolve o novo registro (ou null para descartar).
+export function atualizarEstadoNivel(anterior, ctx) {
+  const { nivel, direcao, vela, tolPct, resetPct, maxCandles, segundos } = ctx;
+  const tol = Math.abs(nivel) * (tolPct / 100);
+  const alta = direcao === "alta";
+
+  const acima = vela.close > nivel + tol;
+  const abaixo = vela.close < nivel - tol;
+  const naZona = !acima && !abaixo;
+  const penetrou = alta ? vela.low < nivel : vela.high > nivel;
+
+  // lado "valido" = lado para onde o rompimento apontou
+  const ladoValido = alta ? acima : abaixo;
+  const ladoContrario = alta ? abaixo : acima;
+
+  const corpoBaixo = Math.min(vela.open, vela.close);
+  const corpoAlto = Math.max(vela.open, vela.close);
+  const meioCorpo = (vela.open + vela.close) / 2;
+
+  // Criterio RIGOROSO: corpo inteiro alem do nivel. Identico ao usado
+  // por rompimento_confirmado em alertas_tecnicos.
+  const rompimentoRigoroso = alta
+    ? vela.close > nivel && corpoBaixo > nivel
+    : vela.close < nivel && corpoAlto < nivel;
+
+  // Criterio SENSIVEL: ponto medio do corpo alem do nivel. So arma a
+  // maquina — nunca produz o rotulo "rompido" sozinho.
+  const rompimentoCandidato = alta
+    ? vela.close > nivel && meioCorpo > nivel
+    : vela.close < nivel && meioCorpo < nivel;
+
+  if (!anterior) {
+    if (!rompimentoCandidato) return null;
+    return {
+      estado: rompimentoRigoroso ? "rompido" : "rompimento_candidato",
+      direcao,
+      precoRompimento: vela.close,
+      dataRompimento: vela.time,
+      ultimoContato: vela.time,
+      atualizado: vela.time,
+      historico: [],
+    };
+  }
+
+  const e = { ...anterior, historico: [...(anterior.historico || [])] };
+  if (e.estado === "arquivado") return e;
+
+  // descarte operacional por inatividade
+  const velasSemContato = (vela.time - (e.ultimoContato || e.dataRompimento)) / segundos;
+  if (velasSemContato > maxCandles) {
+    if (!e.historico.length) return null;
+    return { estado: "arquivado", historico: e.historico };
+  }
+
+  e.atualizado = vela.time;
+  if (naZona || penetrou) e.ultimoContato = vela.time;
+
+  const anota = (novo) => {
+    if (e.estado !== novo) {
+      e.historico.push(`${novo}@${fmtDia(vela.time)}`);
+      if (e.historico.length > HISTORICO_MAX) e.historico.shift();
+    }
+    e.estado = novo;
+  };
+
+  switch (e.estado) {
+    // Estagio preliminar: promove se o criterio rigoroso aparecer, mas
+    // ja aceita evoluir para reteste — um reteste bem-sucedido e'
+    // confirmacao estrutural por si mesmo.
+    case "rompimento_candidato":
+      // Os rotulos de reteste sao mais especificos que a promocao e
+      // vem primeiro: uma vela que volta ao nivel conta como reteste,
+      // nao como simples confirmacao do rompimento.
+      if (ladoContrario) anota("rompimento_falhou");
+      else if (naZona) anota("em_reteste");
+      else if (ladoValido && penetrou) anota("reteste_confirmado");
+      else if (rompimentoRigoroso) anota("rompido");
+      break;
+    case "rompido":
+    case "reteste_confirmado":
+    case "recuperado":
+      if (ladoContrario) anota("rompimento_falhou");
+      else if (naZona) anota("em_reteste");
+      else if (ladoValido && penetrou) anota("reteste_confirmado");
+      break;
+    case "em_reteste":
+      if (ladoContrario) anota("rompimento_falhou");
+      else if (ladoValido) anota("reteste_confirmado");
+      break;
+    case "rompimento_falhou":
+      if (ladoValido) anota("recuperado");
+      break;
+  }
+
+  // ciclo encerrado por afastamento: volta ao estado operacional de
+  // rompido, sem apagar o historico do que ja aconteceu.
+  const distPct = (Math.abs(vela.close - nivel) / Math.abs(nivel)) * 100;
+  if (
+    distPct > resetPct &&
+    (e.estado === "reteste_confirmado" || e.estado === "recuperado")
+  ) {
+    e.estado = "rompido";
+    e.afastado = true;
+  } else if (distPct <= resetPct) {
+    e.afastado = false;
+  }
+
+  return e;
+}
+
+function niveisDoPar(cfg) {
+  const out = [];
+  const nv = cfg.niveis;
+  if (nv.resistencia !== null && nv.resistencia !== undefined)
+    out.push({ nivel: nv.resistencia, direcao: "alta", label: nv.resistenciaLabel });
+  if (nv.suporte !== null && nv.suporte !== undefined)
+    out.push({ nivel: nv.suporte, direcao: "baixa", label: nv.suporteLabel });
+  return out;
+}
+
+// ------------------------------------------------------------
+// Volume parcial: fracao do periodo ja decorrida
+// ------------------------------------------------------------
+
+const FRACAO_INCONCLUSIVA = 0.25;
+
+function fracaoPeriodo(live, segundos, agora = Math.floor(Date.now() / 1000)) {
+  const f = (agora - live.time) / segundos;
+  if (!isFinite(f)) return null;
+  return Math.max(0, Math.min(1, f));
+}
+
+// Comparacao semanal justa: soma os dias JA FECHADOS da semana atual e
+// compara com a soma dos mesmos N primeiros dias das semanas anteriores.
+// Nao e' projecao — sao dias completos contra dias completos.
+function volumeSemanaEquivalente(dadosSemanal, dadosDiario, semanasAtras = 8) {
+  if (!dadosDiario || !dadosDiario.times || !dadosDiario.volumes) return null;
+  const inicioSemana = dadosSemanal.live.time;
+  const SEMANA = 604800;
+
+  const diasAtuais = [];
+  for (let i = 0; i < dadosDiario.times.length; i++) {
+    const t = dadosDiario.times[i];
+    // limita a janela a UMA semana: protege contra desalinhamento entre
+    // a grade diaria e a semanal devolvidas pela Kraken.
+    if (t >= inicioSemana && t < inicioSemana + SEMANA)
+      diasAtuais.push(dadosDiario.volumes[i]);
+  }
+  const k = diasAtuais.length;
+  if (k < 1) return null;
+  const somaAtual = diasAtuais.reduce((a, b) => a + b, 0);
+
+  const inicios = dadosSemanal.times.slice(-semanasAtras);
+  const somas = [];
+  for (const ini of inicios) {
+    const dias = [];
+    for (let i = 0; i < dadosDiario.times.length; i++) {
+      const t = dadosDiario.times[i];
+      if (t >= ini && t < ini + SEMANA) dias.push(dadosDiario.volumes[i]);
+    }
+    if (dias.length >= k) somas.push(dias.slice(0, k).reduce((a, b) => a + b, 0));
+  }
+  if (!somas.length) return null;
+  const media = somas.reduce((a, b) => a + b, 0) / somas.length;
+  return {
+    dias: k,
+    somaAtual,
+    mediaEquivalente: media,
+    vsPct: media === 0 ? null : ((somaAtual - media) / media) * 100,
+    semanasComparadas: somas.length,
+  };
+}
+
+// ------------------------------------------------------------
+// Metricas normalizadas de vela (reaproveitam anatomia)
+// ------------------------------------------------------------
+
+function metricasVela(v) {
+  if (!v || !(v.amplitude > 0)) return null;
+  return {
+    corpoPctRange: (v.corpo / v.amplitude) * 100,
+    sombraSupPctRange: (v.sombraSup / v.amplitude) * 100,
+    sombraInfPctRange: (v.sombraInf / v.amplitude) * 100,
+    sombraSupVsCorpo: v.corpo > 0 ? v.sombraSup / v.corpo : null,
+    sombraInfVsCorpo: v.corpo > 0 ? v.sombraInf / v.corpo : null,
+  };
+}
+
+
+// ------------------------------------------------------------
+// Sinteses descritivas
+//
+// Estes quatro campos NAO produzem sinal novo: apenas reunem, num
+// lugar so, itens que ja aparecem em outros campos do relatorio.
+// Sao descritivos, nunca prescritivos — nao dizem comprar nem vender.
+// ------------------------------------------------------------
+
+function sinteses(ctx) {
+  const {
+    alertas,
+    estrutura,
+    estruturaEventos,
+    divergencias,
+    vol,
+    enfraquecimento,
+    fraqueza,
+    rsiFech,
+    rsiAnt,
+    diPlus,
+    diMinus,
+    estadosNivel,
+  } = ctx;
+
+  const tem = (p) => alertas.some((x) => x.startsWith(p));
+  const entrada = [];
+  const pullback = [];
+  const riscos = [];
+  const deterioracao = [];
+
+  // --- confluencia de entrada ---
+  if (tem("rompimento_confirmado")) entrada.push("rompimento_confirmado_por_fechamento");
+  if (estadosNivel.includes("reteste_confirmado")) entrada.push("reteste_confirmado");
+  if (alertas.includes("rompimento_com_volume_acima_da_media"))
+    entrada.push("volume_acima_da_media_no_rompimento");
+  if (estrutura.tendencia === "alta") entrada.push("estrutura_de_alta_preservada");
+  if (diPlus !== null && diMinus !== null && diPlus > diMinus)
+    entrada.push("di_plus_dominante");
+
+  // --- confluencia de pullback ---
+  if (estrutura.tendencia === "alta") pullback.push("tendencia_hh_hl_preservada");
+  if (estadosNivel.includes("em_reteste")) pullback.push("em_reteste_de_nivel");
+  if (estruturaEventos.includes("novo_HL_apos_fundo_mais_baixo"))
+    pullback.push("novo_HL_formado");
+  if (rsiFech !== null && rsiAnt !== null && rsiFech < rsiAnt && rsiFech > 40)
+    pullback.push("rsi_esfriando_sem_deterioracao");
+  if (diPlus !== null && diMinus !== null && diPlus > diMinus)
+    pullback.push("di_plus_ainda_dominante");
+  if (vol && vol.tendencia === "decrescente") pullback.push("volume_decrescente_na_correcao");
+  if (divergencias.some((d) => d.tipo.startsWith("bullish")))
+    pullback.push("divergencia_bullish_confirmada");
+
+  // --- riscos tecnicos ---
+  for (const e of enfraquecimento) riscos.push(e);
+  if (fraqueza.includes("sombras_superiores_crescentes"))
+    riscos.push("sombras_superiores_crescentes");
+  if (divergencias.some((d) => d.tipo.startsWith("bearish")))
+    riscos.push("divergencia_bearish_confirmada");
+  if (tem("toque_suporte") || tem("perda_suporte")) riscos.push("suporte_sob_pressao");
+  if (alertas.includes("queda_com_expansao_de_volume"))
+    riscos.push("volume_expandindo_na_queda");
+  if (estadosNivel.includes("em_reteste")) riscos.push("nivel_em_teste");
+
+  // --- deterioracao de tendencia (so o estrutural) ---
+  if (estruturaEventos.includes("perda_estrutura_alta_novo_LL"))
+    deterioracao.push("perda_estrutura_alta_novo_LL");
+  if (estrutura.tendencia === "baixa") deterioracao.push("estrutura_de_baixa");
+  if (estadosNivel.includes("rompimento_falhou")) deterioracao.push("rompimento_falhou");
+  if (tem("perda_suporte_confirmada")) deterioracao.push("perda_de_suporte_confirmada");
+  if (
+    diPlus !== null &&
+    diMinus !== null &&
+    diMinus > diPlus &&
+    estrutura.tendencia !== "alta"
+  )
+    deterioracao.push("di_minus_dominante_com_estrutura_nao_altista");
+
+  const j = (arr) => (arr.length ? arr.join(", ") : "nenhuma");
+  return {
+    entrada: j(entrada),
+    pullback: j(pullback),
+    riscos: riscos.length ? riscos.join(", ") : "nenhum",
+    deterioracao: deterioracao.length ? deterioracao.join(", ") : "nenhuma",
+  };
+}
+
 // ------------------------------------------------------------
 // Bloco de texto por par
 // ------------------------------------------------------------
@@ -950,7 +1262,9 @@ function detalheDiv(x, times, dec, timeViva) {
   );
 }
 
-function readPair(cfg, d, tf) {
+function readPair(cfg, d, tf, opts = {}) {
+  const estadoAnt = opts.estadoNiveis || {};
+  const estadoNovo = {};
   const { highs, lows, closes, opens, times, live } = d;
   const D = cfg.dec;
 
@@ -1039,6 +1353,70 @@ function readPair(cfg, d, tf) {
   }
   const confEstrutural = confirmacaoEstrutural(ctxUsado, estrutura.tendencia);
 
+  // ---- maquina de estados dos niveis (sobre a ULTIMA VELA FECHADA) ----
+  const velaFechada = {
+    open: opens[i],
+    high: highs[i],
+    low: lows[i],
+    close: closes[i],
+    time: times[i],
+  };
+  const mudancasNivel = [];
+  const linhasNivel = [];
+  for (const nv of niveisDoPar(cfg)) {
+    const chave = chaveNivel(cfg.key, tf.key, nv.nivel);
+    const antes = estadoAnt[chave] || null;
+    const depois = atualizarEstadoNivel(antes, {
+      nivel: nv.nivel,
+      direcao: nv.direcao,
+      vela: velaFechada,
+      tolPct: RETEST_TOLERANCE_PCT,
+      resetPct: RETEST_RESET_DISTANCE_PCT,
+      maxCandles: tf.retestMaxCandles,
+      segundos: tf.segundos,
+    });
+    if (depois) estadoNovo[chave] = depois;
+    if (depois && antes && depois.estado !== antes.estado)
+      mudancasNivel.push(`${depois.estado}_${nv.label}`);
+    if (depois && !antes && depois.estado === "rompido")
+      mudancasNivel.push(`rompido_${nv.label}`);
+
+    linhasNivel.push(
+      `nivel_${nv.label}_estado: ${depois ? depois.estado : "sem_registro"}`
+    );
+    if (depois && depois.estado !== "arquivado") {
+      linhasNivel.push(`nivel_${nv.label}_direcao: ${depois.direcao}`);
+      linhasNivel.push(
+        `nivel_${nv.label}_preco_rompimento: ${num(depois.precoRompimento, D)}`
+      );
+      linhasNivel.push(
+        `nivel_${nv.label}_rompeu_em: ${fmtDia(depois.dataRompimento)}`
+      );
+      linhasNivel.push(
+        `nivel_${nv.label}_ultimo_contato: ${fmtDia(depois.ultimoContato)}`
+      );
+      linhasNivel.push(`nivel_${nv.label}_afastado: ${depois.afastado ? "sim" : "nao"}`);
+    }
+    linhasNivel.push(
+      `nivel_${nv.label}_historico: ${
+        depois && depois.historico && depois.historico.length
+          ? depois.historico.join(" ")
+          : "nenhum"
+      }`
+    );
+  }
+
+  // ---- volume parcial ----
+  const fracao = fracaoPeriodo(live, tf.segundos);
+  const parcial = fracao !== null && fracao < 0.98;
+  const inconclusivo = fracao !== null && fracao < FRACAO_INCONCLUSIVA;
+  const volSemana =
+    tf.key === "semanal" ? volumeSemanaEquivalente(d, opts.dadosDiario) : null;
+
+  // ---- metricas normalizadas das velas ----
+  const mFechada = metricasVela(ult[0]);
+  const mViva = metricasVela(anatomia(live.open, live.high, live.low, live.close));
+
   // --- alertas tecnicos (linha nova) ---
   const alertas = alertasTecnicos(cfg, d, {
     rsi: rsi[i],
@@ -1055,6 +1433,24 @@ function readPair(cfg, d, tf) {
     enfraquecimento,
     padroes,
     contextoTrio: ctxSoldados,
+    mudancasNivel,
+    volumeInconclusivo: inconclusivo,
+  });
+
+  const estadosNivel = Object.values(estadoNovo).map((x) => x.estado);
+  const sint = sinteses({
+    alertas,
+    estrutura,
+    estruturaEventos,
+    divergencias,
+    vol,
+    enfraquecimento,
+    fraqueza,
+    rsiFech: rsi[i],
+    rsiAnt: rsi[j],
+    diPlus: plusDI[i],
+    diMinus: minusDI[i],
+    estadosNivel,
   });
 
   const emaAtual = ema[i];
@@ -1105,15 +1501,37 @@ function readPair(cfg, d, tf) {
     );
   });
   L.push("");
+  // ---- estado dos niveis (rompimento / reteste) ----
+  L.push("");
+  linhasNivel.forEach((x) => L.push(x));
+  L.push(
+    `niveis_mudancas_nesta_vela: ${mudancasNivel.length ? mudancasNivel.join(", ") : "nenhuma"}`
+  );
+
   // ---- volume ----
   L.push("");
+  L.push(`fracao_periodo_decorrida: ${fracao === null ? "--" : fracao.toFixed(3)}`);
+  L.push(`volume_parcial: ${parcial ? "sim" : "nao"}`);
   L.push(`volume_atual: ${num(vol.atual, 4)}`);
   L.push(`volume_ultima_fechada: ${num(vol.ultimaFechada, 4)}`);
   L.push(`volume_media${vol.periodoMedia || VOL_MEDIA}: ${num(vol.media, 4)}`);
   L.push(`volume_vs_media_pct: ${num(vol.vsMediaPct, 2)}`);
-  L.push(`volume_classificacao: ${vol.classificacao}`);
+  L.push(
+    `volume_classificacao: ${
+      inconclusivo ? "inconclusivo_periodo_inicial" : vol.classificacao
+    }`
+  );
   L.push(`volume_tendencia_3_fechadas: ${vol.tendencia}`);
   L.push(`trades_vela_atual: ${num(live.trades, 0)}`);
+  if (volSemana) {
+    L.push(`volume_semana_dias_fechados: ${volSemana.dias}`);
+    L.push(`volume_semana_soma_dias_fechados: ${num(volSemana.somaAtual, 4)}`);
+    L.push(
+      `volume_semanas_anteriores_mesmos_dias_media: ${num(volSemana.mediaEquivalente, 4)}`
+    );
+    L.push(`volume_semana_vs_equivalente_pct: ${num(volSemana.vsPct, 2)}`);
+    L.push(`volume_semana_semanas_comparadas: ${volSemana.semanasComparadas}`);
+  }
 
   // ---- estrutura de mercado ----
   L.push("");
@@ -1153,6 +1571,22 @@ function readPair(cfg, d, tf) {
   });
 
   L.push("");
+  if (mFechada) {
+    L.push(`corpo_pct_range: ${num(mFechada.corpoPctRange, 2)}`);
+    L.push(`sombra_sup_pct_range: ${num(mFechada.sombraSupPctRange, 2)}`);
+    L.push(`sombra_inf_pct_range: ${num(mFechada.sombraInfPctRange, 2)}`);
+    L.push(`sombra_sup_vs_corpo: ${num(mFechada.sombraSupVsCorpo, 2)}`);
+    L.push(`sombra_inf_vs_corpo: ${num(mFechada.sombraInfVsCorpo, 2)}`);
+  }
+  if (mViva) {
+    L.push(`candle_atual_corpo_pct_range: ${num(mViva.corpoPctRange, 2)}`);
+    L.push(`candle_atual_sombra_sup_pct_range: ${num(mViva.sombraSupPctRange, 2)}`);
+    L.push(`candle_atual_sombra_inf_pct_range: ${num(mViva.sombraInfPctRange, 2)}`);
+    L.push(`candle_atual_sombra_sup_vs_corpo: ${num(mViva.sombraSupVsCorpo, 2)}`);
+    L.push(`candle_atual_sombra_inf_vs_corpo: ${num(mViva.sombraInfVsCorpo, 2)}`);
+  }
+
+  L.push("");
   L.push(`${tf.campoEventos}: ${linhaEventos}`);
   L.push(`mediana_corpo_20: ${num(medCorpo, Math.max(D, 6))}`);
   L.push(`contexto_antes_do_trio: ${ctxFechado}`);
@@ -1172,8 +1606,13 @@ function readPair(cfg, d, tf) {
     `padrao_em_formacao: ${formacao.length ? formacao.join(", ") : "nenhum"}`
   );
   L.push(`alertas_tecnicos: ${alertas.length ? alertas.join(", ") : "nenhum"}`);
+  L.push("");
+  L.push(`confluencia_entrada: ${sint.entrada}`);
+  L.push(`confluencia_pullback: ${sint.pullback}`);
+  L.push(`riscos_tecnicos: ${sint.riscos}`);
+  L.push(`deterioracao_tendencia: ${sint.deterioracao}`);
 
-  return { texto: L.join("\n") };
+  return { texto: L.join("\n"), estadoNiveis: estadoNovo };
 }
 
 // ------------------------------------------------------------
@@ -1224,9 +1663,11 @@ function avaliarGatilhos(d) {
 // Montagem da pagina
 // ------------------------------------------------------------
 
-export async function build(fetchImpl = fetch) {
+export async function build(fetchImpl = fetch, estadoAnterior = {}) {
   const blocks = [];
   const dados = {};
+  const estadoNiveis = {};
+  const estadoAnt = (estadoAnterior && estadoAnterior.niveis) || {};
 
   blocks.push(`timestamp: ${fmtUTC(Math.floor(Date.now() / 1000))}`);
   blocks.push(`fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)`);
@@ -1247,7 +1688,12 @@ export async function build(fetchImpl = fetch) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const parsed = parseKraken(await res.json());
         dados[tf.key][cfg.key] = parsed;
-        blocks.push(readPair(cfg, parsed, tf).texto);
+        const r = readPair(cfg, parsed, tf, {
+          estadoNiveis: estadoAnt,
+          dadosDiario: (dados.diario || {})[cfg.key],
+        });
+        blocks.push(r.texto);
+        Object.assign(estadoNiveis, r.estadoNiveis || {});
       } catch (err) {
         blocks.push(`${cfg.label}\ntimeframe: ${tf.key}\nFALHA: ${err.message}`);
       }
@@ -1264,7 +1710,7 @@ export async function build(fetchImpl = fetch) {
   );
   blocks.push("");
   blocks.push("fim do relatorio");
-  return { texto: blocks.join("\n"), gatilhos };
+  return { texto: blocks.join("\n"), gatilhos, estadoNiveis };
 }
 
 function toHTML(text) {
@@ -1278,15 +1724,16 @@ function toHTML(text) {
 
 // So executa quando chamado direto (nao durante os testes)
 if (process.argv[1] && process.argv[1].endsWith("monitor.mjs")) {
-  const { texto, gatilhos } = await build();
-  mkdirSync("docs", { recursive: true });
-
-  let anteriores = [];
+  let estadoPrev = {};
   try {
-    anteriores = JSON.parse(readFileSync("docs/estado.json", "utf8")).ativos || [];
+    estadoPrev = JSON.parse(readFileSync("docs/estado.json", "utf8"));
   } catch {
-    anteriores = [];
+    estadoPrev = {};
   }
+  const anteriores = estadoPrev.ativos || [];
+
+  const { texto, gatilhos, estadoNiveis } = await build(fetch, estadoPrev);
+  mkdirSync("docs", { recursive: true });
   const ativos = gatilhos.map((g) => g.id);
   const novos = gatilhos.filter((g) => !anteriores.includes(g.id));
 
@@ -1295,7 +1742,11 @@ if (process.argv[1] && process.argv[1].endsWith("monitor.mjs")) {
   writeFileSync("docs/.nojekyll", "");
   writeFileSync(
     "docs/estado.json",
-    JSON.stringify({ ativos, em: new Date().toISOString() }, null, 2) + "\n"
+    JSON.stringify(
+      { ativos, em: new Date().toISOString(), niveis: estadoNiveis },
+      null,
+      2
+    ) + "\n"
   );
 
   if (novos.length) {
