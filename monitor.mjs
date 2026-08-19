@@ -1195,7 +1195,7 @@ function sinteses(ctx) {
   if (estruturaEventos.includes("novo_HL_apos_fundo_mais_baixo"))
     pullback.push("novo_HL_formado");
   if (rsiFech !== null && rsiAnt !== null && rsiFech < rsiAnt && rsiFech > 40)
-    pullback.push("rsi_esfriando_sem_deterioracao");
+    pullback.push("rsi_esfriando");
   if (diPlus !== null && diMinus !== null && diPlus > diMinus)
     pullback.push("di_plus_ainda_dominante");
   if (vol && vol.tendencia === "decrescente") pullback.push("volume_decrescente_na_correcao");
