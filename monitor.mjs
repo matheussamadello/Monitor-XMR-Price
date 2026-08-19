@@ -1790,6 +1790,16 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
         Object.assign(estadoNiveis, r.estadoNiveis || {});
       } catch (err) {
         blocks.push(`${cfg.label}\ntimeframe: ${tf.key}\nFALHA: ${err.message}`);
+        // A consulta falhou: sem vela nova, nao ha o que avaliar. Copia
+        // os estados anteriores DESTE par/timeframe para o novo estado,
+        // senao uma indisponibilidade momentanea da Kraken apagaria a
+        // memoria de rompimento/reteste. O prefixo garante que so estes
+        // sao restaurados — estados descartados numa execucao bem
+        // sucedida continuam podendo sumir normalmente.
+        const prefixo = `${cfg.key}|${tf.key}|`;
+        for (const [chave, valor] of Object.entries(estadoAnt)) {
+          if (chave.startsWith(prefixo)) estadoNiveis[chave] = valor;
+        }
       }
       blocks.push("");
     }
