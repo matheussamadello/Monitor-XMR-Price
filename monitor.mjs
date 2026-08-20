@@ -1361,8 +1361,9 @@ export function relatorioParaJSON(texto, zonas = null) {
 //     atual muda.
 //   - operacionais: centro +- 0,35 x ATR fechado ATUAL. Usados para
 //     medir distancia e interacao no regime de volatilidade corrente.
-//   - deteccao: uniao dos dois. Uma contracao de volatilidade nao pode
-//     apagar toques historicos que realmente aconteceram.
+//   - episodios historicos: janela reconstruida vela a vela com o ATR
+//     DAQUELA epoca. Uma mudanca do ATR de hoje nunca altera
+//     retroativamente quantos toques a zona teve no passado.
 // ------------------------------------------------------------
 
 const ATR_PERIODO = 14;
@@ -1372,6 +1373,7 @@ const ZONA_LARGURA_MAX_PCT = 1.5;
 const CLUSTER_DIAMETRO_MAX = 1.0; // distancia normalizada entre QUALQUER par
 const MATCH_MAX_ATR = 0.75;
 const MERGE_SOBREPOSICAO_MIN = 0.5;
+const MATCH_SOBREPOSICAO_MIN = 0.35;
 const CONFLUENCIA_SOBREPOSICAO_MIN = 0.35;
 const SAIDA_EPISODIO_ATR = 1.0;
 const ZONA_SCORE_MIN_PUBLICAR = 25;
@@ -1725,51 +1727,51 @@ export function pontuarZona(zona, ctx) {
 // regiao do grafico, e trocar o id apagaria o historico que a valoriza.
 // ------------------------------------------------------------
 
+// Identidade e' REGIAO DO GRAFICO, nao papel. O casamento usa
+// sobreposicao estrutural e proximidade do centro; o tipo entra apenas
+// como desempate. Exigir mesmo tipo faria uma zona ganhar ID novo so
+// porque o preco intradiario cruzou para o outro lado — e o papel e'
+// atributo, nunca identidade.
 export function casarZonas(anteriores, novas, atrAtual) {
-  const usadas = new Set();
-  const pares = [];
-
-  const tentar = (permitirTipoDiferente) => {
-    for (const nova of novas) {
-      if (nova._casada) continue;
-      let melhor = null;
-      let melhorDist = Infinity;
-      for (const ant of anteriores) {
-        if (usadas.has(ant.id)) continue;
-        const mesmoTipo = ant.tipo === nova.tipo;
-        if (!permitirTipoDiferente && !mesmoTipo) continue;
-        if (permitirTipoDiferente && mesmoTipo) continue;
-
-        if (mesmoTipo) {
-          const d = Math.abs(ant.centro - nova.centro);
-          if (atrAtual > 0 && d <= MATCH_MAX_ATR * atrAtual && d < melhorDist) {
-            melhor = ant;
-            melhorDist = d;
-          }
-        } else {
-          const sob = sobreposicaoFrac(
-            ant.limites_estruturais,
-            nova.limites_estruturais
-          );
-          if (sob >= MERGE_SOBREPOSICAO_MIN && ant.cruzamento_confirmado) {
-            const d = Math.abs(ant.centro - nova.centro);
-            if (d < melhorDist) {
-              melhor = ant;
-              melhorDist = d;
-            }
-          }
-        }
-      }
-      if (melhor) {
-        nova._casada = true;
-        usadas.add(melhor.id);
-        pares.push({ ant: melhor, nova, trocouTipo: melhor.tipo !== nova.tipo });
+  const candidatos = [];
+  for (const nova of novas) {
+    for (const ant of anteriores) {
+      const sob = sobreposicaoFrac(
+        ant.limites_estruturais,
+        nova.limites_estruturais
+      );
+      const dist = Math.abs(ant.centro - nova.centro);
+      const perto = atrAtual > 0 && dist <= MATCH_MAX_ATR * atrAtual;
+      if (sob >= MATCH_SOBREPOSICAO_MIN || perto) {
+        candidatos.push({
+          ant,
+          nova,
+          sob,
+          dist,
+          mesmoTipo: ant.tipo === nova.tipo,
+        });
       }
     }
-  };
+  }
 
-  tentar(false);
-  tentar(true);
+  // maior sobreposicao, depois menor distancia, tipo so no desempate
+  candidatos.sort(
+    (a, b) =>
+      b.sob - a.sob ||
+      a.dist - b.dist ||
+      (a.mesmoTipo === b.mesmoTipo ? 0 : a.mesmoTipo ? -1 : 1)
+  );
+
+  const usadasAnt = new Set();
+  const usadasNova = new Set();
+  const pares = [];
+  for (const c of candidatos) {
+    if (usadasAnt.has(c.ant.id) || usadasNova.has(c.nova)) continue;
+    usadasAnt.add(c.ant.id);
+    usadasNova.add(c.nova);
+    c.nova._casada = true;
+    pares.push({ ant: c.ant, nova: c.nova, trocouTipo: !c.mesmoTipo });
+  }
   return pares;
 }
 
@@ -1884,7 +1886,11 @@ export function calcularZonas(cfg, tf, d, ctx) {
   const ultimaVelaFechada = times[times.length - 1];
 
   const pv = pivosComAtr(highs, lows, closes, times, ctx.pivos, atr);
-  if (!pv.topos.length && !pv.fundos.length) return { zonas: [], proximoId: ctx.proximoId };
+  if (!pv.topos.length && !pv.fundos.length) {
+    // Sem pivos nesta consulta: nao ha o que recalcular, mas as zonas
+    // ja conhecidas nao podem ser apagadas por isso.
+    return { zonas: [], zonasEstado: anteriores, proximoId: ctx.proximoId };
+  }
 
   const montar = (clusters, origem) =>
     clusters
@@ -2681,9 +2687,13 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
         const chaveZ = `${cfg.key}|${tf.key}`;
         if (zonasAnt[chaveZ]) {
           zonasNovas[chaveZ] = zonasAnt[chaveZ];
-          zonasPublicadas[chaveZ] = zonasAnt[chaveZ];
+          // confluencia continua usando o estado preservado
           if (tf.key === "semanal") zonasSemanaisPorPar[cfg.key] = zonasAnt[chaveZ];
         }
+        // Nada e' publicado numa execucao que falhou: o bloco ja informa
+        // FALHA, e exibir zonas antigas as apresentaria como se
+        // tivessem sido recalculadas agora.
+        zonasPublicadas[chaveZ] = [];
         blocosPorTf[tf.key].push("");
         continue;
       }
