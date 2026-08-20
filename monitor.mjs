@@ -1275,7 +1275,10 @@ function valorJSON(campo, bruto) {
   return v;
 }
 
-export function relatorioParaJSON(texto) {
+// Solucao B: as zonas vem do MESMO objeto canonico usado pelo resumo
+// textual, injetadas apos o parse. Todo o restante do JSON continua
+// derivado do texto, preservando a garantia de paridade.
+export function relatorioParaJSON(texto, zonas = null) {
   const out = {
     cabecalho: {},
     diario: {},
@@ -1326,8 +1329,844 @@ export function relatorioParaJSON(texto) {
     else out.cabecalho[campo] = valor;
   }
 
+  // niveis_manuais e zonas_automaticas ficam SEPARADOS por par/timeframe
+  for (const tfKey of ["diario", "semanal"]) {
+    for (const par of Object.keys(out[tfKey] || {})) {
+      const bloco = out[tfKey][par];
+      const chave = `${par === "XMR/USD" ? "usd" : "btc"}|${tfKey}`;
+      bloco.niveis_manuais = {};
+      for (const [campo, valor] of Object.entries(bloco)) {
+        if (campo.startsWith("nivel_")) bloco.niveis_manuais[campo] = valor;
+      }
+      bloco.zonas_automaticas = zonas && zonas[chave] ? zonas[chave] : [];
+    }
+  }
+
   out.timestamp = out.cabecalho.timestamp || null;
   return out;
+}
+
+
+// ------------------------------------------------------------
+// ZONAS AUTOMATICAS DE SUPORTE E RESISTENCIA
+//
+// Detectadas a partir dos pivos confirmados que o script ja calcula.
+// Nesta primeira versao sao SOMENTE CONTEXTO: nao geram alerta, nao
+// entram em gatilhos_ativos, nao tocam a maquina de estados dos niveis
+// manuais e nao alteram confluencia_entrada/pullback/deterioracao.
+//
+// Dois pares de limites, com propositos distintos:
+//   - estruturais: derivados dos pivos e da volatilidade DA EPOCA deles.
+//     Usados para identidade, matching e merge. Nao mudam quando o ATR
+//     atual muda.
+//   - operacionais: centro +- 0,35 x ATR fechado ATUAL. Usados para
+//     medir distancia e interacao no regime de volatilidade corrente.
+//   - deteccao: uniao dos dois. Uma contracao de volatilidade nao pode
+//     apagar toques historicos que realmente aconteceram.
+// ------------------------------------------------------------
+
+const ATR_PERIODO = 14;
+const ZONA_MEIA_LARGURA_ATR = 0.35;
+const ZONA_LARGURA_MIN_PCT = 0.15;
+const ZONA_LARGURA_MAX_PCT = 1.5;
+const CLUSTER_DIAMETRO_MAX = 1.0; // distancia normalizada entre QUALQUER par
+const MATCH_MAX_ATR = 0.75;
+const MERGE_SOBREPOSICAO_MIN = 0.5;
+const CONFLUENCIA_SOBREPOSICAO_MIN = 0.35;
+const SAIDA_EPISODIO_ATR = 1.0;
+const ZONA_SCORE_MIN_PUBLICAR = 25;
+const ZONA_SCORE_ATIVA = 45;
+const ZONA_SCORE_ENFRAQUECE = 30;
+const ZONA_SCORE_REMOVE = 15;
+const ZONA_MAX_POR_LADO = 3; // publicadas por lado
+const SUAVIZA_CENTRO = 0.7; // peso do centro anterior ao casar
+
+const PARAMS_TF = {
+  diario: { meiaVida: 20, semToqueEnfraquece: 30, enfraquecidaRemove: 15 },
+  semanal: { meiaVida: 6, semToqueEnfraquece: 8, enfraquecidaRemove: 4 },
+};
+
+// ATR(14) de Wilder sobre velas fechadas. Calculo proprio: o dmiSeries
+// usa True Range internamente mas nao o expoe, e extrair um helper
+// comum exigiria mexer no DMI, que deve permanecer intocado.
+export function atrSeries(highs, lows, closes, period = ATR_PERIODO) {
+  const n = closes.length;
+  const out = new Array(n).fill(null);
+  if (n < period + 1) return out;
+  const tr = new Array(n).fill(0);
+  for (let i = 1; i < n; i++) {
+    tr[i] = Math.max(
+      highs[i] - lows[i],
+      Math.abs(highs[i] - closes[i - 1]),
+      Math.abs(lows[i] - closes[i - 1])
+    );
+  }
+  let soma = 0;
+  for (let i = 1; i <= period; i++) soma += tr[i];
+  out[period] = soma / period;
+  for (let i = period + 1; i < n; i++) {
+    out[i] = (out[i - 1] * (period - 1) + tr[i]) / period;
+  }
+  return out;
+}
+
+// Anexa a volatilidade da epoca a cada pivo confirmado.
+export function pivosComAtr(highs, lows, closes, times, pivos, atr) {
+  // PRIMEIRO ATR valido, nunca o ultimo: um pivo antigo jamais pode
+  // receber a volatilidade de hoje como substituta.
+  const fallback = atr.find((x) => x !== null && x > 0) || null;
+  const monta = (idx, tipo) => ({
+    idx,
+    tipo,
+    preco: tipo === "topo" ? highs[idx] : lows[idx],
+    time: times[idx],
+    atr_at_pivot: atr[idx] !== null && atr[idx] > 0 ? atr[idx] : fallback,
+  });
+  return {
+    topos: pivos.altos.map((i) => monta(i, "topo")),
+    fundos: pivos.baixos.map((i) => monta(i, "fundo")),
+  };
+}
+
+// Distancia normalizada pela volatilidade DAS DUAS EPOCAS.
+function distNorm(a, b) {
+  const escala = ((a.atr_at_pivot || 0) + (b.atr_at_pivot || 0)) / 2;
+  if (!(escala > 0)) return Infinity;
+  return Math.abs(a.preco - b.preco) / escala;
+}
+
+// Clustering guloso com verificacao de TODOS OS PARES: um candidato so
+// entra se for compativel com cada membro ja presente. Isso elimina o
+// chaining (A~B, B~C, mas A e C distantes).
+export function agruparPivos(lista) {
+  const ord = [...lista].sort((x, y) => x.preco - y.preco);
+  const clusters = [];
+  for (const p of ord) {
+    const atual = clusters[clusters.length - 1];
+    if (atual && atual.every((m) => distNorm(m, p) <= CLUSTER_DIAMETRO_MAX)) {
+      atual.push(p);
+    } else {
+      clusters.push([p]);
+    }
+  }
+  return clusters;
+}
+
+function limitesEstruturais(membros) {
+  const precos = membros.map((m) => m.preco);
+  const atrMedio =
+    membros.reduce((s, m) => s + (m.atr_at_pivot || 0), 0) / membros.length;
+  const folga = 0.15 * atrMedio;
+  return {
+    inferior: Math.min(...precos) - folga,
+    superior: Math.max(...precos) + folga,
+  };
+}
+
+function limitesOperacionais(centro, atrAtual) {
+  let meia = ZONA_MEIA_LARGURA_ATR * (atrAtual || 0);
+  const piso = (ZONA_LARGURA_MIN_PCT / 100) * Math.abs(centro);
+  const teto = (ZONA_LARGURA_MAX_PCT / 100) * Math.abs(centro);
+  if (meia < piso) meia = piso;
+  if (meia > teto) meia = teto;
+  return { inferior: centro - meia, superior: centro + meia };
+}
+
+function sobreposicaoFrac(a, b) {
+  const ini = Math.max(a.inferior, b.inferior);
+  const fim = Math.min(a.superior, b.superior);
+  if (fim <= ini) return 0;
+  const menor = Math.min(a.superior - a.inferior, b.superior - b.inferior);
+  return menor > 0 ? (fim - ini) / menor : 0;
+}
+
+// ------------------------------------------------------------
+// Episodios de toque: varias velas seguidas dentro da zona sao UM toque.
+// Um novo toque so conta depois que o preco sai >= 1 ATR e volta.
+// ------------------------------------------------------------
+
+// Janela de interacao reconstruida PARA CADA VELA com o ATR daquela
+// epoca. Uma mudanca do ATR de hoje nao pode alterar retroativamente
+// quantos toques a zona teve em julho.
+function meiaLarguraNaEpoca(centro, atrEpoca) {
+  let meia = ZONA_MEIA_LARGURA_ATR * (atrEpoca || 0);
+  const piso = (ZONA_LARGURA_MIN_PCT / 100) * Math.abs(centro);
+  const teto = (ZONA_LARGURA_MAX_PCT / 100) * Math.abs(centro);
+  if (meia < piso) meia = piso;
+  if (meia > teto) meia = teto;
+  return meia;
+}
+
+export function calcularEpisodios(zona, dados, atr, idxInicio, volRel) {
+  const { highs, lows, closes, times } = dados;
+  const centro = zona.centro;
+  const eps = [];
+  let dentro = false;
+  let atualEp = null;
+  // Fallback para o warm-up do ATR: o PRIMEIRO valor valido, nunca o
+  // ultimo. Usar o ultimo reinjetaria a volatilidade de hoje no passado.
+  const primeiroAtr = atr.find((x) => x !== null && x > 0) || 0;
+
+  for (let i = Math.max(1, idxInicio); i < closes.length; i++) {
+    const a = atr[i] !== null && atr[i] > 0 ? atr[i] : primeiroAtr;
+    const meia = meiaLarguraNaEpoca(centro, a);
+    const inf = centro - meia;
+    const sup = centro + meia;
+    const intersecta = highs[i] >= inf && lows[i] <= sup;
+
+    if (intersecta) {
+      if (!dentro) {
+        dentro = true;
+        atualEp = {
+          inicioIdx: i,
+          inicio: times[i],
+          fimIdx: i,
+          fim: times[i],
+          lado: closes[i - 1] > sup ? "acima" : closes[i - 1] < inf ? "abaixo" : "dentro",
+          velas: 1,
+          rejeitado: false,
+          excursaoAtr: 0,
+          volume_relativo: volRel && volRel[i] !== null ? volRel[i] : null,
+        };
+      } else {
+        atualEp.fimIdx = i;
+        atualEp.fim = times[i];
+        atualEp.velas += 1;
+      }
+      continue;
+    }
+
+    if (dentro) {
+      const distSaida = closes[i] > sup ? closes[i] - sup : inf - closes[i];
+      if (a > 0 && distSaida >= SAIDA_EPISODIO_ATR * a) {
+        let extremo = closes[i];
+        for (let k = i; k < Math.min(i + 3, closes.length); k++) {
+          if (closes[i] > sup) extremo = Math.max(extremo, highs[k]);
+          else extremo = Math.min(extremo, lows[k]);
+        }
+        const exc = Math.abs(extremo - (closes[i] > sup ? sup : inf));
+        atualEp.excursaoAtr = a > 0 ? exc / a : 0;
+        const voltouParaOrigem =
+          atualEp.lado === "acima"
+            ? closes[i] > sup
+            : atualEp.lado === "abaixo"
+            ? closes[i] < inf
+            : false;
+        atualEp.rejeitado = voltouParaOrigem && atualEp.excursaoAtr >= SAIDA_EPISODIO_ATR;
+        atualEp.saidaIdx = i;
+        eps.push(atualEp);
+        dentro = false;
+        atualEp = null;
+      }
+    }
+  }
+  if (dentro && atualEp) {
+    atualEp.aberto = true;
+    eps.push(atualEp);
+  }
+  return eps;
+}
+
+// Media movel de 20 do volume, para normalizar cada toque pela EPOCA
+// dele. Sem 20 velas anteriores o episodio fica indefinido (neutro),
+// nunca "forte".
+export function mediaVolMovel(volumes, janela = 20) {
+  const out = new Array(volumes.length).fill(null);
+  if (!volumes || volumes.length < janela) return out;
+  let soma = 0;
+  for (let i = 0; i < volumes.length; i++) {
+    soma += volumes[i];
+    if (i >= janela) soma -= volumes[i - janela];
+    if (i >= janela - 1) out[i] = soma / janela;
+  }
+  return out;
+}
+
+// Role reversal EXIGE evidencia cronologica E reacao confirmada no
+// lado novo: episodio de um lado -> fechamento confirmado do outro ->
+// episodio pelo lado oposto COM rejeicao. Mera presenca do preco do
+// outro lado nao inverte o papel da zona.
+//
+// Devolve a lista de eventos, em ordem. Cada troca de papel futura
+// exige um evento NOVO — um role reversal antigo nao autoriza
+// alternancia permanente de tipo.
+export function eventosRoleReversal(zona, closes) {
+  const eps = (zona.episodios || []).filter(
+    (e) => e.lado === "acima" || e.lado === "abaixo"
+  );
+  if (eps.length < 2) return [];
+  const est = zona.limites_estruturais;
+  const out = [];
+  let ladoAtual = eps[0].lado;
+  let ultFim = eps[0].fimIdx;
+
+  for (let j = 1; j < eps.length; j++) {
+    const e = eps[j];
+    if (e.lado === ladoAtual) {
+      ultFim = e.fimIdx;
+      continue;
+    }
+    let cruzou = false;
+    for (let k = ultFim; k <= e.inicioIdx && k < closes.length; k++) {
+      if (ladoAtual === "acima" ? closes[k] < est.inferior : closes[k] > est.superior) {
+        cruzou = true;
+        break;
+      }
+    }
+    if (cruzou && e.rejeitado) {
+      out.push({ em: e.fim, idx: e.fimIdx, ladoNovo: e.lado });
+      ladoAtual = e.lado;
+    }
+    ultFim = e.fimIdx;
+  }
+  return out;
+}
+
+export function detectarRoleReversalCron(zona, closes) {
+  return eventosRoleReversal(zona, closes).length > 0;
+}
+
+// Lado de aproximacao -> papel da zona. Preco vindo de cima significa
+// que a zona esta segurando por baixo: suporte.
+function papelPorLado(lado) {
+  return lado === "acima" ? "suporte" : "resistencia";
+}
+
+// ------------------------------------------------------------
+// Score normalizado 0-100 sobre os fatores APLICAVEIS ao timeframe.
+// Proximidade do preco NAO entra: ela ordena a exibicao, nao mede forca.
+// Penalidades sao MULTIPLICATIVAS, para nunca produzir negativo nem
+// achatar a diferenca entre "fraca" e "muito fraca".
+// ------------------------------------------------------------
+
+const PESOS = {
+  episodios: 25,
+  rejeicoes: 21,
+  recencia: 15,
+  forca_reacao: 15,
+  confluencia_semanal: 13,
+  role_reversal: 7,
+  volume: 4,
+};
+
+export function pontuarZona(zona, ctx) {
+  const { tfKey, velasDesdeUltimoToque, confluenciaSemanal, volumeForte } = ctx;
+  const par = PARAMS_TF[tfKey] || PARAMS_TF.diario;
+
+  const eps = zona.episodios || [];
+  const nToques = eps.length;
+  const nRej = eps.filter((e) => e.rejeitado).length;
+  const excMedia = eps.length
+    ? eps.reduce((s, e) => s + (e.excursaoAtr || 0), 0) / eps.length
+    : 0;
+
+  const fatores = {
+    episodios: { aplicavel: true, valor: Math.min(nToques / 4, 1) },
+    rejeicoes: { aplicavel: true, valor: Math.min(nRej / 3, 1) },
+    recencia: {
+      aplicavel: true,
+      valor:
+        velasDesdeUltimoToque === null
+          ? 0
+          : Math.pow(2, -velasDesdeUltimoToque / par.meiaVida),
+    },
+    forca_reacao: { aplicavel: true, valor: Math.min(excMedia / 2, 1) },
+    confluencia_semanal: {
+      aplicavel: tfKey === "diario",
+      valor: confluenciaSemanal ? 1 : 0,
+    },
+    role_reversal: { aplicavel: true, valor: zona.role_reversal ? 1 : 0 },
+    volume: { aplicavel: true, valor: volumeForte ? 1 : 0 },
+  };
+
+  let obtido = 0;
+  let possivel = 0;
+  for (const [nome, f] of Object.entries(fatores)) {
+    if (!f.aplicavel) continue;
+    possivel += PESOS[nome];
+    obtido += PESOS[nome] * f.valor;
+  }
+  const bruto = possivel > 0 ? (obtido / possivel) * 100 : 0;
+
+  // penalidades multiplicativas
+  let fator = 1;
+  const penalidades = [];
+  const rompimentosSemReacao = eps.filter((e) => !e.rejeitado && !e.aberto).length;
+  if (rompimentosSemReacao >= 2) {
+    fator *= 0.85;
+    penalidades.push("rompida_2x_sem_reacao");
+  }
+  if (nToques <= 1) {
+    fator *= 0.8;
+    penalidades.push("episodio_unico");
+  }
+  // wick solto: um unico episodio, de uma vela so, sem rejeicao.
+  // Sombra longa COM rejeicao nao e' penalizada — e' justamente o sinal.
+  if (nToques === 1 && eps[0] && eps[0].velas === 1 && !eps[0].rejeitado) {
+    fator *= 0.75;
+    penalidades.push("wick_isolado_sem_rejeicao");
+  }
+
+  return {
+    score: Math.round(bruto * fator),
+    score_bruto: Math.round(bruto),
+    fator_penalidade: Number(fator.toFixed(3)),
+    penalidades,
+    numero_toques: nToques,
+    numero_rejeicoes: nRej,
+    forca_reacao_atr: Number(excMedia.toFixed(2)),
+  };
+}
+
+// ------------------------------------------------------------
+// Identidade: duas passadas. Mesmo tipo por proximidade; tipos opostos
+// so casam com sobreposicao estrutural + cruzamento confirmado, e ai o
+// ID e' PRESERVADO — uma resistencia que virou suporte e' a mesma
+// regiao do grafico, e trocar o id apagaria o historico que a valoriza.
+// ------------------------------------------------------------
+
+export function casarZonas(anteriores, novas, atrAtual) {
+  const usadas = new Set();
+  const pares = [];
+
+  const tentar = (permitirTipoDiferente) => {
+    for (const nova of novas) {
+      if (nova._casada) continue;
+      let melhor = null;
+      let melhorDist = Infinity;
+      for (const ant of anteriores) {
+        if (usadas.has(ant.id)) continue;
+        const mesmoTipo = ant.tipo === nova.tipo;
+        if (!permitirTipoDiferente && !mesmoTipo) continue;
+        if (permitirTipoDiferente && mesmoTipo) continue;
+
+        if (mesmoTipo) {
+          const d = Math.abs(ant.centro - nova.centro);
+          if (atrAtual > 0 && d <= MATCH_MAX_ATR * atrAtual && d < melhorDist) {
+            melhor = ant;
+            melhorDist = d;
+          }
+        } else {
+          const sob = sobreposicaoFrac(
+            ant.limites_estruturais,
+            nova.limites_estruturais
+          );
+          if (sob >= MERGE_SOBREPOSICAO_MIN && ant.cruzamento_confirmado) {
+            const d = Math.abs(ant.centro - nova.centro);
+            if (d < melhorDist) {
+              melhor = ant;
+              melhorDist = d;
+            }
+          }
+        }
+      }
+      if (melhor) {
+        nova._casada = true;
+        usadas.add(melhor.id);
+        pares.push({ ant: melhor, nova, trocouTipo: melhor.tipo !== nova.tipo });
+      }
+    }
+  };
+
+  tentar(false);
+  tentar(true);
+  return pares;
+}
+
+// ------------------------------------------------------------
+// Merge topo/fundo e montagem das zonas
+// ------------------------------------------------------------
+
+function fundirZonasOpostas(zonas) {
+  const out = [];
+  const consumidas = new Set();
+  for (let i = 0; i < zonas.length; i++) {
+    if (consumidas.has(i)) continue;
+    let z = zonas[i];
+    for (let j = i + 1; j < zonas.length; j++) {
+      if (consumidas.has(j)) continue;
+      const o = zonas[j];
+      if (o.origem === z.origem) continue;
+      // Merge usa limites ESTRUTURAIS: um pico momentaneo de ATR nao
+      // pode fundir zonas que historicamente sempre foram distintas.
+      if (sobreposicaoFrac(z.limites_estruturais, o.limites_estruturais) >= MERGE_SOBREPOSICAO_MIN) {
+        const membros = [...z.membros, ...o.membros].sort((a, b) => a.time - b.time);
+        const est = limitesEstruturais(membros);
+        z = {
+          ...z,
+          membros,
+          origem: "misto",
+          limites_estruturais: est,
+          centro: (est.inferior + est.superior) / 2,
+          // NAO marca role_reversal: sobreposicao topo/fundo e' apenas
+          // geometria. O papel so inverte com evidencia cronologica.
+        };
+        consumidas.add(j);
+      }
+    }
+    out.push(z);
+  }
+  return out;
+}
+
+// ------------------------------------------------------------
+// Ciclo de vida: histerese contada por VELA FECHADA NOVA, nunca por
+// execucao. O workflow roda 24x sobre a mesma vela diaria; contar
+// execucoes inflaria tudo por um fator de 24.
+// ------------------------------------------------------------
+
+function evidenciaEstruturalIndependente(z, confluenciaSemanal) {
+  const eps = z.episodios || [];
+  const comRejeicao = eps.filter((e) => e.rejeitado).length;
+  if (eps.length >= 2 && comRejeicao >= 1) return true;
+  if (comRejeicao >= 1 && confluenciaSemanal) return true;
+  if (z.role_reversal && z.cruzamento_confirmado) return true;
+  return false;
+}
+
+function atualizarCiclo(z, anterior, ctx) {
+  const par = PARAMS_TF[ctx.tfKey] || PARAMS_TF.diario;
+  const velaNova = !anterior || anterior.ultimaVelaAvaliada !== ctx.ultimaVelaFechada;
+
+  z.status = anterior ? anterior.status : "candidata";
+  z.velasComScoreAlto = anterior ? anterior.velasComScoreAlto || 0 : 0;
+  z.velasEnfraquecida = anterior ? anterior.velasEnfraquecida || 0 : 0;
+  z.ultimaVelaAvaliada = ctx.ultimaVelaFechada;
+
+  if (!velaNova) {
+    // mesma vela: mantem o estado, so atualiza os campos calculados
+    return z;
+  }
+
+  if (z.score >= ZONA_SCORE_ATIVA) z.velasComScoreAlto += 1;
+  else z.velasComScoreAlto = 0;
+
+  const semToque =
+    ctx.velasDesdeUltimoToque === null ? Infinity : ctx.velasDesdeUltimoToque;
+
+  if (z.status === "candidata") {
+    if (
+      z.velasComScoreAlto >= 2 &&
+      evidenciaEstruturalIndependente(z, ctx.confluenciaSemanal)
+    ) {
+      z.status = "ativa";
+    }
+  } else if (z.status === "ativa") {
+    if (z.score < ZONA_SCORE_ENFRAQUECE || semToque > par.semToqueEnfraquece) {
+      z.status = "enfraquecida";
+      z.velasEnfraquecida = 0;
+    }
+  } else if (z.status === "enfraquecida") {
+    z.velasEnfraquecida += 1;
+    if (z.score >= ZONA_SCORE_ATIVA && semToque <= par.semToqueEnfraquece) {
+      z.status = "ativa";
+      z.velasEnfraquecida = 0;
+    } else if (
+      z.velasEnfraquecida >= par.enfraquecidaRemove ||
+      z.score < ZONA_SCORE_REMOVE
+    ) {
+      z.status = "remover";
+    }
+  }
+  return z;
+}
+
+// ------------------------------------------------------------
+// Pipeline completo por par/timeframe
+// ------------------------------------------------------------
+
+export function calcularZonas(cfg, tf, d, ctx) {
+  const { highs, lows, closes, times, opens } = d;
+  const anteriores = ctx.zonasAnteriores || [];
+  const atr = atrSeries(highs, lows, closes);
+  const atrAtual = atr.filter((x) => x !== null).slice(-1)[0] || 0;
+  const precoAtual = d.live.close;
+  const ultimaVelaFechada = times[times.length - 1];
+
+  const pv = pivosComAtr(highs, lows, closes, times, ctx.pivos, atr);
+  if (!pv.topos.length && !pv.fundos.length) return { zonas: [], proximoId: ctx.proximoId };
+
+  const montar = (clusters, origem) =>
+    clusters
+      .filter((c) => c.length > 0)
+      .map((membros) => {
+        const est = limitesEstruturais(membros);
+        const centro = (est.inferior + est.superior) / 2;
+        return {
+          membros: membros.map((m) => ({ time: m.time, preco: m.preco, tipo: m.tipo, idx: m.idx })),
+          origem,
+          limites_estruturais: est,
+          centro,
+        };
+      });
+
+  let zonas = [
+    ...montar(agruparPivos(pv.topos), "topo"),
+    ...montar(agruparPivos(pv.fundos), "fundo"),
+  ];
+  zonas = fundirZonasOpostas(zonas);
+
+  // limites operacionais (interacao com o preco AGORA)
+  for (const z of zonas) {
+    z.limites_operacionais = limitesOperacionais(z.centro, atrAtual);
+  }
+
+  // Tipo PROVISORIO antes do casamento. Sem isso, casarZonas compara
+  // ant.tipo contra undefined e a passada de mesmo tipo nunca casa.
+  for (const z of zonas) {
+    z.tipo = z.centro > precoAtual ? "resistencia" : "suporte";
+  }
+
+  // casamento com as zonas anteriores (identidade estavel)
+  const pares = casarZonas(anteriores, zonas, atrAtual);
+  const mapaAnt = new Map(pares.map((p) => [p.nova, p]));
+  let proximoId = ctx.proximoId || 1;
+
+  for (const z of zonas) {
+    const par = mapaAnt.get(z);
+    if (par) {
+      z.id = par.ant.id;
+      // suaviza o centro para o valor nao oscilar a cada vela
+      z.centro = SUAVIZA_CENTRO * par.ant.centro + (1 - SUAVIZA_CENTRO) * z.centro;
+      z.limites_operacionais = limitesOperacionais(z.centro, atrAtual);
+      z.role_reversal = z.role_reversal || par.ant.role_reversal || par.trocouTipo;
+      z.cruzamento_confirmado = par.ant.cruzamento_confirmado || false;
+      z._anterior = par.ant;
+      z._tipoAnterior = par.ant.tipo;
+    } else {
+      z.id = `${cfg.key}|${tf.key}|z${proximoId++}`;
+      z.role_reversal = z.role_reversal || false;
+      z.cruzamento_confirmado = false;
+    }
+  }
+
+  // volume relativo A EPOCA de cada vela
+  const mediaVol = mediaVolMovel(d.volumes || [], 20);
+  const volRel = (d.volumes || []).map((v, i) =>
+    mediaVol[i] && mediaVol[i] > 0 ? v / mediaVol[i] : null
+  );
+
+  // episodios de toque, a partir do primeiro membro da zona
+  for (const z of zonas) {
+    const idxIni = Math.min(...z.membros.map((m) => m.idx));
+    z.episodios = calcularEpisodios(z, d, atr, idxIni, volRel);
+    const ultimo = z.episodios.length ? z.episodios[z.episodios.length - 1] : null;
+    z.primeiro_toque = z.episodios.length ? z.episodios[0].inicio : null;
+    z.ultimo_toque = ultimo ? ultimo.fim : null;
+    z.velasDesdeUltimoToque = ultimo ? closes.length - 1 - ultimo.fimIdx : null;
+
+    // cruzamento confirmado: fechamentos dos dois lados do estrutural
+    const acima = closes.some((c, i) => i >= idxIni && c > z.limites_estruturais.superior);
+    const abaixo = closes.some((c, i) => i >= idxIni && c < z.limites_estruturais.inferior);
+    if (acima && abaixo) z.cruzamento_confirmado = true;
+    // role reversal so com evidencia cronologica de lado -> cruzamento
+    // confirmado -> reacao COM rejeicao pelo lado oposto.
+    z._eventosRR = eventosRoleReversal(z, closes);
+    z.role_reversal = z._eventosRR.length > 0;
+  }
+
+  // tipo e estado_atual
+  for (const z of zonas) {
+    const dentro =
+      precoAtual >= z.limites_operacionais.inferior &&
+      precoAtual <= z.limites_operacionais.superior;
+    z.estado_atual = dentro
+      ? "em_teste"
+      : precoAtual > z.limites_operacionais.superior
+      ? "acima"
+      : "abaixo";
+
+    const inferido = z.estado_atual === "abaixo" ? "resistencia" : "suporte";
+    const eventos = z._eventosRR || [];
+    const ultimoEvento = eventos.length ? eventos[eventos.length - 1] : null;
+    const rrAnterior = z._anterior ? z._anterior.ultimo_role_reversal_em || null : null;
+
+    if (!z._anterior) {
+      // zona nova: o ultimo evento manda; sem evento, infere pela posicao
+      z.tipo_confirmado = ultimoEvento
+        ? papelPorLado(ultimoEvento.ladoNovo)
+        : dentro
+        ? z.origem === "topo"
+          ? "resistencia"
+          : "suporte"
+        : inferido;
+      z.ultimo_role_reversal_em = ultimoEvento ? ultimoEvento.em : null;
+    } else {
+      z.tipo_confirmado =
+        z._anterior.tipo_confirmado || z._anterior.tipo || z._tipoAnterior;
+      z.ultimo_role_reversal_em = rrAnterior;
+      // So troca com um evento NOVO, posterior ao ultimo ja processado.
+      if (ultimoEvento && (rrAnterior === null || ultimoEvento.em > rrAnterior)) {
+        z.tipo_confirmado = papelPorLado(ultimoEvento.ladoNovo);
+        z.ultimo_role_reversal_em = ultimoEvento.em;
+      }
+    }
+    z.tipo = z.tipo_confirmado;
+    z.distancia_preco_atual_pct =
+      ((precoAtual - z.centro) / Math.abs(z.centro)) * 100;
+  }
+
+  // score
+  for (const z of zonas) {
+    // volume relativo A EPOCA de cada toque. Sem media20 historica o
+    // episodio e' NEUTRO, nunca "forte".
+    const rels = z.episodios
+      .map((e) => e.volume_relativo)
+      .filter((v) => typeof v === "number" && isFinite(v));
+    const medianaRel = rels.length
+      ? rels.slice().sort((a, b) => a - b)[Math.floor(rels.length / 2)]
+      : null;
+    const confl = (ctx.zonasSemanais || []).some(
+      (zs) =>
+        (zs.status === "ativa" || zs.status === "candidata") &&
+        sobreposicaoFrac(zs.limites_estruturais, z.limites_estruturais) >=
+          CONFLUENCIA_SOBREPOSICAO_MIN
+    );
+    z.confluenciaSemanal = confl;
+    const p = pontuarZona(z, {
+      tfKey: tf.key,
+      velasDesdeUltimoToque: z.velasDesdeUltimoToque,
+      confluenciaSemanal: confl,
+      volumeForte: medianaRel !== null && medianaRel >= 1.2,
+    });
+    Object.assign(z, p);
+    z.volume_relativo_mediano = medianaRel === null ? null : Number(medianaRel.toFixed(2));
+    z.volume_contexto =
+      medianaRel === null
+        ? "indefinido"
+        : medianaRel >= 1.2
+        ? "acima_da_media_na_epoca"
+        : "normal";
+    z.timeframes_confirmando = confl ? [tf.key, "semanal"] : [tf.key];
+    z.confluencia_nivel_manual = (ctx.niveisManuais || []).some(
+      (n) => n >= z.limites_estruturais.inferior && n <= z.limites_estruturais.superior
+    );
+  }
+
+  // ciclo de vida
+  for (const z of zonas) {
+    atualizarCiclo(z, z._anterior || null, {
+      tfKey: tf.key,
+      ultimaVelaFechada,
+      velasDesdeUltimoToque: z.velasDesdeUltimoToque,
+      confluenciaSemanal: z.confluenciaSemanal,
+    });
+  }
+
+  // zonas anteriores que sumiram do calculo nao morrem de imediato:
+  // entram em enfraquecida e seguem o ciclo normal.
+  const idsCalculados = new Set(zonas.map((z) => z.id));
+  const zonasCalculadas = [...zonas];
+  for (const ant of anteriores) {
+    if (idsCalculados.has(ant.id) || ant.status === "remover") continue;
+    // se ja existe zona calculada cobrindo a mesma regiao, a antiga foi
+    // absorvida — nao reinserir como orfa, senao duplica.
+    const absorvida = zonasCalculadas.some(
+      (z) => sobreposicaoFrac(z.limites_estruturais, ant.limites_estruturais) >= 0.5
+    );
+    if (absorvida) continue;
+    const orfa = { ...ant };
+    if (orfa.status === "ativa" || orfa.status === "candidata") {
+      orfa.status = "enfraquecida";
+      orfa.velasEnfraquecida = 0;
+    } else if (orfa.status === "enfraquecida") {
+      const par = PARAMS_TF[tf.key] || PARAMS_TF.diario;
+      if (ant.ultimaVelaAvaliada !== ultimaVelaFechada) {
+        orfa.velasEnfraquecida = (orfa.velasEnfraquecida || 0) + 1;
+      }
+      if (orfa.velasEnfraquecida >= par.enfraquecidaRemove) orfa.status = "remover";
+    }
+    orfa.ultimaVelaAvaliada = ultimaVelaFechada;
+    orfa.orfa = true;
+    zonas.push(orfa);
+  }
+
+  // ---- duas colecoes distintas ----
+  // zonasEstado: TODAS as vivas. Sustentam identidade, matching e ciclo
+  // de vida. Uma zona que hoje nao esta entre as 3 mais proximas nao
+  // pode perder o ID e voltar como zona nova amanha.
+  // zonasPublicadas: subconjunto visivel no relatorio/JSON.
+  const vivas = zonas.filter((z) => z.status !== "remover");
+  // TODAS as vivas. Cortar por score aqui faria uma zona perder ID e
+  // historico so por nao estar entre as maiores — a remocao deve vir
+  // do ciclo de vida, nunca de um corte silencioso.
+  const estado = vivas.map((z) => limparZona(z));
+
+  const publicaveis = vivas.filter((z) => z.score >= ZONA_SCORE_MIN_PUBLICAR);
+  const acima = publicaveis
+    .filter((z) => z.centro > precoAtual)
+    .sort((a, b) => a.centro - b.centro)
+    .slice(0, ZONA_MAX_POR_LADO);
+  const abaixo = publicaveis
+    .filter((z) => z.centro <= precoAtual)
+    .sort((a, b) => b.centro - a.centro)
+    .slice(0, ZONA_MAX_POR_LADO);
+
+  return {
+    zonas: [...acima, ...abaixo].map((z) => limparZona(z)),
+    zonasEstado: estado,
+    proximoId,
+  };
+}
+
+// Objeto CANONICO. Texto e JSON derivam exatamente daqui.
+function limparZona(z) {
+  return {
+    id: z.id,
+    tipo: z.tipo,
+    tipo_confirmado: z.tipo_confirmado || z.tipo,
+    ultimo_role_reversal_em: z.ultimo_role_reversal_em ?? null,
+    status: z.status,
+    estado_atual: z.estado_atual,
+    centro: z.centro,
+    limites_estruturais: z.limites_estruturais,
+    limites_operacionais: z.limites_operacionais,
+    score: z.score,
+    score_bruto: z.score_bruto,
+    fator_penalidade: z.fator_penalidade,
+    penalidades: z.penalidades || [],
+    numero_toques: z.numero_toques,
+    numero_rejeicoes: z.numero_rejeicoes,
+    forca_reacao_atr: z.forca_reacao_atr,
+    primeiro_toque: z.primeiro_toque,
+    ultimo_toque: z.ultimo_toque,
+    velas_desde_ultimo_toque: z.velasDesdeUltimoToque,
+    timeframes_confirmando: z.timeframes_confirmando || [],
+    role_reversal: !!z.role_reversal,
+    cruzamento_confirmado: !!z.cruzamento_confirmado,
+    volume_contexto: z.volume_contexto || "indefinido",
+    volume_relativo_mediano: z.volume_relativo_mediano ?? null,
+    distancia_preco_atual_pct: z.distancia_preco_atual_pct,
+    confluencia_nivel_manual: !!z.confluencia_nivel_manual,
+    membros: (z.membros || []).map((m) => ({ time: m.time, preco: m.preco, tipo: m.tipo })),
+    velasComScoreAlto: z.velasComScoreAlto || 0,
+    velasEnfraquecida: z.velasEnfraquecida || 0,
+    ultimaVelaAvaliada: z.ultimaVelaAvaliada || null,
+  };
+}
+
+// Resumo textual DERIVADO do mesmo objeto canonico.
+export function zonaParaEstado(z) {
+  const { membros, ...resto } = z;
+  return resto;
+}
+
+export function zonasParaTexto(zonas, dec, fmtDiaFn) {
+  if (!zonas.length) return ["zonas_automaticas: nenhuma"];
+  const L = [`zonas_automaticas_total: ${zonas.length}`];
+  zonas.forEach((z, i) => {
+    L.push(
+      `zona_auto_${i + 1}: id=${z.id} tipo=${z.tipo} status=${z.status} ` +
+        `estado=${z.estado_atual} score=${z.score} ` +
+        `estrutural=${z.limites_estruturais.inferior.toFixed(dec)}-${z.limites_estruturais.superior.toFixed(dec)} ` +
+        `operacional=${z.limites_operacionais.inferior.toFixed(dec)}-${z.limites_operacionais.superior.toFixed(dec)} ` +
+        `centro=${z.centro.toFixed(dec)} toques=${z.numero_toques} ` +
+        `rejeicoes=${z.numero_rejeicoes} role_reversal=${z.role_reversal ? "sim" : "nao"} ` +
+        `dist_pct=${z.distancia_preco_atual_pct.toFixed(2)} ` +
+        `confluencia_manual=${z.confluencia_nivel_manual ? "sim" : "nao"}`
+    );
+  });
+  return L;
 }
 
 // ------------------------------------------------------------
@@ -1531,6 +2370,18 @@ function readPair(cfg, d, tf, opts = {}) {
     volumeInconclusivo: inconclusivo,
   });
 
+  // ---- zonas automaticas (SO contexto: nao geram alerta) ----
+  const zonasRes = calcularZonas(cfg, tf, d, {
+    pivos,
+    zonasAnteriores: opts.zonasAnteriores || [],
+    zonasSemanais: opts.zonasSemanais || [],
+    proximoId: opts.proximoIdZona || 1,
+    volumeMedia20: vol.media,
+    niveisManuais: niveisDoPar(cfg).map((n) => n.nivel),
+  });
+  const zonasAutomaticas = zonasRes.zonas;
+  const zonasEstadoPar = zonasRes.zonasEstado || [];
+
   const estadosNivel = Object.values(estadoNovo).map((x) => x.estado);
   const sint = sinteses({
     alertas,
@@ -1701,12 +2552,20 @@ function readPair(cfg, d, tf, opts = {}) {
   );
   L.push(`alertas_tecnicos: ${alertas.length ? alertas.join(", ") : "nenhum"}`);
   L.push("");
+  zonasParaTexto(zonasAutomaticas, Math.max(D, 6), fmtDia).forEach((x) => L.push(x));
+  L.push("");
   L.push(`confluencia_entrada: ${sint.entrada}`);
   L.push(`confluencia_pullback: ${sint.pullback}`);
   L.push(`riscos_tecnicos: ${sint.riscos}`);
   L.push(`deterioracao_tendencia: ${sint.deterioracao}`);
 
-  return { texto: L.join("\n"), estadoNiveis: estadoNovo };
+  return {
+    texto: L.join("\n"),
+    estadoNiveis: estadoNovo,
+    zonasAutomaticas,
+    zonasEstadoPar,
+    proximoIdZona: zonasRes.proximoId,
+  };
 }
 
 // ------------------------------------------------------------
@@ -1762,6 +2621,10 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
   const dados = {};
   const estadoNiveis = {};
   const estadoAnt = (estadoAnterior && estadoAnterior.niveis) || {};
+  const zonasAnt = (estadoAnterior && estadoAnterior.zonas) || {};
+  const contadoresZona = { ...((estadoAnterior && estadoAnterior.contadoresZona) || {}) };
+  const zonasNovas = {};
+  const zonasPublicadas = {};
 
   blocks.push(`timestamp: ${fmtUTC(Math.floor(Date.now() / 1000))}`);
   blocks.push(`fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)`);
@@ -1770,10 +2633,13 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
   blocks.push(`nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eventos_semanal:"`);
   blocks.push("");
 
+  // Busca TUDO primeiro. As zonas semanais precisam existir antes das
+  // diarias (confluencia), mas o volume semanal equivalente precisa dos
+  // dados diarios. Separar busca de processamento resolve os dois.
+  const brutos = {};
   for (const tf of TIMEFRAMES) {
     dados[tf.key] = {};
-    blocks.push(`========== ${tf.titulo} ==========`);
-    blocks.push("");
+    brutos[tf.key] = {};
     for (const cfg of PAIRS) {
       try {
         const res = await fetchImpl(urlKraken(cfg, tf), {
@@ -1782,27 +2648,73 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const parsed = parseKraken(await res.json());
         dados[tf.key][cfg.key] = parsed;
-        const r = readPair(cfg, parsed, tf, {
-          estadoNiveis: estadoAnt,
-          dadosDiario: (dados.diario || {})[cfg.key],
-        });
-        blocks.push(r.texto);
-        Object.assign(estadoNiveis, r.estadoNiveis || {});
+        brutos[tf.key][cfg.key] = { ok: true, parsed };
       } catch (err) {
-        blocks.push(`${cfg.label}\ntimeframe: ${tf.key}\nFALHA: ${err.message}`);
-        // A consulta falhou: sem vela nova, nao ha o que avaliar. Copia
-        // os estados anteriores DESTE par/timeframe para o novo estado,
-        // senao uma indisponibilidade momentanea da Kraken apagaria a
-        // memoria de rompimento/reteste. O prefixo garante que so estes
-        // sao restaurados — estados descartados numa execucao bem
-        // sucedida continuam podendo sumir normalmente.
+        brutos[tf.key][cfg.key] = { ok: false, erro: err.message };
+      }
+    }
+  }
+
+  const blocosPorTf = {};
+  const zonasSemanaisPorPar = {};
+  // semanal primeiro (calculo), diario depois — a exibicao mantem a
+  // ordem original.
+  const ordemCalculo = [...TIMEFRAMES].sort((a, b) =>
+    a.key === "semanal" ? -1 : b.key === "semanal" ? 1 : 0
+  );
+
+  for (const tf of ordemCalculo) {
+    blocosPorTf[tf.key] = [];
+    for (const cfg of PAIRS) {
+      const bruto = brutos[tf.key][cfg.key];
+      if (!bruto.ok) {
+        blocosPorTf[tf.key].push(
+          `${cfg.label}\ntimeframe: ${tf.key}\nFALHA: ${bruto.erro}`
+        );
+        // Sem vela nova nao ha o que avaliar: preserva estados e zonas
+        // ANTERIORES deste par/timeframe. Uma indisponibilidade
+        // momentanea da Kraken nao pode apagar memoria.
         const prefixo = `${cfg.key}|${tf.key}|`;
         for (const [chave, valor] of Object.entries(estadoAnt)) {
           if (chave.startsWith(prefixo)) estadoNiveis[chave] = valor;
         }
+        const chaveZ = `${cfg.key}|${tf.key}`;
+        if (zonasAnt[chaveZ]) {
+          zonasNovas[chaveZ] = zonasAnt[chaveZ];
+          zonasPublicadas[chaveZ] = zonasAnt[chaveZ];
+          if (tf.key === "semanal") zonasSemanaisPorPar[cfg.key] = zonasAnt[chaveZ];
+        }
+        blocosPorTf[tf.key].push("");
+        continue;
       }
-      blocks.push("");
+      const chaveZ = `${cfg.key}|${tf.key}`;
+      const r = readPair(cfg, bruto.parsed, tf, {
+        estadoNiveis: estadoAnt,
+        dadosDiario: (dados.diario || {})[cfg.key],
+        zonasAnteriores: zonasAnt[chaveZ] || [],
+        zonasSemanais: tf.key === "diario" ? zonasSemanaisPorPar[cfg.key] || [] : [],
+        proximoIdZona: (contadoresZona[chaveZ] || 0) + 1,
+      });
+      blocosPorTf[tf.key].push(r.texto);
+      blocosPorTf[tf.key].push("");
+      Object.assign(estadoNiveis, r.estadoNiveis || {});
+      zonasPublicadas[chaveZ] = r.zonasAutomaticas || [];
+      zonasNovas[chaveZ] = (r.zonasEstadoPar || []).map(zonaParaEstado);
+      contadoresZona[chaveZ] = Math.max(
+        (contadoresZona[chaveZ] || 0),
+        (r.proximoIdZona || 1) - 1
+      );
+      // confluencia usa o ESTADO semanal (todas as vivas), nao o
+      // subconjunto publicado: uma zona semanal valida fora das 3 mais
+      // proximas ainda pode confirmar uma zona diaria.
+      if (tf.key === "semanal") zonasSemanaisPorPar[cfg.key] = r.zonasEstadoPar || [];
     }
+  }
+
+  for (const tf of TIMEFRAMES) {
+    blocks.push(`========== ${tf.titulo} ==========`);
+    blocks.push("");
+    for (const b of blocosPorTf[tf.key]) blocks.push(b);
   }
 
   // Gatilhos do alerta continuam olhando SOMENTE o diario.
@@ -1814,7 +2726,14 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
   );
   blocks.push("");
   blocks.push("fim do relatorio");
-  return { texto: blocks.join("\n"), gatilhos, estadoNiveis };
+  return {
+    texto: blocks.join("\n"),
+    gatilhos,
+    estadoNiveis,
+    zonas: zonasPublicadas,
+    zonasEstado: zonasNovas,
+    contadoresZona,
+  };
 }
 
 function toHTML(text) {
@@ -1836,7 +2755,8 @@ if (process.argv[1] && process.argv[1].endsWith("monitor.mjs")) {
   }
   const anteriores = estadoPrev.ativos || [];
 
-  const { texto, gatilhos, estadoNiveis } = await build(fetch, estadoPrev);
+  const { texto, gatilhos, estadoNiveis, zonas, zonasEstado, contadoresZona } =
+    await build(fetch, estadoPrev);
   mkdirSync("docs", { recursive: true });
   const ativos = gatilhos.map((g) => g.id);
   const novos = gatilhos.filter((g) => !anteriores.includes(g.id));
@@ -1845,13 +2765,19 @@ if (process.argv[1] && process.argv[1].endsWith("monitor.mjs")) {
   writeFileSync("docs/index.txt", texto + "\n");
   writeFileSync(
     "docs/relatorio.json",
-    JSON.stringify(relatorioParaJSON(texto), null, 2) + "\n"
+    JSON.stringify(relatorioParaJSON(texto, zonas), null, 2) + "\n"
   );
   writeFileSync("docs/.nojekyll", "");
   writeFileSync(
     "docs/estado.json",
     JSON.stringify(
-      { ativos, em: new Date().toISOString(), niveis: estadoNiveis },
+      {
+        ativos,
+        em: new Date().toISOString(),
+        niveis: estadoNiveis,
+        zonas: zonasEstado,
+        contadoresZona,
+      },
       null,
       2
     ) + "\n"
