@@ -50,6 +50,15 @@ const PAIRS = [
       resistenciaLabel: "409_410",
       suporte: 350,
       suporteLabel: "350_355",
+      // Ancora contextual manual: resistencia historica de longo prazo.
+      // NAO entra na maquina de estados, NAO gera evento, gatilho nem
+      // alerta tecnico. Existe apenas como referencia no relatorio.
+      resistenciaMacro: {
+        inferior: 430,
+        superior: 445,
+        label: "resistencia_macro_430_445",
+        tipo: "resistencia_macro_manual",
+      },
     },
   },
   {
@@ -59,7 +68,6 @@ const PAIRS = [
     dec: 8,
     niveis: {
       faixas: [[0.00575, 0.00585, "zona_000575_000585"]],
-      proximidade: [0.0061, "proximo_de_00060"],
       resistencia: 0.00644,
       resistenciaLabel: "000644",
       suporte: null,
@@ -839,7 +847,6 @@ function alertasTecnicos(cfg, d, ind) {
   for (const [lo, hi, nome] of nv.faixas || []) {
     if (p >= lo && p <= hi) a.push(nome);
   }
-  if (nv.proximidade && p <= nv.proximidade[0]) a.push(nv.proximidade[1]);
 
   // Rompimento: intradiario vs confirmado
   if (nv.resistencia !== null && nv.resistencia !== undefined) {
@@ -1336,7 +1343,8 @@ export function relatorioParaJSON(texto, zonas = null) {
       const chave = `${par === "XMR/USD" ? "usd" : "btc"}|${tfKey}`;
       bloco.niveis_manuais = {};
       for (const [campo, valor] of Object.entries(bloco)) {
-        if (campo.startsWith("nivel_")) bloco.niveis_manuais[campo] = valor;
+        if (campo.startsWith("nivel_") || campo.startsWith("resistencia_macro_"))
+          bloco.niveis_manuais[campo] = valor;
       }
       bloco.zonas_automaticas = zonas && zonas[chave] ? zonas[chave] : [];
     }
@@ -2459,6 +2467,29 @@ function readPair(cfg, d, tf, opts = {}) {
     `niveis_mudancas_nesta_vela: ${mudancasNivel.length ? mudancasNivel.join(", ") : "nenhuma"}`
   );
 
+  // ---- ancora macro manual (puramente descritiva) ----
+  const macro = cfg.niveis.resistenciaMacro;
+  if (macro) {
+    const estadoMacro =
+      live.close > macro.superior
+        ? "acima"
+        : live.close < macro.inferior
+        ? "abaixo"
+        : "em_teste";
+    L.push(`${macro.label}_tipo: ${macro.tipo}`);
+    L.push(`${macro.label}_inferior: ${num(macro.inferior, D)}`);
+    L.push(`${macro.label}_superior: ${num(macro.superior, D)}`);
+    L.push(`${macro.label}_estado: ${estadoMacro}`);
+    L.push(
+      `${macro.label}_distancia_pct: ${num(
+        ((live.close - (macro.inferior + macro.superior) / 2) /
+          ((macro.inferior + macro.superior) / 2)) *
+          100,
+        2
+      )}`
+    );
+  }
+
   // ---- volume ----
   L.push("");
   L.push(`fracao_periodo_decorrida: ${fracao === null ? "--" : fracao.toFixed(3)}`);
@@ -2607,8 +2638,6 @@ function avaliarGatilhos(d) {
     const p = btc.live.close;
     const i = btc.closes.length - 1;
     const fech = btc.closes[i];
-    if (p <= 0.0061)
-      add("btc_aprox_0060", `XMR/BTC se aproximou de 0,0060 (agora ${p.toFixed(8)})`);
     if (p >= 0.00575 && p <= 0.00585)
       add("btc_zona_00580", `XMR/BTC entrou na zona 0,00575-0,00585 (agora ${p.toFixed(8)})`);
     if (fech > 0.00644)
