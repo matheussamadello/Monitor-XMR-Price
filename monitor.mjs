@@ -2052,9 +2052,34 @@ export function calcularZonas(cfg, tf, d, ctx) {
         ? "acima_da_media_na_epoca"
         : "normal";
     z.timeframes_confirmando = confl ? [tf.key, "semanal"] : [tf.key];
+    // LEGADO — nao mexer: ponto dentro dos limites ESTRUTURAIS, olhando
+    // apenas os niveis que possuem maquina de estados persistente.
     z.confluencia_nivel_manual = (ctx.niveisManuais || []).some(
       (n) => n >= z.limites_estruturais.inferior && n <= z.limites_estruturais.superior
     );
+
+    // NOVOS — faixa x faixa sobre os limites OPERACIONAIS. O operacional
+    // e' estreito por construcao (centro +- 0,35 ATR), entao nao produz
+    // o artefato de uma zona estrutural larga "engolir" a faixa manual.
+    const sobrepoeFaixa = (faixa) =>
+      sobreposicaoFrac(z.limites_operacionais, {
+        inferior: faixa[0],
+        superior: faixa[1],
+      }) >= CONFLUENCIA_SOBREPOSICAO_MIN;
+
+    z.confluencia_faixa_manual = (ctx.faixasManuais || []).some(sobrepoeFaixa);
+
+    const macro = ctx.resistenciaMacro;
+    z.confluencia_resistencia_macro = macro
+      ? sobrepoeFaixa([macro.inferior, macro.superior])
+      : false;
+
+    // Conveniencia para consumidores externos. Nao entra em score,
+    // alerta, gatilho nem ciclo de vida.
+    z.confluencia_manual_qualquer =
+      z.confluencia_nivel_manual ||
+      z.confluencia_faixa_manual ||
+      z.confluencia_resistencia_macro;
   }
 
   // ciclo de vida
@@ -2152,6 +2177,9 @@ function limparZona(z) {
     volume_relativo_mediano: z.volume_relativo_mediano ?? null,
     distancia_preco_atual_pct: z.distancia_preco_atual_pct,
     confluencia_nivel_manual: !!z.confluencia_nivel_manual,
+    confluencia_faixa_manual: !!z.confluencia_faixa_manual,
+    confluencia_resistencia_macro: !!z.confluencia_resistencia_macro,
+    confluencia_manual_qualquer: !!z.confluencia_manual_qualquer,
     membros: (z.membros || []).map((m) => ({ time: m.time, preco: m.preco, tipo: m.tipo })),
     velasComScoreAlto: z.velasComScoreAlto || 0,
     velasEnfraquecida: z.velasEnfraquecida || 0,
@@ -2177,7 +2205,10 @@ export function zonasParaTexto(zonas, dec, fmtDiaFn) {
         `centro=${z.centro.toFixed(dec)} toques=${z.numero_toques} ` +
         `rejeicoes=${z.numero_rejeicoes} role_reversal=${z.role_reversal ? "sim" : "nao"} ` +
         `dist_pct=${z.distancia_preco_atual_pct.toFixed(2)} ` +
-        `confluencia_manual=${z.confluencia_nivel_manual ? "sim" : "nao"}`
+        `confluencia_manual=${z.confluencia_nivel_manual ? "sim" : "nao"} ` +
+        `confluencia_faixa=${z.confluencia_faixa_manual ? "sim" : "nao"} ` +
+        `confluencia_macro=${z.confluencia_resistencia_macro ? "sim" : "nao"} ` +
+        `confluencia_qualquer=${z.confluencia_manual_qualquer ? "sim" : "nao"}`
     );
   });
   return L;
@@ -2392,6 +2423,8 @@ function readPair(cfg, d, tf, opts = {}) {
     proximoId: opts.proximoIdZona || 1,
     volumeMedia20: vol.media,
     niveisManuais: niveisDoPar(cfg).map((n) => n.nivel),
+    faixasManuais: (cfg.niveis.faixas || []).map((f) => [f[0], f[1]]),
+    resistenciaMacro: cfg.niveis.resistenciaMacro || null,
   });
   const zonasAutomaticas = zonasRes.zonas;
   const zonasEstadoPar = zonasRes.zonasEstado || [];
