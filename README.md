@@ -4,6 +4,8 @@ Monitor técnico automatizado de **Monero (XMR)** com dados OHLC da Kraken.
 
 O projeto acompanha **XMR/USD** e **XMR/BTC** nos timeframes **diário** e **semanal**, calcula indicadores técnicos, estrutura de preço, divergências, volume, níveis manuais e zonas automáticas de suporte/resistência, e publica os resultados em HTML, texto e JSON.
 
+O projeto foi desenhado para acompanhamento de swing trades e operações de prazo mais longo, com o gráfico diário como referência principal de timing e o semanal como filtro de contexto estrutural.
+
 ## Monitor online
 
 **Página principal**
