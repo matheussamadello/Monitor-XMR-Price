@@ -708,13 +708,7 @@ Um consumidor robusto deve, no mínimo:
 7. evitar transformar cada item de `alertas_tecnicos` em uma notificação independente;
 8. fundir sinais relacionados para reduzir spam.
 
-O arquivo:
-
-```text
-PROMPT_XMR_TECHNICAL_WATCH.md
-```
-
-contém uma política pronta e mais seletiva para uma LLM ou agente transformar snapshots sucessivos do `relatorio.json` em alertas técnicos.
+O arquivo [`PROMPT_XMR_TECHNICAL_WATCH.md`](./PROMPT_XMR_TECHNICAL_WATCH.md) contém uma política pronta e mais seletiva para uma LLM ou agente transformar snapshots sucessivos do `relatorio.json` em alertas técnicos.
 
 No prompt atual:
 
