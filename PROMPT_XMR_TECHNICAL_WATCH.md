@@ -105,8 +105,6 @@ A resistência macro `US$ 430–445` é contextual e propositalmente diferente d
 
 Se o JSON atualizado passar a publicar valores diferentes, **prevalece o JSON**.
 
-Se alguma faixa ainda não estiver serializada explicitamente dentro de `niveis_manuais`, use temporariamente os valores atuais conhecidos como baseline, sem transformar essa ausência em alerta.
-
 O antigo campo `proximidade` / `proximo_de_00060` de XMR/BTC foi removido intencionalmente. Não espere esse campo, não sugira recriá-lo e não o substitua automaticamente por uma faixa fixa em torno de `0,0060`.
 
 ### Objetivo operacional
