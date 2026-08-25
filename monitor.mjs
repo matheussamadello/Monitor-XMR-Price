@@ -8,7 +8,8 @@
 // "alertas_tecnicos:".
 // ============================================================
 
-import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
+import { writeFileSync, mkdirSync, readFileSync, realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const PERIOD = 14;
 const EMA_PERIOD = 89;
@@ -34,47 +35,68 @@ const TIMEFRAMES = [
   },
 ];
 
+// ------------------------------------------------------------
+// NIVEIS MANUAIS — o unico lugar a editar quando o preco andar.
+//
+// Tres consumidores leem daqui e so daqui: alertasTecnicos (faixas e
+// rompimento/perda intradiarios), niveisDoPar (maquina de estados de
+// rompimento/reteste) e avaliarGatilhos (a linha GATILHOS ATIVOS). Antes
+// os numeros dos gatilhos estavam repetidos dentro de avaliarGatilhos, o
+// que deixava metade da configuracao desatualizada depois de uma revisao
+// de niveis.
+// ------------------------------------------------------------
+
+const NIVEIS_USD = {
+  faixas: [
+    [377, 385, "faixa_377_385"],
+    [365, 375, "faixa_365_375"],
+    [350, 355, "regiao_suporte_350_355"],
+  ],
+  resistencia: 410,
+  resistenciaLabel: "409_410",
+  suporte: 350,
+  suporteLabel: "350_355",
+  // Ancora contextual manual: resistencia historica de longo prazo.
+  // NAO entra na maquina de estados, NAO gera evento, gatilho nem
+  // alerta tecnico. Existe apenas como referencia no relatorio.
+  resistenciaMacro: {
+    inferior: 430,
+    superior: 445,
+    label: "resistencia_macro_430_445",
+    tipo: "resistencia_macro_manual",
+  },
+};
+
+const NIVEIS_BTC = {
+  faixas: [[0.00575, 0.00585, "zona_000575_000585"]],
+  resistencia: 0.00644,
+  resistenciaLabel: "000644",
+  suporte: null,
+  suporteLabel: null,
+};
+
 const PAIRS = [
   {
     key: "usd",
     label: "XMR/USD",
     par: "XMRUSD",
     dec: 2,
-    niveis: {
-      faixas: [
-        [377, 385, "faixa_377_385"],
-        [365, 375, "faixa_365_375"],
-        [350, 355, "regiao_suporte_350_355"],
-      ],
-      resistencia: 410,
-      resistenciaLabel: "409_410",
-      suporte: 350,
-      suporteLabel: "350_355",
-      // Ancora contextual manual: resistencia historica de longo prazo.
-      // NAO entra na maquina de estados, NAO gera evento, gatilho nem
-      // alerta tecnico. Existe apenas como referencia no relatorio.
-      resistenciaMacro: {
-        inferior: 430,
-        superior: 445,
-        label: "resistencia_macro_430_445",
-        tipo: "resistencia_macro_manual",
-      },
-    },
+    niveis: NIVEIS_USD,
   },
   {
     key: "btc",
     label: "XMR/BTC",
     par: "XMRBTC",
     dec: 8,
-    niveis: {
-      faixas: [[0.00575, 0.00585, "zona_000575_000585"]],
-      resistencia: 0.00644,
-      resistenciaLabel: "000644",
-      suporte: null,
-      suporteLabel: null,
-    },
+    niveis: NIVEIS_BTC,
   },
 ];
+
+// Par pela label publicada no relatorio. Usado pela serializacao do JSON,
+// que so conhece "XMR/USD" / "XMR/BTC".
+function parPorLabel(label) {
+  return PAIRS.find((c) => c.label === label) || null;
+}
 
 function urlKraken(cfg, tf) {
   return `https://api.kraken.com/0/public/OHLC?pair=${cfg.par}&interval=${tf.interval}&assetVersion=1`;
@@ -1340,8 +1362,25 @@ export function relatorioParaJSON(texto, zonas = null) {
   for (const tfKey of ["diario", "semanal"]) {
     for (const par of Object.keys(out[tfKey] || {})) {
       const bloco = out[tfKey][par];
-      const chave = `${par === "XMR/USD" ? "usd" : "btc"}|${tfKey}`;
+      const cfgPar = parPorLabel(par);
+      const chave = `${cfgPar ? cfgPar.key : par === "XMR/USD" ? "usd" : "btc"}|${tfKey}`;
       bloco.niveis_manuais = {};
+
+      // Faixas manuais publicadas como METADADO, derivadas direto da
+      // configuracao do par. Nao existe copia dos numeros aqui: mexer em
+      // NIVEIS_USD.faixas ou NIVEIS_BTC.faixas muda o JSON sozinho.
+      //
+      // Vem da configuracao e nao do texto, igual a zonas_automaticas
+      // logo abaixo, que tambem e' injetada por fora. A regra de derivar
+      // do texto existe para dado CALCULADO, onde texto e JSON poderiam
+      // divergir; faixa manual e' constante de configuracao, entao nao ha
+      // o que divergir.
+      if (cfgPar) {
+        bloco.niveis_manuais.faixas = (cfgPar.niveis.faixas || []).map(
+          ([inferior, superior, label]) => ({ inferior, superior, label })
+        );
+      }
+
       for (const [campo, valor] of Object.entries(bloco)) {
         if (campo.startsWith("nivel_") || campo.startsWith("resistencia_macro_"))
           bloco.niveis_manuais[campo] = valor;
@@ -2645,36 +2684,52 @@ function readPair(cfg, d, tf, opts = {}) {
 function avaliarGatilhos(d) {
   const out = [];
   const add = (id, msg) => out.push({ id, msg });
-  const usd = d.usd;
-  const btc = d.btc;
 
-  if (usd) {
-    const p = usd.live.close;
-    const i = usd.closes.length - 1;
-    const fech = usd.closes[i];
-    const abert = usd.opens[i];
+  // Um bloco so, iterando os pares. Os numeros vem de cfg.niveis; nada
+  // aqui repete valor de preco.
+  for (const cfg of PAIRS) {
+    const dd = d[cfg.key];
+    if (!dd) continue;
+
+    const nv = cfg.niveis;
+    const dec = cfg.dec;
+    const p = dd.live.close;
+    const i = dd.closes.length - 1;
+    if (i < 0) continue;
+    const fech = dd.closes[i];
+    const abert = dd.opens[i];
     const corpoBaixo = Math.min(abert, fech);
 
-    if (p >= 377 && p <= 385)
-      add("usd_377_385", `XMR/USD entrou na faixa 377-385 (agora ${p.toFixed(2)})`);
-    if (p >= 365 && p <= 375)
-      add("usd_365_375", `XMR/USD entrou na faixa 365-375 (agora ${p.toFixed(2)})`);
-    if (p >= 350 && p <= 355)
-      add("usd_350_355", `XMR/USD chegou na regiao de suporte 350-355 (agora ${p.toFixed(2)})`);
-    if (fech > 410 && corpoBaixo > 410)
-      add("usd_rompe_410", `XMR/USD fechou o diario acima de 410 com corpo confirmando (fech ${fech.toFixed(2)}, abert ${abert.toFixed(2)})`);
-    if (usd.closes[i] < 350 && usd.closes[i - 1] < 350)
-      add("usd_perde_350", `XMR/USD perdeu 350 com dois fechamentos diarios seguidos (${usd.closes[i - 1].toFixed(2)} e ${fech.toFixed(2)})`);
-  }
+    for (const [lo, hi, nome] of nv.faixas || []) {
+      if (p >= lo && p <= hi)
+        add(
+          `${cfg.key}_${nome}`,
+          `${cfg.label} entrou na regiao ${lo}-${hi} (agora ${p.toFixed(dec)})`
+        );
+    }
 
-  if (btc) {
-    const p = btc.live.close;
-    const i = btc.closes.length - 1;
-    const fech = btc.closes[i];
-    if (p >= 0.00575 && p <= 0.00585)
-      add("btc_zona_00580", `XMR/BTC entrou na zona 0,00575-0,00585 (agora ${p.toFixed(8)})`);
-    if (fech > 0.00644)
-      add("btc_rompe_00644", `XMR/BTC fechou o diario acima de 0,00644 (fech ${fech.toFixed(8)})`);
+    // Rompimento so conta com o corpo real alem do nivel — mesmo criterio
+    // estrito de rompimento_confirmado em alertas_tecnicos e da maquina
+    // de estados.
+    if (nv.resistencia !== null && nv.resistencia !== undefined) {
+      if (fech > nv.resistencia && corpoBaixo > nv.resistencia) {
+        add(
+          `${cfg.key}_rompe_${nv.resistenciaLabel}`,
+          `${cfg.label} fechou o diario acima de ${nv.resistencia} com corpo confirmando (fech ${fech.toFixed(dec)}, abert ${abert.toFixed(dec)})`
+        );
+      }
+    }
+
+    // Perda de suporte exige dois fechamentos seguidos abaixo.
+    if (nv.suporte !== null && nv.suporte !== undefined && i >= 1) {
+      const ant = dd.closes[i - 1];
+      if (fech < nv.suporte && ant < nv.suporte) {
+        add(
+          `${cfg.key}_perde_${nv.suporteLabel}`,
+          `${cfg.label} perdeu ${nv.suporte} com dois fechamentos diarios seguidos (${ant.toFixed(dec)} e ${fech.toFixed(dec)})`
+        );
+      }
+    }
   }
 
   return out;
@@ -2817,8 +2872,20 @@ function toHTML(text) {
   );
 }
 
-// So executa quando chamado direto (nao durante os testes)
-if (process.argv[1] && process.argv[1].endsWith("monitor.mjs")) {
+// So executa quando chamado direto (nao durante os testes).
+// Compara o caminho REAL do arquivo em execucao com o deste modulo, em
+// vez do nome do arquivo: assim o script continua funcionando com
+// qualquer nome, e um "import" para teste continua nao executando nada.
+const executadoDireto = (() => {
+  try {
+    if (!process.argv[1]) return false;
+    return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+})();
+
+if (executadoDireto) {
   let estadoPrev = {};
   try {
     estadoPrev = JSON.parse(readFileSync("docs/estado.json", "utf8"));
