@@ -190,7 +190,9 @@ Em integrações com bots ou LLMs, sinais de maior convicção podem exigir fech
 
 ## Níveis manuais
 
-Os níveis manuais ficam configurados dentro de cada par no array `PAIRS` de `monitor.mjs`.
+Os níveis manuais ficam centralizados em `NIVEIS_USD` e `NIVEIS_BTC`, no topo de `monitor.mjs`. Cada entrada de `PAIRS` apenas aponta para o objeto do seu par.
+
+Três consumidores leem daí e só daí: `alertasTecnicos` (faixas e rompimento/perda intradiários), `niveisDoPar` (máquina de estados de rompimento/reteste) e `avaliarGatilhos` (a linha `GATILHOS ATIVOS`). Nenhum valor de preço aparece duas vezes no arquivo, então revisar níveis é editar um bloco só.
 
 ### XMR/USD
 
@@ -233,7 +235,19 @@ As zonas automáticas podem cumprir o papel de contexto dinâmico de suporte e r
 
 As faixas manuais fazem parte da configuração do código e também são consideradas no cálculo de confluência das zonas automáticas.
 
-No JSON público atual, a máquina de estados dos níveis pontuais e a resistência macro aparecem dentro de `niveis_manuais`.
+Dentro de `niveis_manuais` aparecem, por par e por timeframe: as faixas manuais, a máquina de estados dos níveis pontuais e — apenas em XMR/USD — a resistência macro.
+
+As faixas são publicadas como metadado derivado da configuração:
+
+```json
+"faixas": [
+  { "inferior": 377, "superior": 385, "label": "faixa_377_385" },
+  { "inferior": 365, "superior": 375, "label": "faixa_365_375" },
+  { "inferior": 350, "superior": 355, "label": "regiao_suporte_350_355" }
+]
+```
+
+Não existe cópia manual desses números na serialização: alterar `NIVEIS_USD.faixas` ou `NIVEIS_BTC.faixas` muda o JSON sozinho. Consumidores externos devem preferir o JSON como fonte de verdade em vez de manter cópias eternas dos valores.
 
 As zonas automáticas também publicam campos próprios de confluência, como:
 
@@ -527,7 +541,7 @@ A cada execução, o workflow:
 4. adiciona a pasta `docs` ao commit;
 5. cria um commit caso haja mudanças;
 6. tenta enviar o commit para `main`;
-7. em caso de push recusado, sincroniza e tenta novamente, até três tentativas.
+7. em caso de push recusado, sincroniza e tenta novamente, até cinco tentativas, com espera progressiva entre elas.
 
 O `reset` antes da execução é importante porque `docs/estado.json` funciona como memória persistente.
 
@@ -569,7 +583,7 @@ O monitor consulta a Kraken pela internet durante a execução.
 3. Crie o fork na sua conta.
 4. Abra a aba **Actions** do fork e habilite os workflows, se o GitHub os tiver deixado desativados.
 5. Confira em **Settings → Actions → General** se o workflow possui permissão para gravar no repositório.
-6. Execute manualmente o workflow `monitor` uma vez usando **Run workflow** para validar o fork.
+6. Execute manualmente o workflow `Monitor XMR` uma vez usando **Run workflow** para validar o fork.
 
 O workflow solicita:
 
@@ -612,40 +626,40 @@ Em um fork com outro usuário ou outro nome de repositório, ajuste os URLs usad
 
 ## Personalizando pares, níveis e faixas
 
-Os pares ficam configurados no array:
+Os níveis ficam em objetos próprios, e o array de pares apenas aponta para eles:
 
 ```js
-const PAIRS = [
-  {
-    key: "usd",
-    label: "XMR/USD",
-    par: "XMRUSD",
-    // ...
-  },
-  {
-    key: "btc",
-    label: "XMR/BTC",
-    par: "XMRBTC",
-    // ...
-  },
-];
-```
-
-Cada par possui sua própria configuração de níveis.
-
-Exemplo simplificado de XMR/BTC:
-
-```js
-niveis: {
+const NIVEIS_BTC = {
   faixas: [[0.00575, 0.00585, "zona_000575_000585"]],
   resistencia: 0.00644,
   resistenciaLabel: "000644",
   suporte: null,
   suporteLabel: null,
-}
+};
+
+const PAIRS = [
+  {
+    key: "usd",
+    label: "XMR/USD",
+    par: "XMRUSD",
+    dec: 2,
+    niveis: NIVEIS_USD,
+  },
+  {
+    key: "btc",
+    label: "XMR/BTC",
+    par: "XMRBTC",
+    dec: 8,
+    niveis: NIVEIS_BTC,
+  },
+];
 ```
 
+`NIVEIS_USD` tem a mesma forma, com o acréscimo de `resistenciaMacro`.
+
 Ao alterar níveis pontuais, mantenha coerentes o valor e o respectivo label, porque os labels participam dos nomes de campos publicados pela máquina de estados.
+
+Os labels também formam os ids publicados em `gatilhos_ativos`: uma faixa gera `<par>_<label>`, a resistência gera `<par>_rompe_<resistenciaLabel>` e o suporte gera `<par>_perde_<suporteLabel>`. Trocar um label muda o id correspondente, e o gatilho volta a contar como novo uma única vez.
 
 Ao alterar faixas manuais, revise também consumidores externos que dependam da leitura dessas regiões.
 
