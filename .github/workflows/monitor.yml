@@ -1,4 +1,4 @@
-name: monitor
+name: Monitor XMR
 
 on:
   schedule:
@@ -28,7 +28,7 @@ jobs:
         run: |
           git config user.name "monitor-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for tentativa in 1 2 3; do
+          for tentativa in 1 2 3 4 5; do
             git fetch origin main
             git reset --hard origin/main
             node monitor.mjs
@@ -42,8 +42,8 @@ jobs:
               echo "publicado na tentativa $tentativa"
               exit 0
             fi
-            echo "push recusado, sincronizando e tentando de novo"
-            sleep 5
+            echo "push recusado (alguem empurrou antes), tentando de novo"
+            sleep $((tentativa * 5))
           done
-          echo "falhou apos 3 tentativas"
+          echo "falhou apos 5 tentativas"
           exit 1
