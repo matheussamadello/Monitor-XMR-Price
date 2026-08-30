@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset=utf-8>
 <title>Monitor XMR</title>
-<pre style="font:14px/1.5 ui-monospace,monospace;padding:1rem;white-space:pre-wrap">timestamp: 2026-08-30 01:13 UTC
+<pre style="font:14px/1.5 ui-monospace,monospace;padding:1rem;white-space:pre-wrap">timestamp: 2026-08-30 01:17 UTC
 fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)
 indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial
 nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
@@ -11,16 +11,16 @@ nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eve
 
 XMR/USD
 timeframe: diario
-preco_atual: 473.45
+preco_atual: 472.94
 candle_atual_data: 2026-08-30
 candle_atual_open: 470.89
 candle_atual_high: 474.14
 candle_atual_low: 470.03
-candle_atual_close_provisorio: 473.45
-candle_atual_var_pct_desde_abertura: 0.54
+candle_atual_close_provisorio: 472.94
+candle_atual_var_pct_desde_abertura: 0.44
 ema89: 376.78
 posicao_vs_ema89: acima
-distancia_ema89_pct: 25.66
+distancia_ema89_pct: 25.52
 
 # principais: calculados SOMENTE com velas fechadas
 rsi14_fechado: 74.63
@@ -32,7 +32,7 @@ ultimo_fechamento_close: 471.00
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi14_provisorio: 75.16
+rsi14_provisorio: 75.05
 di_plus14_provisorio: 29.57
 di_minus14_provisorio: 4.33
 adx14_provisorio: 51.52
@@ -56,17 +56,17 @@ resistencia_macro_430_445_tipo: resistencia_macro_manual
 resistencia_macro_430_445_inferior: 430.00
 resistencia_macro_430_445_superior: 445.00
 resistencia_macro_430_445_estado: acima
-resistencia_macro_430_445_distancia_pct: 8.22
+resistencia_macro_430_445_distancia_pct: 8.10
 
-fracao_periodo_decorrida: 0.051
+fracao_periodo_decorrida: 0.054
 volume_parcial: sim
-volume_atual: 374.7295
+volume_atual: 409.0929
 volume_ultima_fechada: 5157.4502
 volume_media20: 8398.6059
-volume_vs_media_pct: -95.54
+volume_vs_media_pct: -95.13
 volume_classificacao: inconclusivo_periodo_inicial
 volume_tendencia_3_fechadas: decrescente
-trades_vela_atual: 254
+trades_vela_atual: 294
 
 estrutura_preco: HH_HL
 estrutura_tendencia: alta
@@ -84,11 +84,11 @@ sombra_sup_pct_range: 7.19
 sombra_inf_pct_range: 83.94
 sombra_sup_vs_corpo: 0.81
 sombra_inf_vs_corpo: 9.46
-candle_atual_corpo_pct_range: 62.29
-candle_atual_sombra_sup_pct_range: 16.79
+candle_atual_corpo_pct_range: 49.88
+candle_atual_sombra_sup_pct_range: 29.20
 candle_atual_sombra_inf_pct_range: 20.92
-candle_atual_sombra_sup_vs_corpo: 0.27
-candle_atual_sombra_inf_vs_corpo: 0.34
+candle_atual_sombra_sup_vs_corpo: 0.59
+candle_atual_sombra_inf_vs_corpo: 0.42
 
 eventos: nenhum cruzamento nesta vela
 mediana_corpo_20: 8.005000
@@ -103,12 +103,12 @@ padrao_em_formacao: nenhum
 alertas_tecnicos: rompimento_confirmado_409_410, rsi_acima_70, adx_subindo_com_di_plus_dominante
 
 zonas_automaticas_total: 6
-zona_auto_1: id=usd|diario|z17 tipo=resistencia status=ativa estado=em_teste score=73 estrutural=463.010000-485.730000 operacional=467.254450-481.485550 centro=474.370000 toques=5 rejeicoes=2 role_reversal=nao dist_pct=-0.19 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_2: id=usd|diario|z18 tipo=resistencia status=enfraquecida estado=abaixo score=49 estrutural=493.922537-506.947463 operacional=492.928475-507.941525 centro=500.435000 toques=3 rejeicoes=1 role_reversal=nao dist_pct=-5.39 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_3: id=usd|diario|z19 tipo=resistencia status=candidata estado=abaixo score=26 estrutural=641.406035-658.593965 operacional=642.197004-657.802996 centro=650.000000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-27.16 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_4: id=usd|diario|z16 tipo=resistencia status=ativa estado=acima score=84 estrutural=423.380000-444.800000 operacional=427.578650-440.601350 centro=434.090000 toques=7 rejeicoes=4 role_reversal=sim dist_pct=9.07 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
-zona_auto_5: id=usd|diario|z15 tipo=resistencia status=ativa estado=acima score=83 estrutural=403.451869-429.778131 operacional=410.365775-422.864225 centro=416.615000 toques=12 rejeicoes=9 role_reversal=sim dist_pct=13.64 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_6: id=usd|diario|z14 tipo=suporte status=ativa estado=acima score=71 estrutural=389.980000-416.410000 operacional=397.147075-409.242925 centro=403.195000 toques=7 rejeicoes=5 role_reversal=sim dist_pct=17.42 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_1: id=usd|diario|z17 tipo=resistencia status=ativa estado=em_teste score=73 estrutural=463.010000-485.730000 operacional=467.254450-481.485550 centro=474.370000 toques=5 rejeicoes=2 role_reversal=nao dist_pct=-0.30 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_2: id=usd|diario|z18 tipo=resistencia status=enfraquecida estado=abaixo score=49 estrutural=493.922537-506.947463 operacional=492.928475-507.941525 centro=500.435000 toques=3 rejeicoes=1 role_reversal=nao dist_pct=-5.49 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_3: id=usd|diario|z19 tipo=resistencia status=candidata estado=abaixo score=26 estrutural=641.406035-658.593965 operacional=642.197004-657.802996 centro=650.000000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-27.24 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_4: id=usd|diario|z16 tipo=resistencia status=ativa estado=acima score=84 estrutural=423.380000-444.800000 operacional=427.578650-440.601350 centro=434.090000 toques=7 rejeicoes=4 role_reversal=sim dist_pct=8.95 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
+zona_auto_5: id=usd|diario|z15 tipo=resistencia status=ativa estado=acima score=83 estrutural=403.451869-429.778131 operacional=410.365775-422.864225 centro=416.615000 toques=12 rejeicoes=9 role_reversal=sim dist_pct=13.52 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_6: id=usd|diario|z14 tipo=suporte status=ativa estado=acima score=71 estrutural=389.980000-416.410000 operacional=397.147075-409.242925 centro=403.195000 toques=7 rejeicoes=5 role_reversal=sim dist_pct=17.30 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=sim
 
 confluencia_entrada: rompimento_confirmado_por_fechamento, estrutura_de_alta_preservada, di_plus_dominante
 confluencia_pullback: tendencia_hh_hl_preservada, rsi_esfriando, di_plus_ainda_dominante, volume_decrescente_na_correcao
@@ -157,7 +157,7 @@ nivel_000644_afastado: nao
 nivel_000644_historico: em_reteste@2026-08-17 rompimento_falhou@2026-08-18
 niveis_mudancas_nesta_vela: nenhuma
 
-fracao_periodo_decorrida: 0.051
+fracao_periodo_decorrida: 0.054
 volume_parcial: sim
 volume_atual: 53.3337
 volume_ultima_fechada: 504.3744
@@ -218,16 +218,16 @@ deterioracao_tendencia: perda_estrutura_alta_novo_LL, rompimento_falhou
 
 XMR/USD
 timeframe: semanal
-preco_atual: 473.39
+preco_atual: 472.94
 candle_atual_data: 2026-08-27
 candle_atual_open: 437.54
 candle_atual_high: 478.70
 candle_atual_low: 435.47
-candle_atual_close_provisorio: 473.39
-candle_atual_var_pct_desde_abertura: 8.19
+candle_atual_close_provisorio: 472.94
+candle_atual_var_pct_desde_abertura: 8.09
 ema89: 324.87
 posicao_vs_ema89: acima
-distancia_ema89_pct: 45.72
+distancia_ema89_pct: 45.58
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi14_fechado: 63.22
@@ -239,7 +239,7 @@ ultimo_fechamento_close: 437.76
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi14_provisorio: 67.67
+rsi14_provisorio: 67.62
 di_plus14_provisorio: 30.98
 di_minus14_provisorio: 12.21
 adx14_provisorio: 25.16
@@ -263,17 +263,17 @@ resistencia_macro_430_445_tipo: resistencia_macro_manual
 resistencia_macro_430_445_inferior: 430.00
 resistencia_macro_430_445_superior: 445.00
 resistencia_macro_430_445_estado: acima
-resistencia_macro_430_445_distancia_pct: 8.20
+resistencia_macro_430_445_distancia_pct: 8.10
 
 fracao_periodo_decorrida: 0.436
 volume_parcial: sim
-volume_atual: 25087.2457
+volume_atual: 25119.1327
 volume_ultima_fechada: 73810.4220
 volume_media20: 67865.7761
-volume_vs_media_pct: -63.03
+volume_vs_media_pct: -62.99
 volume_classificacao: contracao_forte
 volume_tendencia_3_fechadas: irregular
-trades_vela_atual: 25914
+trades_vela_atual: 25953
 volume_semana_dias_fechados: 3
 volume_semana_soma_dias_fechados: 24710.0397
 volume_semanas_anteriores_mesmos_dias_media: 23676.3778
@@ -296,10 +296,10 @@ sombra_sup_pct_range: 41.01
 sombra_inf_pct_range: 34.92
 sombra_sup_vs_corpo: 1.70
 sombra_inf_vs_corpo: 1.45
-candle_atual_corpo_pct_range: 82.93
-candle_atual_sombra_sup_pct_range: 12.28
+candle_atual_corpo_pct_range: 81.89
+candle_atual_sombra_sup_pct_range: 13.32
 candle_atual_sombra_inf_pct_range: 4.79
-candle_atual_sombra_sup_vs_corpo: 0.15
+candle_atual_sombra_sup_vs_corpo: 0.16
 candle_atual_sombra_inf_vs_corpo: 0.06
 
 eventos_semanal: nenhum cruzamento nesta vela
@@ -315,11 +315,11 @@ padrao_em_formacao: nenhum
 alertas_tecnicos: rompimento_confirmado_409_410, adx_subindo_com_di_plus_dominante, novo_HL_apos_fundo_mais_baixo, topo_mais_baixo_apos_HH, rompimento_com_volume_fraco
 
 zonas_automaticas_total: 5
-zona_auto_1: id=usd|semanal|z14 tipo=resistencia status=ativa estado=abaixo score=53 estrutural=461.413941-525.686059 operacional=486.146750-500.953250 centro=493.550000 toques=2 rejeicoes=2 role_reversal=nao dist_pct=-4.08 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_2: id=usd|semanal|z15 tipo=resistencia status=candidata estado=abaixo score=30 estrutural=788.359398-811.420602 operacional=787.891650-811.888350 centro=799.890000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-40.82 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_3: id=usd|semanal|z13 tipo=resistencia status=ativa estado=acima score=91 estrutural=409.866177-466.113823 operacional=431.420150-444.559850 centro=437.990000 toques=5 rejeicoes=4 role_reversal=nao dist_pct=8.08 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
-zona_auto_4: id=usd|semanal|z12 tipo=suporte status=ativa estado=acima score=96 estrutural=339.680000-382.120000 operacional=355.486500-366.313500 centro=360.900000 toques=6 rejeicoes=5 role_reversal=sim dist_pct=31.17 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_5: id=usd|semanal|z11 tipo=suporte status=ativa estado=acima score=77 estrutural=288.880000-318.500000 operacional=299.134650-308.245350 centro=303.690000 toques=8 rejeicoes=3 role_reversal=sim dist_pct=55.88 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_1: id=usd|semanal|z14 tipo=resistencia status=ativa estado=abaixo score=53 estrutural=461.413941-525.686059 operacional=486.146750-500.953250 centro=493.550000 toques=2 rejeicoes=2 role_reversal=nao dist_pct=-4.18 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_2: id=usd|semanal|z15 tipo=resistencia status=candidata estado=abaixo score=30 estrutural=788.359398-811.420602 operacional=787.891650-811.888350 centro=799.890000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-40.87 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_3: id=usd|semanal|z13 tipo=resistencia status=ativa estado=acima score=91 estrutural=409.866177-466.113823 operacional=431.420150-444.559850 centro=437.990000 toques=5 rejeicoes=4 role_reversal=nao dist_pct=7.98 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
+zona_auto_4: id=usd|semanal|z12 tipo=suporte status=ativa estado=acima score=96 estrutural=339.680000-382.120000 operacional=355.486500-366.313500 centro=360.900000 toques=6 rejeicoes=5 role_reversal=sim dist_pct=31.04 confluencia_manual=sim confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_5: id=usd|semanal|z11 tipo=suporte status=ativa estado=acima score=77 estrutural=288.880000-318.500000 operacional=299.134650-308.245350 centro=303.690000 toques=8 rejeicoes=3 role_reversal=sim dist_pct=55.73 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: rompimento_confirmado_por_fechamento, di_plus_dominante
 confluencia_pullback: novo_HL_formado, di_plus_ainda_dominante
