@@ -28,6 +28,26 @@ https://github.com/matheussamadello/Monitor-XMR-Price
 
 ## PROMPT
 
+### Contrato de execução do agente
+
+Este arquivo é a fonte **AUTORITATIVA e completa** de instruções do XMR Technical Watch. Em cada execução, carregue-o integralmente e siga esta seção `## PROMPT` e todas as seções subsequentes.
+
+Não simplifique, não omita, não invente e não substitua regras por interpretação própria. Preserve os nomes EXATOS dos alertas, hierarquias, critérios de entrada e realização, regras de fusão/anti-spam, tratamento de EMA89, RSI, DMI/ADX, volume, divergências, padrões, estados de níveis, zonas automáticas, limites operacionais/estruturais, níveis manuais dinâmicos lidos do `relatorio.json`, revisão silenciosa de níveis, formato em português, Brasília primeiro + UTC, distinção `PROVISÓRIO` / `CONFIRMADO NO FECHAMENTO` e a regra final de silêncio.
+
+A fonte técnica continua sendo o `relatorio.json` indicado neste arquivo. Só envie mensagem quando as regras abaixo determinarem que existe mudança nova, material e operacionalmente útil, ou se o fallback operacional falhar; caso contrário, permaneça em silêncio.
+
+### Fallback operacional de atualização do relatório
+
+Antes da análise técnica, execute também este fallback operacional do próprio monitor XMR:
+
+1. Leia `docs/relatorio.json` do repositório `matheussamadello/Monitor-XMR-Price` e confira o timestamp.
+2. Se o relatório estiver com mais de **90 minutos** de atraso em relação ao horário atual, consulte os GitHub Actions desse repositório e verifique o workflow `Monitor XMR`.
+3. Se houver execução recente em estado `queued` ou `in_progress`, não force outra execução.
+4. Se não houver execução em andamento e o relatório continuar desatualizado, reexecute o job `atualizar` da execução mais recente do workflow `Monitor XMR` usando a ação de re-run do GitHub Actions. Faça isso sempre que o fallback for necessário e a integração permitir. Não edite o workflow para conseguir a reexecução.
+5. Depois da reexecução, volte a consultar `docs/relatorio.json` e use o relatório atualizado quando já estiver disponível. Se ainda houver execução `queued` ou `in_progress`, não force outra.
+6. Não altere código, `monitor.mjs`, `monitor.yml`, cron, níveis manuais, prompts, configuração do GitHub Pages ou qualquer outro arquivo. Não faça commits manuais nem refatorações como parte desse fallback.
+7. A correção operacional, por si só, não deve gerar alerta ao usuário. Só mencione o fallback se a reexecução falhar ou se não for possível corrigir a desatualização.
+
 Monitore o relatório técnico de XMR a cada execução usando como fonte principal `https://matheussamadello.github.io/Monitor-XMR-Price/relatorio.json` e como fallback `https://matheussamadello.github.io/Monitor-XMR-Price/`. Use anti-cache quando necessário.
 
 Só processe um `timestamp` **estritamente mais novo** que o maior timestamp já processado. Um timestamp novo sozinho **NÃO gera alerta**. Considere o maior timestamp já processado como baseline; somente mudanças posteriores realmente novas podem gerar alerta.
