@@ -1354,7 +1354,7 @@ export function relatorioParaJSON(texto, zonas = null) {
       continue;
     }
 
-    if (linha === "XMR/USD" || linha === "XMR/BTC") {
+    if (parPorLabel(linha)) {
       parAtual = linha;
       if (tfAtual) out[tfAtual][parAtual] = {};
       continue;
@@ -1380,7 +1380,8 @@ export function relatorioParaJSON(texto, zonas = null) {
     for (const par of Object.keys(out[tfKey] || {})) {
       const bloco = out[tfKey][par];
       const cfgPar = parPorLabel(par);
-      const chave = `${cfgPar ? cfgPar.key : par === "XMR/USD" ? "usd" : "btc"}|${tfKey}`;
+      if (!cfgPar) continue;
+      const chave = `${cfgPar.key}|${tfKey}`;
       bloco.niveis_manuais = {};
 
       // Faixas manuais publicadas como METADADO, derivadas direto da

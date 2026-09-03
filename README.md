@@ -495,9 +495,33 @@ Monitor-XMR-Price/
 │   ├── index.txt
 │   └── relatorio.json
 ├── monitor.mjs
+├── teste-fumaca.mjs
 ├── README.md
 └── PROMPT_XMR_TECHNICAL_WATCH.md
 ```
+
+## Teste de fumaça
+
+`teste-fumaca.mjs` roda o monitor inteiro contra séries sintéticas no formato OHLC da Kraken, **sem tocar na rede**. Existe porque o monitor publica sozinho de hora em hora: sem ele, um refactor que quebre o parse ou o cálculo só apareceria em produção, com o relatório já no ar.
+
+Verifica:
+
+- que o relatório sai inteiro, sem `NaN` e sem `undefined`;
+- que RSI, ADX, EMA89 e a estrutura de pivôs são calculados;
+- que as linhas `eventos:` e `eventos_semanal:` continuam nos seus blocos;
+- que a fonte fora do ar vira `FALHA:` citando o status, sem interromper o relatório;
+- que um erro de aplicação da fonte aparece no relatório;
+- que a vela em formação não puxa a classificação de volume, e que uma queda ou um pico reais na vela fechada continuam sendo detectados;
+- que o `relatorio.json` continua parseável e tipado, com as faixas manuais de cada par;
+- que uma segunda execução lê o estado da anterior sem quebrar.
+
+Rode com:
+
+```bash
+node teste-fumaca.mjs
+```
+
+O workflow roda esse teste **antes** de gerar o relatório: se algo quebrou, o job para ali em vez de publicar um relatório pela metade.
 
 ## GitHub Actions
 
@@ -512,12 +536,10 @@ O workflow oficial está em:
 O cron atual é:
 
 ```yaml
-- cron: "5 * * * *"
+- cron: "0 * * * *"
 ```
 
-Ou seja, o GitHub Actions solicita uma execução uma vez por hora, no minuto 5 UTC.
-
-Como todo cron do GitHub Actions, o início efetivo pode sofrer algum atraso de fila da própria plataforma.
+Ou seja, o GitHub Actions solicita uma execução **uma vez por hora, no minuto 0 UTC**. Os três monitores da família são espaçados em 20 minutos — **XMR no 00, BTC no 20, USD no 40** — para as chamadas às fontes ficarem distribuídas e dar para saber qual execução é qual só pelo horário no log. Como todo cron do GitHub Actions, o início efetivo pode sofrer atraso de fila da própria plataforma.
 
 O workflow também possui `workflow_dispatch`, permitindo execução manual pela aba **Actions**.
 
@@ -547,6 +569,7 @@ Assim:
 
 A cada execução, o workflow:
 
+0. roda `node teste-fumaca.mjs`;
 1. faz `git fetch origin main`;
 2. faz `git reset --hard origin/main`;
 3. executa `node monitor.mjs`;
