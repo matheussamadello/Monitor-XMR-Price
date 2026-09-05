@@ -44,7 +44,7 @@ function serieDe(par, interval) {
   return cache.get(chave);
 }
 
-function fakeFetch({ http = null, erroKraken = null } = {}) {
+function fakeFetch({ http = null, erroKraken = null, mexerNaViva = 0 } = {}) {
   return async (url) => {
     if (http) return { ok: false, status: http, json: async () => ({}) };
     const par = url.match(/pair=([^&]+)/)[1];
@@ -55,9 +55,18 @@ function fakeFetch({ http = null, erroKraken = null } = {}) {
     // A chave do result e' arbitraria: parseKraken pega a primeira que
     // nao seja "last", que e' exatamente o que a Kraken faz (XBTUSD vira
     // XXBTZUSD na resposta).
+    let rows = serieDe(par, interval);
+    if (mexerNaViva) {
+      // Mexe SO na ultima vela, a que esta em formacao. Tudo que ja
+      // fechou continua identico entre as duas execucoes.
+      rows = rows.slice();
+      const viva = rows[rows.length - 1].slice();
+      for (const j of [1, 2, 3, 4]) viva[j] = viva[j] * (1 + mexerNaViva);
+      rows[rows.length - 1] = viva;
+    }
     return {
       ok: true,
-      json: async () => ({ error: [], result: { [`X${par}`]: serieDe(par, interval), last: 0 } }),
+      json: async () => ({ error: [], result: { [`X${par}`]: rows, last: 0 } }),
     };
   };
 }
@@ -150,6 +159,29 @@ console.log("\n== afastado mede distancia, nao etapa do ciclo ==");
   ok(e.afastado === true, "nivel 30% para tras e' marcado como afastado mesmo em 'rompido'");
   e = atualizarEstadoNivel(e, { ...base, vela: { open: 101, close: 101.5, high: 102, low: 100.8, time: t0 + 2 * 86400 } });
   ok(e.afastado === false, "preco de volta perto do nivel desmarca o afastamento");
+}
+
+
+console.log("\n== a situacao dos niveis olha a vela FECHADA ==");
+{
+  // Duas execucoes identicas a nao ser pela vela EM FORMACAO. Se a
+  // vigilancia usasse o preco vivo -- como usava na primeira versao --
+  // a distancia mudaria. Usando o fechamento, nao pode mudar.
+  const campo = (t, c) => {
+    const m = t.match(new RegExp(`^${c}: (.+)$`, "m"));
+    return m ? m[1] : null;
+  };
+  const normal = await build(fakeFetch(), {});
+  const viva = await build(fakeFetch({ mexerNaViva: 0.25 }), {});
+
+  ok(campo(viva.texto, "preco_atual") !== campo(normal.texto, "preco_atual"),
+    "a vela em formacao de fato mudou de preco entre as duas execucoes");
+  ok(campo(viva.texto, "ultimo_fechamento_close") === campo(normal.texto, "ultimo_fechamento_close"),
+    "o ultimo fechamento continua o mesmo, como deve");
+  ok(campo(viva.texto, "niveis_manuais_distancia_atr") === campo(normal.texto, "niveis_manuais_distancia_atr"),
+    "a distancia ate a faixa manual NAO mudou: ela vem do fechamento");
+  ok(campo(viva.texto, "niveis_manuais_situacao") === campo(normal.texto, "niveis_manuais_situacao"),
+    "a situacao dos niveis tambem nao mudou");
 }
 
 console.log("\n== JSON ==");
