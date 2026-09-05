@@ -46,33 +46,72 @@ const TIMEFRAMES = [
 // de niveis.
 // ------------------------------------------------------------
 
+// RECALIBRADO em 2026-09-05, com o XMR/USD a 528.43.
+//
+// Os anteriores (resistencia 410, faixas 350-385) ficaram para tras: o
+// nivel de 410 foi rompido em 2026-08-17 e o preco seguiu ate 29% acima
+// da faixa mais alta, publicando por 19 dias um rompimento que ja nao
+// era noticia. E' o caso que motivou a vigilancia em situacaoNiveis().
+//
+// De onde saem os novos:
+//   resistencia 550 — unica estrutura acima do preco ate 650: zona
+//     diaria com centro em 548.34, que e' tambem o pivo de topo de
+//     2026-08-31. O nivel fica dentro do estrutural (544.13-552.55).
+//   suporte 500 — zona diaria de score 67 com centro em 500.44, a mais
+//     proxima abaixo do preco, e numero redondo bem no centro dela.
+//   faixas — as tres regioes que as zonas ja marcavam: 544-553 acima,
+//     494-507 logo abaixo, e 423-445, onde a zona diaria de score 82
+//     coincide com a semanal de score 91.
 const NIVEIS_USD = {
   faixas: [
-    [377, 385, "faixa_377_385"],
-    [365, 375, "faixa_365_375"],
-    [350, 355, "regiao_suporte_350_355"],
+    [544, 553, "faixa_544_553"],
+    [494, 507, "faixa_494_507"],
+    [423, 445, "regiao_suporte_423_445"],
   ],
-  resistencia: 410,
-  resistenciaLabel: "409_410",
-  suporte: 350,
-  suporteLabel: "350_355",
+  resistencia: 550,
+  resistenciaLabel: "550",
+  suporte: 500,
+  suporteLabel: "500",
   // Ancora contextual manual: resistencia historica de longo prazo.
   // NAO entra na maquina de estados, NAO gera evento, gatilho nem
   // alerta tecnico. Existe apenas como referencia no relatorio.
+  //
+  // A anterior (430-445) virou suporte quando o preco passou por ela.
+  // A nova aponta a unica estrutura macro ainda acima: a zona de 788-811,
+  // que aparece no diario E no semanal. O score dela e' baixo (36 e 30)
+  // justamente porque o preco esteve la poucas vezes -- e' isso que faz
+  // dela uma referencia macro, e nao um nivel operacional.
   resistenciaMacro: {
-    inferior: 430,
-    superior: 445,
-    label: "resistencia_macro_430_445",
+    inferior: 788,
+    superior: 811,
+    label: "resistencia_macro_788_811",
     tipo: "resistencia_macro_manual",
   },
 };
 
+// RECALIBRADO em 2026-09-05, com o XMR/BTC a 0.006643.
+//
+// O anterior tinha uma faixa so, ja bem abaixo do preco, e nenhum
+// suporte configurado -- metade da maquina de estados ficava inerte.
+//
+// De onde saem os novos:
+//   resistencia 0.00700 — centro da zona diaria acima do preco e pivo de
+//     topo de 2026-09-02, o mesmo numero pelas duas leituras.
+//   suporte 0.00584 — zona diaria de score 83 com centro em 0.0058425,
+//     por dentro da zona semanal de score 83. Passa a existir: antes o
+//     suporte era null.
+//   faixas — a zona em que o preco esta agora (0.00656-0.00705), a de
+//     score 66 logo abaixo, e a de score 83 que ancora o suporte.
 const NIVEIS_BTC = {
-  faixas: [[0.00575, 0.00585, "zona_000575_000585"]],
-  resistencia: 0.00644,
-  resistenciaLabel: "000644",
-  suporte: null,
-  suporteLabel: null,
+  faixas: [
+    [0.00656, 0.00705, "faixa_000656_000705"],
+    [0.00602, 0.00639, "faixa_000602_000639"],
+    [0.00565, 0.00603, "regiao_suporte_000565_000603"],
+  ],
+  resistencia: 0.00700,
+  resistenciaLabel: "000700",
+  suporte: 0.00584,
+  suporteLabel: "000584",
 };
 
 const PAIRS = [
@@ -1105,18 +1144,75 @@ export function atualizarEstadoNivel(anterior, ctx) {
 
   // ciclo encerrado por afastamento: volta ao estado operacional de
   // rompido, sem apagar o historico do que ja aconteceu.
+  // AFASTADO e' distancia, nao etapa do ciclo. Antes so era marcado ao
+  // encerrar um ciclo de reteste, entao um nivel rompido ha semanas e
+  // deixado muito para tras seguia publicando afastado: nao -- quem
+  // lesse concluiria que o preco ainda estava por perto. Agora vale em
+  // qualquer estado.
   const distPct = (Math.abs(vela.close - nivel) / Math.abs(nivel)) * 100;
+  e.afastado = distPct > resetPct;
+  // O encerramento do ciclo continua valendo so para os dois estados em
+  // que ele faz sentido: um reteste confirmado ou uma recuperacao que o
+  // preco deixou para tras voltam a ser simplesmente "rompido".
   if (
     distPct > resetPct &&
     (e.estado === "reteste_confirmado" || e.estado === "recuperado")
   ) {
     e.estado = "rompido";
-    e.afastado = true;
-  } else if (distPct <= resetPct) {
-    e.afastado = false;
   }
 
   return e;
+}
+
+// ------------------------------------------------------------
+// Vigilancia dos niveis manuais
+//
+// Os niveis manuais sao a espinha da politica de alerta: janela
+// agressiva, confirmacao conservadora e a propria revisao de niveis
+// partem todos deles. Quando envelhecem, o monitor nao passa a errar --
+// ele fica MUDO justamente na parte que mais importa, e nada avisa.
+//
+// Foi o que aconteceu com o monitor de XMR: o preco subiu 29% acima da
+// faixa mais alta configurada e ficou 19 dias assim, republicando de
+// hora em hora um rompimento que havia muito deixara de ser noticia.
+// Detectar isso estava delegado a quem lesse o relatorio, e e'
+// exatamente o tipo de coisa que ninguem nota, porque nada acontece.
+//
+// A distancia e' medida em ATR, e nao em porcentagem: 5% e' muito num
+// par de cambio e pouco num de cripto, enquanto "duas vezes a
+// volatilidade diaria" quer dizer a mesma coisa em qualquer um.
+// ------------------------------------------------------------
+
+const NIVEIS_ATUAL_ATR = 1; // ate aqui, os niveis cercam o preco
+const NIVEIS_OBSOLETO_ATR = 3; // alem daqui, o preco vive noutro lugar
+
+export function situacaoNiveis(niveis, preco, atr) {
+  const faixas = (niveis && niveis.faixas) || [];
+  if (!faixas.length || !(preco > 0)) {
+    return { situacao: "indefinida", distanciaAtr: null, faixa: null };
+  }
+
+  let melhor = null;
+  for (const [lo, hi, label] of faixas) {
+    const dentro = preco >= lo && preco <= hi;
+    const dist = dentro ? 0 : Math.min(Math.abs(preco - lo), Math.abs(preco - hi));
+    if (!melhor || dist < melhor.dist) melhor = { dist, label };
+  }
+  if (!(atr > 0)) {
+    return { situacao: "indefinida", distanciaAtr: null, faixa: melhor.label };
+  }
+
+  const emAtr = melhor.dist / atr;
+  return {
+    situacao:
+      emAtr <= NIVEIS_ATUAL_ATR
+        ? "atual"
+        : emAtr <= NIVEIS_OBSOLETO_ATR
+        ? "monitorar"
+        : "obsoleto",
+    distanciaAtr: emAtr,
+    faixa: melhor.label,
+  };
 }
 
 function niveisDoPar(cfg) {
@@ -2569,6 +2665,14 @@ function readPair(cfg, d, tf, opts = {}) {
   L.push(
     `niveis_mudancas_nesta_vela: ${mudancasNivel.length ? mudancasNivel.join(", ") : "nenhuma"}`
   );
+  // Vigilancia da obsolescencia: transforma em dado o que antes dependia
+  // de alguem reparar. "obsoleto" quer dizer que o preco esta a mais de
+  // 3 ATR da faixa manual mais proxima -- os niveis descreveram outro
+  // regime de mercado e precisam de revisao.
+  const sitNiveis = situacaoNiveis(cfg.niveis, live.close, atr[i]);
+  L.push(`niveis_manuais_situacao: ${sitNiveis.situacao}`);
+  L.push(`niveis_manuais_faixa_mais_proxima: ${sitNiveis.faixa || "--"}`);
+  L.push(`niveis_manuais_distancia_atr: ${num(sitNiveis.distanciaAtr, 2)}`);
 
   // ---- ancora macro manual (puramente descritiva) ----
   const macro = cfg.niveis.resistenciaMacro;

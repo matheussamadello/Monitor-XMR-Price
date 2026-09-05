@@ -109,19 +109,21 @@ Na configuração atual do projeto, as referências conhecidas são:
 #### XMR/BTC
 
 - faixa manual `0,00575–0,00585`;
-- resistência pontual principal `0,00644`.
-
-Atualmente não há suporte pontual fixo configurado para XMR/BTC. Não invente um. Use a EMA89 e as zonas automáticas como referências dinâmicas quando apropriado.
+- resistência pontual principal `0,00700`;
+- suporte pontual principal `0,00584`.
 
 #### XMR/USD
 
-- faixa `US$ 377–385`;
-- faixa `US$ 365–375`;
-- região de suporte `US$ 350–355`;
-- referência pontual de rompimento/reteste em torno de `US$ 409–410`;
-- resistência macro manual `US$ 430–445`.
+- faixa `US$ 544–553`;
+- faixa `US$ 494–507`;
+- região de suporte `US$ 423–445`;
+- resistência pontual `US$ 550`;
+- suporte pontual `US$ 500`;
+- resistência macro manual `US$ 788–811`.
 
-A resistência macro `US$ 430–445` é contextual e propositalmente diferente da máquina de estados dos níveis pontuais.
+A resistência macro é contextual e propositalmente diferente da máquina de estados dos níveis pontuais.
+
+**Estes números são a configuração de 2026-09-05 e vão envelhecer.** Leia sempre `niveis_manuais` do JSON, que é a fonte de verdade, e observe `niveis_manuais_situacao`: quando ela disser `obsoleto`, é a lista acima que está velha, não o mercado que está errado.
 
 Se o JSON atualizado passar a publicar valores diferentes, **prevalece o JSON**.
 
@@ -192,6 +194,34 @@ Da maior para a menor prioridade:
 4. `JANELA AGRESSIVA DE TROCA PARCIAL — SUPORTE RELEVANTE EM TESTE`
 
 O alerta de manutenção dos níveis manuais não conta no limite de uma mensagem de mercado e pode ser enviado separadamente.
+
+---
+
+## Estado x evento
+
+Esta é a distinção que mais evita ruído, e ela não é óbvia lendo o relatório.
+
+**`alertas_tecnicos` é uma fotografia do estado, não um registro do que mudou.** Um `rompimento_confirmado_X` permanece na lista por todo o tempo em que a condição for verdadeira — pode ser um dia, pode ser um mês. Ele apareceu de novo não porque aconteceu de novo, mas porque continua sendo o caso.
+
+**O campo que carrega evento é `niveis_mudancas_nesta_vela`.** Quando ele diz `nenhuma`, nada mudou de estado nesta vela, por mais longa que esteja a lista de `alertas_tecnicos`.
+
+Na prática:
+
+1. Nunca trate a presença de um item em `alertas_tecnicos` como novidade. Compare com o que já foi comunicado.
+2. Um rompimento vira notícia **uma vez**, quando `niveis_mudancas_nesta_vela` o registra. Depois disso ele é contexto.
+3. O mesmo vale para faixas: `faixa_X` na lista só diz onde o preço está, não que ele acabou de chegar.
+
+### Obsolescência dos níveis manuais
+
+O relatório publica, por par e por timeframe:
+
+- `niveis_manuais_situacao` — `atual`, `monitorar` ou `obsoleto`;
+- `niveis_manuais_distancia_atr` — distância do preço até a faixa manual mais próxima, medida em ATR;
+- `niveis_manuais_faixa_mais_proxima` — qual faixa é essa.
+
+`obsoleto` significa que o preço está a mais de 3 ATR de qualquer faixa configurada, ou seja, os níveis descrevem um regime de mercado que ficou para trás. Nesse caso a política de alerta perde sua âncora principal, e o certo é enviar a `REVISÃO DOS NÍVEIS MANUAIS RECOMENDADA` descrita adiante — mesmo que nenhuma outra regra tenha disparado.
+
+`monitorar` é contexto, não motivo de mensagem. E a transição entre os três estados, sozinha, também não é alerta: o que importa é o estado `obsoleto` persistir.
 
 ---
 
@@ -376,7 +406,7 @@ Explique que é um sinal intermediário: superior à janela agressiva e inferior
 
 Use a resistência manual principal publicada em `niveis_manuais` como âncora enquanto ela continuar estruturalmente relevante.
 
-Na configuração atual, essa âncora é **0,00644 BTC por XMR**. Se o JSON passar a publicar outra configuração, prevalece o JSON.
+Na configuração de 2026-09-05 essa âncora é **0,00700 BTC por XMR**. Se o JSON passar a publicar outra configuração, prevalece o JSON.
 
 Não trate a âncora como uma linha mágica. Considere também faixas e zonas automáticas próximas para avaliar a região efetivamente relevante.
 
@@ -488,9 +518,9 @@ Evite ping-pong de alertas durante a mesma oscilação intradiária.
 
 # XMR/USD
 
-## Resistência macro manual — US$ 430–445
+## Resistência macro manual
 
-Na configuração atual, trate **US$ 430–445** como resistência macro/contextual manual de longo prazo.
+Trate a faixa publicada em `niveis_manuais` como resistência macro/contextual manual de longo prazo. Na configuração de 2026-09-05 ela é **US$ 788–811**.
 
 Se o JSON publicar outra configuração para essa resistência macro, prevalece o JSON.
 
@@ -541,7 +571,7 @@ Não trate uma rejeição intradiária como reversão confirmada.
 
 Considere rompimento relevante quando houver **fechamento diário claramente acima da resistência macro atual**, ou acima da resistência automática efetivamente relevante quando ela estiver mais alta.
 
-Na configuração atual, a referência macro é **US$ 445** como limite superior da faixa US$ 430–445.
+A referência é o limite superior da faixa macro publicada no JSON — na configuração de 2026-09-05, **US$ 811**.
 
 Exija força técnica compatível:
 
@@ -563,9 +593,8 @@ Após rompimento, eventual reteste da faixa só merece alerta se houver **defesa
 
 Considere os níveis/faixas publicados pelo monitor e, enquanto continuarem estruturalmente relevantes, referências como:
 
-- US$ 409–410;
-- região de US$ 413–414 quando sustentada pela estrutura/zona atual;
-- faixas manuais atuais;
+- faixas manuais atuais lidas do JSON;
+- os níveis pontuais publicados em `niveis_manuais`;
 - suportes e resistências automáticos relevantes.
 
 Não transforme uma referência histórica em nível eterno.
@@ -751,7 +780,7 @@ Não recrie o antigo campo `proximidade` / `proximo_de_00060`.
 
 Não crie automaticamente uma nova faixa fixa em torno de `0,0060` apenas porque o preço passou a trabalhar nessa região. As zonas automáticas já existem para fornecer contexto dinâmico.
 
-A resistência macro XMR/USD atualmente em US$ 430–445 é propositalmente contextual e não deve ser considerada redundante apenas por coincidir com zonas automáticas.
+A resistência macro XMR/USD é propositalmente contextual e não deve ser considerada redundante apenas por coincidir com zonas automáticas.
 
 Se realmente necessário, envie uma mensagem separada com o título exato:
 

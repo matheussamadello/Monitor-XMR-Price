@@ -4,7 +4,9 @@
 // Existe porque o monitor publica sozinho de hora em hora: sem isso, um
 // refactor que quebre o parse ou o calculo so apareceria em producao,
 // com o relatorio ja no ar.
-import { build, relatorioParaJSON, analisarVolume } from "./monitor.mjs";
+import {
+  build, relatorioParaJSON, analisarVolume, situacaoNiveis, atualizarEstadoNivel,
+} from "./monitor.mjs";
 
 let seed = 42;
 const rnd = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
@@ -103,6 +105,51 @@ console.log("\n== volume: vela parcial nao classifica ==");
   ok(seca.classificacao === "contracao_forte", `queda real vira contracao_forte (deu ${seca.classificacao})`);
   const pico = analisarVolume(fechadas.slice(0, 19).concat([3000]), 1);
   ok(pico.classificacao === "expansao_forte", `pico real vira expansao_forte (deu ${pico.classificacao})`);
+}
+
+
+console.log("\n== vigilancia dos niveis manuais ==");
+{
+  const niveis = { faixas: [[100, 110, "faixa_100_110"], [80, 90, "faixa_80_90"]] };
+  const dentro = situacaoNiveis(niveis, 105, 2);
+  ok(dentro.situacao === "atual" && dentro.distanciaAtr === 0,
+    `preco dentro de uma faixa e' 'atual' a 0 ATR (deu ${dentro.situacao})`);
+  ok(dentro.faixa === "faixa_100_110", "aponta a faixa que contem o preco");
+
+  const perto = situacaoNiveis(niveis, 111.5, 2); // 1.5 acima de 110 = 0,75 ATR
+  ok(perto.situacao === "atual", `menos de 1 ATR fora ainda e' 'atual' (deu ${perto.situacao})`);
+
+  const medio = situacaoNiveis(niveis, 114, 2); // 4 acima = 2 ATR
+  ok(medio.situacao === "monitorar", `entre 1 e 3 ATR e' 'monitorar' (deu ${medio.situacao})`);
+
+  // O caso real do XMR: preco 29% acima da faixa mais alta.
+  const longe = situacaoNiveis(niveis, 128, 2); // 18 acima = 9 ATR
+  ok(longe.situacao === "obsoleto", `mais de 3 ATR e' 'obsoleto' (deu ${longe.situacao})`);
+  ok(Math.abs(longe.distanciaAtr - 9) < 1e-9, `distancia em ATR calculada (deu ${longe.distanciaAtr})`);
+
+  // A distancia e' medida em ATR de proposito: o mesmo afastamento
+  // percentual da leituras diferentes conforme a volatilidade do par.
+  const volatil = situacaoNiveis(niveis, 128, 20);
+  ok(volatil.situacao === "atual",
+    "o mesmo afastamento num par muito mais volatil continua 'atual'");
+
+  ok(situacaoNiveis({ faixas: [] }, 100, 2).situacao === "indefinida", "sem faixas, indefinida");
+  ok(situacaoNiveis(niveis, 100, 0).situacao === "indefinida", "sem ATR, indefinida");
+}
+
+console.log("\n== afastado mede distancia, nao etapa do ciclo ==");
+{
+  // Nivel rompido para cima e deixado muito para tras: o bug antigo
+  // publicava afastado: nao porque o estado era "rompido".
+  const nivel = 100;
+  const base = { nivel, direcao: "alta", tolPct: 0.5, resetPct: 3, maxCandles: 30, segundos: 86400 };
+  const t0 = 1756425600;
+  let e = atualizarEstadoNivel(null, { ...base, vela: { open: 101, close: 105, high: 106, low: 100.5, time: t0 } });
+  ok(e && e.estado === "rompido", `rompimento reconhecido (deu ${e && e.estado})`);
+  e = atualizarEstadoNivel(e, { ...base, vela: { open: 128, close: 130, high: 131, low: 127, time: t0 + 86400 } });
+  ok(e.afastado === true, "nivel 30% para tras e' marcado como afastado mesmo em 'rompido'");
+  e = atualizarEstadoNivel(e, { ...base, vela: { open: 101, close: 101.5, high: 102, low: 100.8, time: t0 + 2 * 86400 } });
+  ok(e.afastado === false, "preco de volta perto do nivel desmarca o afastamento");
 }
 
 console.log("\n== JSON ==");
