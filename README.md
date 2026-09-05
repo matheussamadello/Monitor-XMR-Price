@@ -79,6 +79,19 @@ A EMA89 diária pode funcionar como suporte ou resistência dinâmica para timin
 
 A EMA89 semanal é especialmente útil como filtro de contexto estrutural maior.
 
+### ATR(14) — volatilidade
+
+O monitor calcula **ATR de 14 períodos** por Wilder sobre velas fechadas e publica:
+
+- `atr14` — em unidade de preço;
+- `atr14_pct` — o mesmo em porcentagem do fechamento.
+
+O ATR sempre existiu internamente, dimensionando a largura das zonas automáticas, mas não era publicado. Agora sai no relatório, porque é a leitura que permite dimensionar distância de stop e tamanho de posição sem refazer a conta por fora.
+
+Use `atr14_pct` para comparar: o valor absoluto não diz nada sozinho. `0,05` é muito ou pouco dependendo do par e da época; `1,18%` é comparável com qualquer coisa.
+
+Ele também é a unidade em que a obsolescência dos níveis manuais é medida — ver abaixo.
+
 ### Candles
 
 O monitor registra a anatomia das velas fechadas e da vela atual, incluindo:
@@ -210,16 +223,20 @@ Três consumidores leem daí e só daí: `alertasTecnicos` (faixas e rompimento/
 
 Na versão atual do código:
 
-| Região | Função |
-| --- | --- |
-| US$ 377–385 | faixa manual |
-| US$ 365–375 | faixa manual |
-| US$ 350–355 | região manual de suporte |
-| US$ 409–410 | referência pontual de rompimento/reteste |
-| US$ 350 | âncora pontual de suporte para a máquina de estados |
-| US$ 430–445 | resistência macro manual/contextual |
+Calibrado em 2026-09-05, com o XMR/USD a 528,43:
 
-A resistência macro de US$ 430–445 é intencionalmente diferente dos níveis da máquina de estados.
+| Região | Função | De onde veio |
+| --- | --- | --- |
+| US$ 544–553 | faixa manual | zona diária acima do preço |
+| US$ 494–507 | faixa manual | zona diária de score 67 |
+| US$ 423–445 | região manual de suporte | zona diária de score 82 sobre a semanal de score 91 |
+| US$ 550 | resistência pontual | centro da zona diária (548,34), que é também o pivô de topo de 31/08 |
+| US$ 500 | suporte pontual | centro da zona diária de score 67 (500,44) |
+| US$ 788–811 | resistência macro manual/contextual | única estrutura acima do preço, presente no diário **e** no semanal |
+
+Os anteriores (resistência 410, faixas 350–385) ficaram obsoletos: o nível de 410 foi rompido em 17/08 e o preço seguiu 29% acima da faixa mais alta. Foi esse caso que motivou a [vigilância dos níveis manuais](#vigilância-dos-níveis-manuais).
+
+A resistência macro é intencionalmente diferente dos níveis da máquina de estados.
 
 Ela funciona como **referência contextual de longo prazo** e não gera, por si só:
 
@@ -234,14 +251,19 @@ O relatório publica seu tipo, limites, estado relativo ao preço e distância.
 
 Na versão atual do código:
 
-| Região | Função |
-| --- | --- |
-| 0,00575–0,00585 BTC | faixa manual |
-| 0,00644 BTC | resistência pontual / máquina de estados |
+Calibrado em 2026-09-05, com o XMR/BTC a 0,006643:
 
-Atualmente não existe suporte pontual fixo configurado para XMR/BTC.
+| Região | Função | De onde veio |
+| --- | --- | --- |
+| 0,00656–0,00705 BTC | faixa manual | zona diária onde o preço está |
+| 0,00602–0,00639 BTC | faixa manual | zona diária de score 66 |
+| 0,00565–0,00603 BTC | região manual de suporte | zona diária de score 83, por dentro da semanal de score 83 |
+| 0,00700 BTC | resistência pontual | centro da zona diária **e** pivô de topo de 02/09 — o mesmo número por duas leituras |
+| 0,00584 BTC | suporte pontual | centro da zona de score 83 |
 
-As zonas automáticas podem cumprir o papel de contexto dinâmico de suporte e resistência sem exigir a criação de uma nova linha manual toda vez que o regime muda.
+Antes havia uma faixa só, já abaixo do preço, e o suporte pontual era `null` — metade da máquina de estados ficava inerte. Agora os dois lados existem.
+
+As zonas automáticas seguem cumprindo o papel de contexto dinâmico, sem exigir uma nova linha manual toda vez que o regime muda.
 
 ### Faixas manuais e JSON
 
@@ -270,6 +292,26 @@ As zonas automáticas também publicam campos próprios de confluência, como:
 
 Portanto, consumidores externos não devem inferir que `confluencia_nivel_manual` representa sozinho toda forma possível de confluência manual.
 
+## Vigilância dos níveis manuais
+
+Os níveis manuais são a espinha da política de alerta: janela agressiva, confirmação conservadora e a própria revisão de níveis partem todos deles. Quando envelhecem, o monitor não passa a errar — ele fica **mudo** justamente na parte que mais importa, e nada avisa.
+
+Foi o que aconteceu no monitor de XMR: o preço rompeu a resistência manual em 17/08 e seguiu até 29% acima da faixa mais alta configurada, republicando de hora em hora um rompimento que havia muito deixara de ser notícia. Detectar isso estava delegado a quem lesse o relatório, e é exatamente o tipo de coisa que ninguém nota, porque nada acontece.
+
+Agora o relatório publica, por par e por timeframe:
+
+| Campo | O que traz |
+| --- | --- |
+| `niveis_manuais_situacao` | `atual`, `monitorar` ou `obsoleto` |
+| `niveis_manuais_distancia_atr` | distância do preço até a faixa manual mais próxima, em ATR |
+| `niveis_manuais_faixa_mais_proxima` | qual faixa é essa |
+
+Os cortes são **1 ATR** e **3 ATR**: dentro de uma faixa ou a menos de 1 ATR dela é `atual`; entre 1 e 3 é `monitorar`; além de 3 é `obsoleto`.
+
+A distância é medida em ATR, e não em porcentagem, de propósito. Cinco por cento é muito num par de câmbio e pouco num de cripto, enquanto "três vezes a volatilidade diária" quer dizer a mesma coisa em qualquer um — um limiar só serve para os três monitores, sem recalibragem.
+
+`obsoleto` não é alerta de mercado: é aviso de manutenção. Significa que os níveis descrevem um regime que ficou para trás e precisam de revisão.
+
 ## Máquina de estados de rompimento e reteste
 
 Os níveis pontuais possuem estado persistente avaliado sobre candles fechados, para evitar que simples oscilações intradiárias mudem a leitura estrutural.
@@ -283,7 +325,7 @@ Entre os principais estados implementados estão:
 - `rompimento_falhou`;
 - `recuperado`.
 
-O registro também pode marcar `afastado` quando o preço já se distanciou da região depois de um ciclo de reteste ou recuperação.
+O registro marca `afastado` sempre que o preço estiver além da distância de reset do nível, **em qualquer estado**. Isso já foi diferente: a marcação só valia ao encerrar um ciclo de reteste, então um nível rompido semanas antes e deixado 29% para trás continuava publicando `afastado: nao`, e quem lesse concluía que o preço ainda estava por perto. O encerramento do ciclo — voltar de `reteste_confirmado` ou `recuperado` para `rompido` — continua restrito aos dois estados em que faz sentido.
 
 A máquina diferencia um critério mais sensível, que pode armar um candidato, de critérios mais rigorosos usados para confirmar mudanças de estado.
 
@@ -665,11 +707,15 @@ Os níveis ficam em objetos próprios, e o array de pares apenas aponta para ele
 
 ```js
 const NIVEIS_BTC = {
-  faixas: [[0.00575, 0.00585, "zona_000575_000585"]],
-  resistencia: 0.00644,
-  resistenciaLabel: "000644",
-  suporte: null,
-  suporteLabel: null,
+  faixas: [
+    [0.00656, 0.00705, "faixa_000656_000705"],
+    [0.00602, 0.00639, "faixa_000602_000639"],
+    [0.00565, 0.00603, "regiao_suporte_000565_000603"],
+  ],
+  resistencia: 0.00700,
+  resistenciaLabel: "000700",
+  suporte: 0.00584,
+  suporteLabel: "000584",
 };
 
 const PAIRS = [
