@@ -71,6 +71,7 @@ ok(/rsi14_fechado: \d/.test(r1.texto), "RSI calculado");
 ok(/adx14_fechado: \d/.test(r1.texto), "ADX calculado");
 ok(/ema89: \d/.test(r1.texto), "EMA89 calculada");
 ok(/estrutura_preco: \w/.test(r1.texto), "estrutura de pivos");
+ok(/atr14: \d/.test(r1.texto) && /atr14_pct: \d/.test(r1.texto), "ATR publicado em preco e em %");
 ok(/volume_referencia: ultima_vela_fechada/.test(r1.texto), "volume declara a base da comparacao");
 ok(/zonas_automaticas_total: \d|zonas_automaticas: nenhuma/.test(r1.texto), "secao de zonas presente");
 ok(/GATILHOS ATIVOS:/.test(r1.texto), "linha de gatilhos presente");
