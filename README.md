@@ -71,13 +71,37 @@ O ADX mede força direcional e deve ser interpretado junto de DI+ e DI−. O mon
 
 O monitor calcula uma média móvel exponencial de 89 períodos e publica campos como:
 
+Campos que olham a vela **em formação**:
+
 - `ema89`;
 - `posicao_vs_ema89`;
 - `distancia_ema89_pct`.
 
+`posicao_vs_ema89` e `distancia_ema89_pct` comparam a média com o preço vivo, então mudam durante o dia. Servem para contexto, nunca para confirmação.
+
+Campos calculados **só com velas fechadas**:
+
+- `ema89_fechada_atual`;
+- `ema89_fechada_anterior`;
+- `ema89_cruzamento_fechado`;
+- `distancia_ema89_fechada_atr`.
+
+`ema89_fechada_anterior` é a média no fechamento anterior. Sem ela, quem lê o relatório não conseguia saber se houve travessia sem depender da própria memória de execuções passadas — o monitor publica de hora em hora e não garante essa memória. `ema89_cruzamento_fechado` traz o veredito pronto (`acima`, `abaixo` ou `nenhum`) e `distancia_ema89_fechada_atr` mede a distância do fechamento até a média em ATR do próprio timeframe, que é a margem usada para separar travessia real de simples encostada.
+
+Nada disso exige cálculo novo nem estado guardado entre execuções: são dois pontos de uma série que o monitor já tinha em memória e não publicava.
+
 A EMA89 diária pode funcionar como suporte ou resistência dinâmica para timing.
 
 A EMA89 semanal é especialmente útil como filtro de contexto estrutural maior.
+
+### Dois horizontes
+
+O mesmo relatório atende dois horizontes de swing, sem nenhum campo novo no JSON:
+
+- **tático**, de 2 a 6 semanas, em que o diário pesa mais;
+- **estratégico**, de vários meses a mais de um ano, em que o semanal pesa mais.
+
+A separação vive no prompt, não no monitor: `monitor.mjs` publica fatos de mercado e não sabe qual é o horizonte de quem lê. Divergência entre os dois — semanal íntegro e diário cedendo — é o estado normal de um pullback, não erro de dados.
 
 ### ATR(14) — volatilidade
 
