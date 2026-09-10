@@ -915,7 +915,7 @@ export function analisarVolume(volumes, volumeVivo, media = VOL_MEDIA) {
 // Alertas tecnicos (linha NOVA, separada de "eventos")
 // ------------------------------------------------------------
 
-function alertasTecnicos(cfg, d, ind) {
+export function alertasTecnicos(cfg, d, ind) {
   const a = [];
   const nv = cfg.niveis;
   const p = d.live.close;
@@ -945,8 +945,17 @@ function alertasTecnicos(cfg, d, ind) {
   // Perda de suporte: intradiaria vs confirmada
   if (nv.suporte !== null && nv.suporte !== undefined) {
     const S = nv.suporte;
-    if (fechAtual < S) a.push(`perda_suporte_confirmada_${nv.suporteLabel}`);
-    else if (d.live.low < S || p < S)
+    if (fechAtual < S) {
+      // Espelho da resistencia: so' e' perda confirmada se o CORPO inteiro
+      // fechou abaixo. Fechamento 0,05% abaixo com corpo em cima do nivel
+      // e' encostada, nao travessia -- e era publicado como confirmada.
+      const corpoAbaixo = Math.max(abertFech, fechAtual) < S;
+      a.push(
+        corpoAbaixo
+          ? `perda_suporte_confirmada_${nv.suporteLabel}`
+          : `perda_suporte_confirmada_fraca_${nv.suporteLabel}`
+      );
+    } else if (d.live.low < S || p < S)
       a.push(`toque_suporte_intradiario_${nv.suporteLabel}`);
   }
 
@@ -1300,7 +1309,7 @@ function metricasVela(v) {
 // Sao descritivos, nunca prescritivos — nao dizem comprar nem vender.
 // ------------------------------------------------------------
 
-function sinteses(ctx) {
+export function sinteses(ctx) {
   const {
     alertas,
     estrutura,
@@ -1323,7 +1332,11 @@ function sinteses(ctx) {
   const deterioracao = [];
 
   // --- confluencia de entrada ---
-  if (tem("rompimento_confirmado")) entrada.push("rompimento_confirmado_por_fechamento");
+  // tem() e' por prefixo: sem a exclusao, a versao FRACA passaria por
+  // confirmada aqui e em deterioracao. So ha um nivel de cada lado por
+  // par, entao "existe forte e nao existe fraca" e' exato.
+  if (tem("rompimento_confirmado") && !tem("rompimento_confirmado_fraco"))
+    entrada.push("rompimento_confirmado_por_fechamento");
   if (estadosNivel.includes("reteste_confirmado")) entrada.push("reteste_confirmado");
   if (alertas.includes("rompimento_com_volume_acima_da_media"))
     entrada.push("volume_acima_da_media_no_rompimento");
@@ -1360,7 +1373,8 @@ function sinteses(ctx) {
     deterioracao.push("perda_estrutura_alta_novo_LL");
   if (estrutura.tendencia === "baixa") deterioracao.push("estrutura_de_baixa");
   if (estadosNivel.includes("rompimento_falhou")) deterioracao.push("rompimento_falhou");
-  if (tem("perda_suporte_confirmada")) deterioracao.push("perda_de_suporte_confirmada");
+  if (tem("perda_suporte_confirmada") && !tem("perda_suporte_confirmada_fraca"))
+    deterioracao.push("perda_de_suporte_confirmada");
   if (
     diPlus !== null &&
     diMinus !== null &&

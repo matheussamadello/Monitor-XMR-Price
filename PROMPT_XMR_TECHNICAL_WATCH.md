@@ -757,6 +757,12 @@ Quando publicados, interprete os estados da máquina de rompimento/reteste assim
 
 Não transforme cada mudança descritiva de estado em mensagem.
 
+### Perda de suporte e rompimento: forte x fraco
+
+`rompimento_confirmado_X` e `perda_suporte_confirmada_X` exigem que o **corpo inteiro** da vela fechada esteja além do nível. Quando só o fechamento passou e o corpo ficou em cima do nível, o relatório publica `rompimento_confirmado_fraco_X` ou `perda_suporte_confirmada_fraca_X`.
+
+A versão fraca é encostada, não travessia. Ela **não alimenta `deterioracao_tendencia` nem `confluencia_entrada`**, e sozinha não justifica alerta — leia-a como um `toque_suporte_intradiario_X` / `rompimento_intradiario_X` que por acaso aconteceu no fechamento. Se a vela seguinte fechar com o corpo além do nível, a versão forte aparece e aí vale a regra normal.
+
 ---
 
 ## Divergências
