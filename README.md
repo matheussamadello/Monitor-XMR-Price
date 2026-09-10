@@ -555,7 +555,9 @@ docs/
 
 ### A página publicada (`index.html`)
 
-A página tem tema escuro e serve a dois leitores ao mesmo tempo, com prioridades opostas.
+A página serve a dois leitores ao mesmo tempo, com prioridades opostas.
+
+**Tema.** Abre em *night mode* — fundo azul-noite, azul nos títulos e nas etiquetas. O botão no topo alterna para um tema claro, com fundo quase branco e texto quase preto, e a escolha fica salva no navegador. O tema claro **só redefine tokens de cor**: nenhuma regra de layout existe duas vezes, então os dois não têm como divergir de estrutura. Há um teste que compara os dois conjuntos de tokens e falha se alguém acrescentar uma cor no escuro e esquecer do claro — senão o tema claro herdaria uma cor de fundo escuro em silêncio.
 
 Para **você**: um cartão por par com o resumo dos dois timeframes — último fechamento, lado e distância da EMA89 em ATR, RSI, ADX com DI+/DI−, estrutura, situação dos níveis manuais e ATR —, mais os alertas técnicos como etiquetas. O que está em `deterioracao_tendencia` sai em vermelho; o resto, em azul. O carimbo de tempo no topo calcula sozinho, no navegador, há quanto tempo o relatório foi gerado, e muda de cor a partir de 90 minutos.
 
@@ -563,7 +565,7 @@ Para o **agente**: o relatório inteiro continua saindo *verbatim* dentro de um 
 
 Os cartões **não** reparseiam o texto: eles leem o mesmo objeto de `relatorioParaJSON` que vira o `relatorio.json`, gerado uma vez só e passado para os dois. Dois leitores do mesmo objeto não têm como discordar.
 
-O par que tiver `grafico` na configuração ganha também um gráfico embutido. A Kraken não publica widget de embed próprio; o TradingView publica, e serve a série da **própria Kraken** sob o símbolo `KRAKEN:…` — é a mesma fonte do relatório, não uma segunda opinião. Se o script não carregar, fica no lugar um link para o gráfico completo e nada mais na página se perde.
+O par que tiver `grafico` na configuração ganha também um gráfico embutido, redesenhado quando o tema muda — o gráfico mora num iframe e o tema dele é escolhido na criação do widget, não por CSS. A Kraken não publica widget de embed próprio; o TradingView publica, e serve a série da **própria Kraken** sob o símbolo `KRAKEN:…` — é a mesma fonte do relatório, não uma segunda opinião. Se o script não carregar, fica no lugar um link para o gráfico completo e nada mais na página se perde.
 
 Uma diferença que vale conhecer antes de comparar número com desenho: a Kraken alinha a vela semanal pela **época do Unix**, que caiu numa quinta-feira, então a semana dela vai de quinta a quarta. O TradingView desenha a semana de segunda a domingo. Os dois estão certos dentro da própria régua, mas as velas semanais do gráfico não coincidem com o `ultimo_fechamento_data` semanal do relatório. No diário não há divergência.
 
