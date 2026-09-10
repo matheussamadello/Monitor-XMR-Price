@@ -17,14 +17,10 @@ No prompt de alertas incluído no projeto, **XMR/BTC** é o par principal para a
 
 O monitor acompanha dois pares:
 
-| Par | Leitura | Na página |
-| --- | --- | --- |
-| **XMR/USD** | o Monero em dólar | cartão + gráfico |
-| **XMR/BTC** | o Monero contra o Bitcoin | só no relatório completo |
+- **XMR/USD** — leitura do Monero em dólar.
+- **XMR/BTC** — leitura relativa do Monero contra Bitcoin. É a referência principal da decisão de troca parcial BTC → XMR, que é o objetivo deste monitor.
 
-A análise de cada par é independente e **completa nos dois** — o XMR/BTC não perde nenhum campo por não ter cartão. O relatório permite combinar as duas leituras.
-
-**A ordem é de apresentação, não de análise.** O painel de cima mostra o XMR/USD porque é o preço que se olha rápido. Para o agente, o prompt continua dizendo que a referência principal da decisão de troca parcial BTC → XMR é o **XMR/BTC** — e é ele que responde a pergunta "o Monero está ganhando ou perdendo do Bitcoin", que o preço em dólar não responde.
+A análise de cada par é independente, mas o relatório permite combinar as duas leituras.
 
 Por exemplo, XMR/USD pode continuar estruturalmente forte enquanto XMR/BTC passa por uma correção relativa contra o Bitcoin. Um agente externo pode usar essa diferença como contexto em vez de reduzir toda a análise a um único preço.
 
@@ -563,13 +559,11 @@ A página serve a dois leitores ao mesmo tempo, com prioridades opostas.
 
 **Tema.** Abre em *night mode* — fundo azul-noite, azul nos títulos e nas etiquetas. O botão no topo alterna para um tema claro, com fundo quase branco e texto quase preto, e a escolha fica salva no navegador. O tema claro **só redefine tokens de cor**: nenhuma regra de layout existe duas vezes, então os dois não têm como divergir de estrutura. Há um teste que compara os dois conjuntos de tokens e falha se alguém acrescentar uma cor no escuro e esquecer do claro — senão o tema claro herdaria uma cor de fundo escuro em silêncio.
 
-Para **você**: um cartão do **XMR/USD** com o resumo dos dois timeframes — último fechamento, lado e distância da EMA89 em ATR, RSI, ADX com DI+/DI−, estrutura, situação dos níveis manuais e ATR —, mais os alertas técnicos como etiquetas. O que está em `deterioracao_tendencia` sai em vermelho; o resto, em azul. O carimbo de tempo no topo calcula sozinho, no navegador, há quanto tempo o relatório foi gerado, e muda de cor a partir de 90 minutos.
+Para **você**: um cartão por par com o resumo dos dois timeframes — último fechamento, lado e distância da EMA89 em ATR, RSI, ADX com DI+/DI−, estrutura, situação dos níveis manuais e ATR —, mais os alertas técnicos como etiquetas. O que está em `deterioracao_tendencia` sai em vermelho; o resto, em azul. O carimbo de tempo no topo calcula sozinho, no navegador, há quanto tempo o relatório foi gerado, e muda de cor a partir de 90 minutos.
 
 Para o **agente**: o relatório inteiro continua saindo *verbatim* dentro de um único `<pre>`, em texto puro, com o mesmo escape de sempre (`&` e `<`, nada mais). O prompt usa esta página como fallback quando o `relatorio.json` não responde, e quem lê procura linhas `campo: valor` no fonte — uma única `<span>` ali dentro quebraria isso, e quebraria justamente quando a fonte principal já estivesse fora do ar. Por isso o tema é moldura em volta do bloco, nunca dentro dele, e há um teste de fumaça que compara o `<pre>` byte a byte com o relatório e falha se aparecer qualquer tag lá.
 
 Os cartões **não** reparseiam o texto: eles leem o mesmo objeto de `relatorioParaJSON` que vira o `relatorio.json`, gerado uma vez só e passado para os dois. Dois leitores do mesmo objeto não têm como discordar.
-
-O XMR/BTC não tem cartão: fica só no relatório completo, abaixo do XMR/USD. Tirar o cartão é uma linha na configuração do par (`semCartao: true`). Como o gráfico mora dentro do cartão, o par também deixa de ter gráfico — as duas listas saem da mesma filtragem, então não sobra widget apontando para um container que não existe. O símbolo `KRAKEN:XMRBTC` continua declarado de propósito: tirar o `semCartao` devolve cartão e gráfico de uma vez.
 
 O par que tiver cartão e `grafico` na configuração ganha também um gráfico embutido, redesenhado quando o tema muda — o gráfico mora num iframe e o tema dele é escolhido na criação do widget, não por CSS. A Kraken não publica widget de embed próprio; o TradingView publica, e serve a série da **própria Kraken** sob o símbolo `KRAKEN:…` — é a mesma fonte do relatório, não uma segunda opinião. Se o script não carregar, fica no lugar um link para o gráfico completo e nada mais na página se perde.
 

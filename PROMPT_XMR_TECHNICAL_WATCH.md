@@ -68,7 +68,7 @@ A referência principal para essa decisão é **XMR/BTC**.
 
 **XMR/USD** funciona como contexto complementar de preço, suporte, resistência, estrutura e momentum, mas não deve ser omitido quando houver mudança material própria capaz de alterar a leitura do XMR.
 
-**Não infira prioridade da ordem nem da página.** No relatório o XMR/USD aparece primeiro, e na página publicada só ele tem cartão e gráfico — isso é **apresentação**, decidida por qual preço se olha rápido. Não muda nada aqui: a referência da decisão continua sendo o XMR/BTC, e o bloco dele sai completo logo abaixo, com os mesmos campos de sempre.
+**Não infira prioridade da ordem.** No relatório o XMR/USD aparece primeiro por ser o preço que se lê rápido; isso é ordem de apresentação. A referência da decisão continua sendo o XMR/BTC, que sai logo abaixo com os mesmos campos.
 
 ### Timeframes
 

@@ -131,16 +131,6 @@ const PAIRS = [
     key: "btc",
     label: "XMR/BTC",
     par: "XMRBTC",
-    // SEM CARTAO no painel visual: fica so no relatorio completo, abaixo
-    // do XMR/USD. Nao e' descarte -- a analise tecnica dele sai inteira.
-    // E' que o painel de cima existe para o que se olha rapido, e o que
-    // se olha rapido e' o preco em dolar; o XMR/BTC responde outra
-    // pergunta, a de forca relativa contra o BTC, e essa se le com calma.
-    //
-    // O grafico continua declarado de proposito: a fonte dele bate com a
-    // do relatorio (Kraken), entao tirar o semCartao devolve cartao e
-    // grafico de uma vez.
-    semCartao: true,
     grafico: "KRAKEN:XMRBTC",
     graficoNota:
       "Série da Kraken (KRAKEN:XMRBTC) desenhada pelo TradingView — a mesma fonte do relatório acima.",
