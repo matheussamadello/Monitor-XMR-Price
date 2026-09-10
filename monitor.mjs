@@ -131,6 +131,16 @@ const PAIRS = [
     key: "btc",
     label: "XMR/BTC",
     par: "XMRBTC",
+    // SEM CARTAO no painel visual: fica so no relatorio completo, abaixo
+    // do XMR/USD. Nao e' descarte -- a analise tecnica dele sai inteira.
+    // E' que o painel de cima existe para o que se olha rapido, e o que
+    // se olha rapido e' o preco em dolar; o XMR/BTC responde outra
+    // pergunta, a de forca relativa contra o BTC, e essa se le com calma.
+    //
+    // O grafico continua declarado de proposito: a fonte dele bate com a
+    // do relatorio (Kraken), entao tirar o semCartao devolve cartao e
+    // grafico de uma vez.
+    semCartao: true,
     grafico: "KRAKEN:XMRBTC",
     graficoNota:
       "Série da Kraken (KRAKEN:XMRBTC) desenhada pelo TradingView — a mesma fonte do relatório acima.",
@@ -3300,7 +3310,12 @@ export function toHTML(text, dados) {
   const ts = String((d.cabecalho && d.cabecalho.timestamp) || "");
   const m = /^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) UTC$/.exec(ts);
   const iso = m ? `${m[1]}T${m[2]}:00Z` : "";
-  const comGrafico = PAIRS.filter((c) => c.grafico);
+  // Um par com semCartao fica so no relatorio completo, la embaixo. E
+  // como o grafico mora DENTRO do cartao, quem nao tem cartao tambem
+  // nao tem grafico: as duas listas saem da mesma filtragem, entao nao
+  // ha como sobrar um widget apontando para um container inexistente.
+  const comCartao = PAIRS.filter((c) => !c.semCartao);
+  const comGrafico = comCartao.filter((c) => c.grafico);
 
   return (
     "<!doctype html>\n" +
@@ -3324,7 +3339,7 @@ export function toHTML(text, dados) {
     '<svg class="lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>' +
     "</button>" +
     "</div></header>\n" +
-    `<section class="pares">${PAIRS.map((c) => pgCartao(c, d)).join("")}</section>\n` +
+    `<section class="pares">${comCartao.map((c) => pgCartao(c, d)).join("")}</section>\n` +
     '<section class="relatorio"><h2>Relatório completo</h2>\n' +
     // ---- daqui ate o </pre> e' o bloco que o fallback do prompt le ----
     "<pre>" +
