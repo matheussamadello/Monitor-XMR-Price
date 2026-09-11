@@ -5,7 +5,7 @@
 // refactor que quebre o parse ou o calculo so apareceria em producao,
 // com o relatorio ja no ar.
 import {
-  build, relatorioParaJSON, toHTML, PARES_TESTE, dmiSeries, analisarVolume, situacaoNiveis, atualizarEstadoNivel, alertasTecnicos, sinteses,
+  build, relatorioParaJSON, toHTML, PARES_TESTE, TIMEFRAMES_TESTE, dmiSeries, rsiSeries, analisarVolume, situacaoNiveis, atualizarEstadoNivel, alertasTecnicos, sinteses,
 } from "./monitor.mjs";
 
 let seed = 42;
@@ -88,7 +88,7 @@ console.log("== relatorio completo ==");
 const r1 = await build(fakeFetch(), {});
 ok(!/FALHA:/.test(r1.texto), "nenhum bloco em FALHA");
 ok(!/NaN|undefined/.test(r1.texto), "sem NaN/undefined no texto");
-ok(/rsi14_fechado: \d/.test(r1.texto), "RSI calculado");
+ok(/rsi_fechado: \d/.test(r1.texto), "RSI calculado");
 ok(/adx_fechado: \d/.test(r1.texto), "ADX calculado");
 ok(/ema89: \d/.test(r1.texto), "EMA89 calculada");
 ok(/estrutura_preco: \w/.test(r1.texto), "estrutura de pivos");
@@ -210,7 +210,7 @@ const pares = Object.keys(j.diario);
 ok(pares.length > 0, `JSON tem bloco diario (${pares.join(", ")})`);
 for (const p of pares) {
   ok(typeof j.diario[p].preco_atual === "number", `${p}: preco_atual numerico`);
-  ok(typeof j.semanal[p].rsi14_fechado === "number", `${p}: RSI semanal numerico`);
+  ok(typeof j.semanal[p].rsi_fechado === "number", `${p}: RSI semanal numerico`);
   ok(Array.isArray(j.diario[p].alertas_tecnicos), `${p}: alertas_tecnicos vira lista`);
   ok(Array.isArray(j.diario[p].niveis_manuais.faixas), `${p}: faixas manuais publicadas`);
 }
@@ -429,6 +429,65 @@ console.log("\n== DMI/ADX: o relatorio declara a configuracao usada ==");
   const adxDe = (t) => (/adx_fechado: ([\d.]+)/.exec(t) || [])[1];
   ok(adxDe(diaBloco) !== adxDe(semBloco),
     "diario e semanal publicam ADX distintos: as configuracoes nao se misturam");
+}
+
+
+console.log("\n== RSI: periodo por timeframe ==");
+{
+  // Ate 2026-09-11 o RSI usava 14 nos dois timeframes, por herdar o
+  // default de PERIOD. Agora: diario 21, semanal 14. O metodo nao mudou
+  // -- Wilder/RMA --, so o periodo, e rsiSeries ja aceitava o parametro:
+  // eram os call sites que nao passavam.
+  const c = [];
+  let p = 100;
+  for (let i = 0; i < 300; i++) { p = p * (1 + (rnd() - 0.48) * 0.03); c.push(p); }
+  const u = c.length - 1;
+
+  const r14 = rsiSeries(c);
+  const r14x = rsiSeries(c, 14);
+  ok(r14[u] === r14x[u], "rsiSeries(c, 14) reproduz exatamente o default de antes");
+
+  const r21 = rsiSeries(c, 21);
+  ok(r21[u] !== r14[u], "periodo 21 produz RSI diferente do 14");
+
+  // O objetivo da troca: menos oscilacao vela a vela no diario.
+  const varia = (s) => {
+    let soma = 0, n = 0;
+    for (let i = 100; i < s.length; i++)
+      if (s[i] !== null && s[i - 1] !== null) { soma += Math.abs(s[i] - s[i - 1]); n++; }
+    return n ? soma / n : 0;
+  };
+  ok(varia(r21) < varia(r14), "RSI(21) varia menos de vela para vela que o RSI(14)");
+
+  // E a relacao que o usuario pediu para preservar: o RSI tem de
+  // continuar MAIS responsivo que o DMI do mesmo timeframe.
+  const dia = TIMEFRAMES_TESTE.find((t) => t.key === "diario");
+  const sem = TIMEFRAMES_TESTE.find((t) => t.key === "semanal");
+  ok(dia.rsi.length === 21 && dia.dmi.diLen === 28, "diario: RSI 21 contra DMI 28");
+  ok(sem.rsi.length === 14 && sem.dmi.diLen === 14, "semanal: RSI 14 contra DMI 14");
+  ok(dia.rsi.length < dia.dmi.adxLen && sem.rsi.length < sem.dmi.adxLen,
+    "em cada timeframe o RSI e' mais curto que o alisamento do ADX");
+
+  const curto = rsiSeries(c.slice(0, 10), 21);
+  ok(curto.every((v) => v === null), "serie curta demais devolve RSI null, nao NaN");
+}
+
+console.log("\n== RSI: o relatorio declara o periodo usado ==");
+{
+  const par = PARES_TESTE[0].label;
+  const lenDe = (t) => (/rsi_length: (\d+)/.exec(t) || [])[1];
+  const diaBloco = blocoTf(r1.texto, "GRAFICO DIARIO", par);
+  const semBloco = blocoTf(r1.texto, "GRAFICO SEMANAL", par);
+  ok(lenDe(diaBloco) === "21", "bloco diario declara rsi_length 21");
+  ok(lenDe(semBloco) === "14", "bloco semanal declara rsi_length 14");
+  ok(/indicadores:.*RSI diario 21, semanal 14/.test(r1.texto),
+    "o cabecalho lista o periodo de RSI de cada timeframe");
+  ok(!/rsi14_fechado|rsi14_provisorio/.test(r1.texto),
+    "os campos perderam o '14' do nome, que virou mentira no diario");
+
+  const rsiDe = (t) => (/rsi_fechado: ([\d.]+)/.exec(t) || [])[1];
+  ok(rsiDe(diaBloco) !== rsiDe(semBloco),
+    "diario e semanal publicam RSI distintos: os periodos nao se misturam");
 }
 
 console.log("\n== estado entre execucoes ==");

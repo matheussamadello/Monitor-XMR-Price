@@ -25,6 +25,12 @@ const TIMEFRAMES = [
     // tendencia e forca para swing e position: 28/42 corta o ruido de
     // curto prazo que o 14/14 deixava passar.
     dmi: { diLen: 28, adxLen: 42 },
+    // RSI mais longo que o padrao, pelo mesmo motivo do DMI: 14 no
+    // diario oscila demais para um horizonte de swing/position. Mas
+    // continua MAIS RESPONSIVO que o DMI deste timeframe (21 contra
+    // 28/42) -- e' dele que se espera a leitura de momentum, perda de
+    // forca e retomada.
+    rsi: { length: 21 },
     // A automacao externa le a linha "eventos:" do bloco diario.
     // Por isso o semanal usa um nome diferente, para nunca colidir.
     campoEventos: "eventos",
@@ -39,6 +45,9 @@ const TIMEFRAMES = [
     // ja e' lento o bastante nessa escala, e alongar mais so atrasaria a
     // leitura sem ganhar filtragem.
     dmi: { diLen: 14, adxLen: 21 },
+    // 14 no semanal: leitura estrutural de momentum, e a mesma relacao
+    // de responsividade contra o DMI semanal (14 contra 14/21).
+    rsi: { length: 14 },
     campoEventos: "eventos_semanal",
   },
 ];
@@ -152,6 +161,9 @@ const PAIRS = [
 // Exportado para o teste conferir que todo par com grafico tem nota.
 export const PARES_TESTE = PAIRS;
 
+// Exportado para o teste conferir os periodos por timeframe.
+export const TIMEFRAMES_TESTE = TIMEFRAMES;
+
 function parPorLabel(label) {
   return PAIRS.find((c) => c.label === label) || null;
 }
@@ -170,6 +182,9 @@ function rsiFrom(avgGain, avgLoss) {
   return 100 - 100 / (1 + avgGain / avgLoss);
 }
 
+// O periodo SEMPRE vem de quem chama (tf.rsi.length); o default de 14
+// so existe para nao quebrar chamada sem argumento. Metodo inalterado:
+// Wilder/RMA, igual desde o inicio.
 export function rsiSeries(closes, period = PERIOD) {
   const out = new Array(closes.length).fill(null);
   if (closes.length < period + 1) return out;
@@ -2439,7 +2454,7 @@ function readPair(cfg, d, tf, opts = {}) {
   const D = cfg.dec;
 
   // --- indicadores com velas FECHADAS (referencia principal) ---
-  const rsi = rsiSeries(closes);
+  const rsi = rsiSeries(closes, tf.rsi.length);
   // Periodos do proprio timeframe: os valores diario e semanal nunca se
   // encontram, porque cada bloco calcula a partir do seu tf.
   const { plusDI, minusDI, adx } = dmiSeries(
@@ -2460,7 +2475,7 @@ function readPair(cfg, d, tf, opts = {}) {
   const closesP = closes.concat([live.close]);
   const highsP = highs.concat([live.high]);
   const lowsP = lows.concat([live.low]);
-  const rsiP = rsiSeries(closesP);
+  const rsiP = rsiSeries(closesP, tf.rsi.length);
   const dmiP = dmiSeries(highsP, lowsP, closesP, tf.dmi.diLen, tf.dmi.adxLen);
   const k = closesP.length - 1;
 
@@ -2688,7 +2703,11 @@ function readPair(cfg, d, tf, opts = {}) {
   L.push(`distancia_ema89_pct: ${num(distEma, 2)}`);
   L.push("");
   L.push(`# principais: calculados SOMENTE com velas ${tf.key === "semanal" ? "semanais " : ""}fechadas`);
-  L.push(`rsi14_fechado: ${num(rsi[i], 2)}`);
+  // Mesmo tratamento dado ao DMI: o periodo sai declarado ao lado do
+  // valor, e o nome perdeu o "14" -- rsi14_fechado guardando um RSI de
+  // 21 seria mentira.
+  L.push(`rsi_length: ${tf.rsi.length}`);
+  L.push(`rsi_fechado: ${num(rsi[i], 2)}`);
   // Os periodos saem ao lado dos valores: o DMI deixou de ser 14/14 em
   // todo lugar, entao quem le o bloco tem de saber com que configuracao
   // aquele numero foi calculado sem precisar consultar o codigo. Os
@@ -2720,7 +2739,7 @@ function readPair(cfg, d, tf, opts = {}) {
   L.push("");
   L.push("# PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o");
   L.push(`# fechamento ${tf.key}. NAO sao a referencia principal.`);
-  L.push(`rsi14_provisorio: ${num(rsiP[k], 2)}`);
+  L.push(`rsi_provisorio: ${num(rsiP[k], 2)}`);
   L.push(`di_plus_provisorio: ${num(dmiP.plusDI[k], 2)}`);
   L.push(`di_minus_provisorio: ${num(dmiP.minusDI[k], 2)}`);
   L.push(`adx_provisorio: ${num(dmiP.adx[k], 2)}`);
@@ -2974,10 +2993,11 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
   blocks.push(`fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)`);
   // Derivado de TIMEFRAMES para o cabecalho nao poder divergir da
   // configuracao de verdade.
-  const dmiCab = TIMEFRAMES.map((t) => `${t.key} ${t.dmi.diLen}/${t.dmi.adxLen}`).join(", ");
+  const porTf = (f) => TIMEFRAMES.map((t) => `${t.key} ${f(t)}`).join(", ");
   blocks.push(
-    `indicadores: RSI(14) por Wilder/RMA, DMI/ADX por Wilder/RMA com periodos por timeframe ` +
-      `(${dmiCab}), EMA(89) exponencial`
+    `indicadores: RSI e DMI/ADX por Wilder/RMA com periodos por timeframe ` +
+      `(RSI ${porTf((t) => t.rsi.length)}; DMI/ADX ${porTf((t) => `${t.dmi.diLen}/${t.dmi.adxLen}`)}), ` +
+      `EMA(89) exponencial`
   );
   blocks.push(`nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao`);
   blocks.push(`nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eventos_semanal:"`);
@@ -3286,7 +3306,7 @@ function pgTimeframe(titulo, b, dec) {
 
   const tend = b.estrutura_tendencia || "--";
   const sit = b.niveis_manuais_situacao || "--";
-  const rsi = b.rsi14_fechado;
+  const rsi = b.rsi_fechado;
   const diPlus = b.di_plus_fechado;
   const diMinus = b.di_minus_fechado;
 
@@ -3296,7 +3316,7 @@ function pgTimeframe(titulo, b, dec) {
   L.push(pgLinha("EMA89 (fechado)", emaTxt, acima === null ? "" : acima ? "alta" : "baixa"));
   if (cruz && cruz !== "nenhum")
     L.push(pgLinha("Cruzou a EMA89", `${pgEsc(cruz)} no fechamento`, "evento"));
-  L.push(pgLinha("RSI(14)", pgNum(rsi, 1),
+  L.push(pgLinha(`RSI(${b.rsi_length || 14})`, pgNum(rsi, 1),
     typeof rsi === "number" && (rsi >= 70 || rsi <= 30) ? "atencao" : ""));
   // Rotulo com os periodos DAQUELE bloco: diario e semanal usam
   // configuracoes diferentes e o cartao mostra os dois lado a lado.
