@@ -1532,9 +1532,9 @@ export function relatorioParaJSON(texto, zonas = null) {
   // niveis_manuais e zonas_automaticas ficam SEPARADOS por par/timeframe
   for (const tfKey of ["diario", "semanal"]) {
     for (const par of Object.keys(out[tfKey] || {})) {
-      const bloco = out[tfKey][par];
       const cfgPar = parPorLabel(par);
       if (!cfgPar) continue;
+      const bloco = out[tfKey][par];
       const chave = `${cfgPar.key}|${tfKey}`;
       bloco.niveis_manuais = {};
 
@@ -1547,11 +1547,9 @@ export function relatorioParaJSON(texto, zonas = null) {
       // do texto existe para dado CALCULADO, onde texto e JSON poderiam
       // divergir; faixa manual e' constante de configuracao, entao nao ha
       // o que divergir.
-      if (cfgPar) {
-        bloco.niveis_manuais.faixas = (cfgPar.niveis.faixas || []).map(
-          ([inferior, superior, label]) => ({ inferior, superior, label })
-        );
-      }
+      bloco.niveis_manuais.faixas = (cfgPar.niveis.faixas || []).map(
+        ([inferior, superior, label]) => ({ inferior, superior, label })
+      );
 
       for (const [campo, valor] of Object.entries(bloco)) {
         if (campo.startsWith("nivel_") || campo.startsWith("resistencia_macro_"))
@@ -2638,7 +2636,7 @@ function readPair(cfg, d, tf, opts = {}) {
     proximoId: opts.proximoIdZona || 1,
     volumeMedia20: vol.media,
     niveisManuais: niveisDoPar(cfg).map((n) => n.nivel),
-    faixasManuais: (cfg.niveis.faixas || []).map((f) => [f[0], f[1]]),
+    faixasManuais: cfg.niveis.faixas || [],
     resistenciaMacro: cfg.niveis.resistenciaMacro || null,
   });
   const zonasAutomaticas = zonasRes.zonas;

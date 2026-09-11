@@ -86,7 +86,7 @@ Leia, quando disponíveis no relatório:
 - RSI (o período vem em `rsi_length` e difere por timeframe);
 - DI+;
 - DI−;
-- ADX;
+- ADX (os períodos vêm em `dmi_di_length` e `dmi_adx_smoothing` e também diferem por timeframe);
 - valores fechados e provisórios;
 - candles e anatomia das velas;
 - volume;
@@ -125,7 +125,9 @@ Na configuração atual do projeto, as referências conhecidas são:
 
 #### XMR/BTC
 
-- faixa manual `0,00575–0,00585`;
+- faixa `0,00656–0,00705` — `faixa_000656_000705`;
+- faixa `0,00602–0,00639` — `faixa_000602_000639`;
+- região de suporte `0,00565–0,00603` — `regiao_suporte_000565_000603`;
 - resistência pontual principal `0,00700`;
 - suporte pontual principal `0,00584`.
 
