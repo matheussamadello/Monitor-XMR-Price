@@ -2,7 +2,7 @@
 
 Monitor técnico automatizado de **XMR/USD** e **XMR/BTC** que coleta candles da Kraken, calcula indicadores, acompanha estrutura de mercado e publica um relatório estático em HTML, texto e JSON para consulta humana ou consumo por bots, agentes e LLMs.
 
-Este monitor é voltado a **swing trades com horizonte mínimo aproximado de uma semana** e a **position trades**, não a operações de curto prazo ou day trade. O gráfico **diário** é a referência principal de timing e o **semanal**, o filtro de contexto estrutural.
+Este monitor é voltado a **swing trades de médio prazo** e **position trades**, com ênfase em **acumulação, realização parcial e decisões de prazo mais longo**. O gráfico **diário** é a referência principal de timing e o **semanal**, o filtro de contexto estrutural. Não é destinado a operações de curto prazo ou day trade.
 
 No prompt de alertas incluído no projeto, **XMR/BTC** é o par principal para avaliar o momento relativo de uma troca BTC → XMR, enquanto **XMR/USD** funciona como contexto complementar de preço, suporte, resistência, estrutura e momentum.
 
