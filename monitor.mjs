@@ -21,6 +21,10 @@ const TIMEFRAMES = [
     interval: 1440,
     segundos: 86400,
     retestMaxCandles: 30,
+    // DMI/ADX por timeframe. O diario e' a leitura OPERACIONAL de
+    // tendencia e forca para swing e position: 28/42 corta o ruido de
+    // curto prazo que o 14/14 deixava passar.
+    dmi: { diLen: 28, adxLen: 42 },
     // A automacao externa le a linha "eventos:" do bloco diario.
     // Por isso o semanal usa um nome diferente, para nunca colidir.
     campoEventos: "eventos",
@@ -31,6 +35,10 @@ const TIMEFRAMES = [
     interval: 10080,
     segundos: 604800,
     retestMaxCandles: 8,
+    // O semanal e' CONTEXTO de prazo maior, nao gatilho de entrada: 14/21
+    // ja e' lento o bastante nessa escala, e alongar mais so atrasaria a
+    // leitura sem ganhar filtragem.
+    dmi: { diLen: 14, adxLen: 21 },
     campoEventos: "eventos_semanal",
   },
 ];
@@ -188,12 +196,19 @@ export function rsiSeries(closes, period = PERIOD) {
   return out;
 }
 
-export function dmiSeries(highs, lows, closes, period = PERIOD) {
+// DOIS periodos, como no DMI do TradingView: diLen suaviza TR, +DM e
+// -DM (e portanto os DIs); adxLen suaviza o DX para virar ADX. Ate
+// 2026-09-11 havia um so, usado nos dois papeis e nos dois timeframes.
+// Chamar com (14, 14) reproduz exatamente o comportamento antigo, e ha
+// teste fixando isso.
+//
+// O metodo nao mudou: Wilder/RMA em todas as etapas.
+export function dmiSeries(highs, lows, closes, diLen = PERIOD, adxLen = diLen) {
   const n = closes.length;
   const plusDI = new Array(n).fill(null);
   const minusDI = new Array(n).fill(null);
   const adx = new Array(n).fill(null);
-  if (n < 2 * period) return { plusDI, minusDI, adx };
+  if (n < diLen + adxLen) return { plusDI, minusDI, adx };
 
   const tr = new Array(n).fill(0);
   const pDM = new Array(n).fill(0);
@@ -214,7 +229,7 @@ export function dmiSeries(highs, lows, closes, period = PERIOD) {
   let trS = 0;
   let pS = 0;
   let mS = 0;
-  for (let i = 1; i <= period; i++) {
+  for (let i = 1; i <= diLen; i++) {
     trS += tr[i];
     pS += pDM[i];
     mS += mDM[i];
@@ -229,21 +244,24 @@ export function dmiSeries(highs, lows, closes, period = PERIOD) {
     dx[i] = p + m === 0 ? 0 : (100 * Math.abs(p - m)) / (p + m);
   };
 
-  writeDI(period);
-  for (let i = period + 1; i < n; i++) {
-    trS = trS - trS / period + tr[i];
-    pS = pS - pS / period + pDM[i];
-    mS = mS - mS / period + mDM[i];
+  writeDI(diLen);
+  for (let i = diLen + 1; i < n; i++) {
+    trS = trS - trS / diLen + tr[i];
+    pS = pS - pS / diLen + pDM[i];
+    mS = mS - mS / diLen + mDM[i];
     writeDI(i);
   }
 
-  const firstAdx = 2 * period - 1;
+  // O DX so existe a partir de diLen; a semente do ADX e' a media dos
+  // adxLen primeiros DX, e dai em diante Wilder com adxLen. Com
+  // diLen === adxLen isto e' exatamente o 2*period-1 de antes.
+  const firstAdx = diLen + adxLen - 1;
   if (n > firstAdx) {
     let sum = 0;
-    for (let i = period; i <= firstAdx; i++) sum += dx[i];
-    adx[firstAdx] = sum / period;
+    for (let i = diLen; i <= firstAdx; i++) sum += dx[i];
+    adx[firstAdx] = sum / adxLen;
     for (let i = firstAdx + 1; i < n; i++) {
-      adx[i] = (adx[i - 1] * (period - 1) + dx[i]) / period;
+      adx[i] = (adx[i - 1] * (adxLen - 1) + dx[i]) / adxLen;
     }
   }
 
@@ -2422,7 +2440,11 @@ function readPair(cfg, d, tf, opts = {}) {
 
   // --- indicadores com velas FECHADAS (referencia principal) ---
   const rsi = rsiSeries(closes);
-  const { plusDI, minusDI, adx } = dmiSeries(highs, lows, closes);
+  // Periodos do proprio timeframe: os valores diario e semanal nunca se
+  // encontram, porque cada bloco calcula a partir do seu tf.
+  const { plusDI, minusDI, adx } = dmiSeries(
+    highs, lows, closes, tf.dmi.diLen, tf.dmi.adxLen
+  );
   const ema = emaSeries(closes);
   // O ATR ja era calculado la dentro das zonas, para dimensionar a
   // largura delas. Aqui ele e' calculado tambem para ser PUBLICADO: e' a
@@ -2439,7 +2461,7 @@ function readPair(cfg, d, tf, opts = {}) {
   const highsP = highs.concat([live.high]);
   const lowsP = lows.concat([live.low]);
   const rsiP = rsiSeries(closesP);
-  const dmiP = dmiSeries(highsP, lowsP, closesP);
+  const dmiP = dmiSeries(highsP, lowsP, closesP, tf.dmi.diLen, tf.dmi.adxLen);
   const k = closesP.length - 1;
 
   // --- linha "eventos": logica e texto ORIGINAIS, nao mexer ---
@@ -2667,9 +2689,16 @@ function readPair(cfg, d, tf, opts = {}) {
   L.push("");
   L.push(`# principais: calculados SOMENTE com velas ${tf.key === "semanal" ? "semanais " : ""}fechadas`);
   L.push(`rsi14_fechado: ${num(rsi[i], 2)}`);
-  L.push(`di_plus14_fechado: ${num(plusDI[i], 2)}`);
-  L.push(`di_minus14_fechado: ${num(minusDI[i], 2)}`);
-  L.push(`adx14_fechado: ${num(adx[i], 2)}`);
+  // Os periodos saem ao lado dos valores: o DMI deixou de ser 14/14 em
+  // todo lugar, entao quem le o bloco tem de saber com que configuracao
+  // aquele numero foi calculado sem precisar consultar o codigo. Os
+  // campos perderam o "14" do nome pelo mesmo motivo -- adx14_fechado
+  // guardando um ADX de 42 seria mentira.
+  L.push(`dmi_di_length: ${tf.dmi.diLen}`);
+  L.push(`dmi_adx_smoothing: ${tf.dmi.adxLen}`);
+  L.push(`di_plus_fechado: ${num(plusDI[i], 2)}`);
+  L.push(`di_minus_fechado: ${num(minusDI[i], 2)}`);
+  L.push(`adx_fechado: ${num(adx[i], 2)}`);
   L.push(`ultimo_fechamento_data: ${fmtDia(times[i])}`);
   L.push(`ultimo_fechamento_close: ${num(closes[i], D)}`);
   // Estes quatro tornam a travessia da EMA89 DETERMINISTICA a partir do
@@ -2692,9 +2721,9 @@ function readPair(cfg, d, tf, opts = {}) {
   L.push("# PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o");
   L.push(`# fechamento ${tf.key}. NAO sao a referencia principal.`);
   L.push(`rsi14_provisorio: ${num(rsiP[k], 2)}`);
-  L.push(`di_plus14_provisorio: ${num(dmiP.plusDI[k], 2)}`);
-  L.push(`di_minus14_provisorio: ${num(dmiP.minusDI[k], 2)}`);
-  L.push(`adx14_provisorio: ${num(dmiP.adx[k], 2)}`);
+  L.push(`di_plus_provisorio: ${num(dmiP.plusDI[k], 2)}`);
+  L.push(`di_minus_provisorio: ${num(dmiP.minusDI[k], 2)}`);
+  L.push(`adx_provisorio: ${num(dmiP.adx[k], 2)}`);
   L.push("");
   ult.forEach((v, idx) => {
     L.push(
@@ -2943,7 +2972,13 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
 
   blocks.push(`timestamp: ${fmtUTC(Math.floor(Date.now() / 1000))}`);
   blocks.push(`fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)`);
-  blocks.push(`indicadores: RSI(14) e DMI/ADX(14) por Wilder/RMA, EMA(89) exponencial`);
+  // Derivado de TIMEFRAMES para o cabecalho nao poder divergir da
+  // configuracao de verdade.
+  const dmiCab = TIMEFRAMES.map((t) => `${t.key} ${t.dmi.diLen}/${t.dmi.adxLen}`).join(", ");
+  blocks.push(
+    `indicadores: RSI(14) por Wilder/RMA, DMI/ADX por Wilder/RMA com periodos por timeframe ` +
+      `(${dmiCab}), EMA(89) exponencial`
+  );
   blocks.push(`nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao`);
   blocks.push(`nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eventos_semanal:"`);
   blocks.push("");
@@ -3252,8 +3287,8 @@ function pgTimeframe(titulo, b, dec) {
   const tend = b.estrutura_tendencia || "--";
   const sit = b.niveis_manuais_situacao || "--";
   const rsi = b.rsi14_fechado;
-  const diPlus = b.di_plus14_fechado;
-  const diMinus = b.di_minus14_fechado;
+  const diPlus = b.di_plus_fechado;
+  const diMinus = b.di_minus_fechado;
 
   const L = [];
   L.push(pgLinha("Último fechamento",
@@ -3263,8 +3298,14 @@ function pgTimeframe(titulo, b, dec) {
     L.push(pgLinha("Cruzou a EMA89", `${pgEsc(cruz)} no fechamento`, "evento"));
   L.push(pgLinha("RSI(14)", pgNum(rsi, 1),
     typeof rsi === "number" && (rsi >= 70 || rsi <= 30) ? "atencao" : ""));
-  L.push(pgLinha("ADX / DI (14)",
-    `${pgNum(b.adx14_fechado, 1)}<small>+${pgNum(diPlus, 1)} / −${pgNum(diMinus, 1)}</small>`,
+  // Rotulo com os periodos DAQUELE bloco: diario e semanal usam
+  // configuracoes diferentes e o cartao mostra os dois lado a lado.
+  const dmiCfg =
+    b.dmi_di_length && b.dmi_adx_smoothing
+      ? ` (${b.dmi_di_length}/${b.dmi_adx_smoothing})`
+      : "";
+  L.push(pgLinha(`ADX / DI${dmiCfg}`,
+    `${pgNum(b.adx_fechado, 1)}<small>+${pgNum(diPlus, 1)} / −${pgNum(diMinus, 1)}</small>`,
     typeof diPlus === "number" && typeof diMinus === "number"
       ? (diPlus > diMinus ? "alta" : "baixa")
       : ""));
