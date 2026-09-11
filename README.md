@@ -292,16 +292,20 @@ Três consumidores leem daí e só daí: `alertasTecnicos` (faixas e rompimento/
 
 Na versão atual do código:
 
-Calibrado em 2026-09-05, com o XMR/USD a 528,43:
+Reancorado em 2026-09-11, com o XMR/USD a 515,50:
 
 | Região | Função | De onde veio |
 | --- | --- | --- |
-| US$ 544–553 | faixa manual | zona diária acima do preço |
-| US$ 494–507 | faixa manual | zona diária de score 67 |
-| US$ 423–445 | região manual de suporte | zona diária de score 82 sobre a semanal de score 91 |
-| US$ 550 | resistência pontual | centro da zona diária (548,34), que é também o pivô de topo de 31/08 |
-| US$ 500 | suporte pontual | centro da zona diária de score 67 (500,44) |
+| US$ 494–507 | faixa manual | zona diária de score 67, e semanal de score 77 |
+| US$ 463–477 | faixa manual | zona diária de score 75, com 6 toques |
+| US$ 423–445 | região manual de suporte | zona diária de score 74 sobre a semanal de score 90 |
+| US$ 550 | resistência pontual | **não corroborada**, mantida de propósito. Ver abaixo |
+| US$ 500 | suporte pontual | centro da zona diária de score 67 |
 | US$ 788–811 | resistência macro manual/contextual | única estrutura acima do preço, presente no diário **e** no semanal |
+
+A faixa de 544–553 saiu porque ficou órfã: não encostava em zona nenhuma, nem no diário nem no semanal. E **acima do preço atual não existe resistência bem testada** — a única zona lá em cima tem 1 toque e score 35. Marcar uma faixa sobre ela passaria no teste de alinhamento apoiada em evidência fraca, que é pior que não marcar. Então o conjunto desceu para as três regiões que o mercado de fato testou, e o par fica **sem faixa marcada acima do preço** até que uma se forme. O alinhamento diário passou de 2 de 3 para 3 de 3.
+
+A resistência pontual de 550 foi mantida mesmo sem corroboração, e por um motivo específico: ela marca o próximo nível a vencer acima do preço, e descê-la para dentro da região já testada faria o monitor anunciar como rompimento **novo** uma passagem que já aconteceu. Quando o preço construir estrutura acima, esse número deve ser revisto.
 
 Os anteriores (resistência 410, faixas 350–385) ficaram obsoletos: o nível de 410 foi rompido em 17/08 e o preço seguiu 29% acima da faixa mais alta. Foi esse caso que motivou a [vigilância dos níveis manuais](#vigilância-dos-níveis-manuais).
 

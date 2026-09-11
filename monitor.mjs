@@ -89,15 +89,31 @@ const TIMEFRAMES = [
 //     2026-08-31. O nivel fica dentro do estrutural (544.13-552.55).
 //   suporte 500 — zona diaria de score 67 com centro em 500.44, a mais
 //     proxima abaixo do preco, e numero redondo bem no centro dela.
-//   faixas — as tres regioes que as zonas ja marcavam: 544-553 acima,
-//     494-507 logo abaixo, e 423-445, onde a zona diaria de score 82
-//     coincide com a semanal de score 91.
+//   faixas — ver abaixo.
+//
+// REANCORAGEM 2026-09-11. A faixa de 544-553 ficou orfa: nao encostava
+// em zona nenhuma, nem no diario nem no semanal. Acima do preco atual
+// NAO EXISTE resistencia bem testada -- a unica zona la em cima tem 1
+// toque e score 35, e marcar uma faixa sobre ela passaria no teste de
+// alinhamento apoiada em evidencia fraca. Entao o conjunto desceu para
+// as tres regioes que o mercado de fato testou, e o par fica sem faixa
+// marcada ACIMA do preco ate que uma se forme. As duas de baixo nao
+// mudaram: ja estavam em 1,00 e 0,99 de sobreposicao.
+//
+//   494-507  zona diaria de score 67, e semanal de score 77
+//   463-477  zona diaria de score 75, 6 toques -- e' a que entrou
+//   423-445  zona diaria de score 74, e semanal de score 90
 const NIVEIS_USD = {
   faixas: [
-    [544, 553, "faixa_544_553"],
     [494, 507, "faixa_494_507"],
+    [463, 477, "faixa_463_477"],
     [423, 445, "regiao_suporte_423_445"],
   ],
+  // NAO corroborada por zona nenhuma, e mantida de proposito: e' a marca
+  // do proximo nivel a vencer acima do preco. Descer a resistencia para
+  // dentro da regiao ja testada faria o monitor anunciar como rompimento
+  // NOVO uma passagem que ja aconteceu. Quando o preco construir
+  // estrutura la em cima, este numero deve ser revisto.
   resistencia: 550,
   resistenciaLabel: "550",
   suporte: 500,

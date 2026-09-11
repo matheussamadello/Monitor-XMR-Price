@@ -156,16 +156,16 @@ Na configuração atual do projeto, as referências conhecidas são:
 
 #### XMR/USD
 
-- faixa `US$ 544–553`;
 - faixa `US$ 494–507`;
+- faixa `US$ 463–477`;
 - região de suporte `US$ 423–445`;
-- resistência pontual `US$ 550`;
+- resistência pontual `US$ 550`, **acima de todas as faixas**: não há resistência bem testada acima do preço, então nenhuma faixa foi marcada lá;
 - suporte pontual `US$ 500`;
 - resistência macro manual `US$ 788–811`.
 
 A resistência macro é contextual e propositalmente diferente da máquina de estados dos níveis pontuais.
 
-**Estes números são a configuração de 2026-09-05 e vão envelhecer.** Leia sempre `niveis_manuais` do JSON, que é a fonte de verdade, e observe `niveis_manuais_situacao`: quando ela disser `obsoleto`, é a lista acima que está velha, não o mercado que está errado.
+**Estes números são a configuração de 2026-09-11 e vão envelhecer.** Leia sempre `niveis_manuais` do JSON, que é a fonte de verdade, e observe `niveis_manuais_situacao`: quando ela disser `obsoleto`, é a lista acima que está velha, não o mercado que está errado.
 
 Se o JSON atualizado passar a publicar valores diferentes, **prevalece o JSON**.
 
