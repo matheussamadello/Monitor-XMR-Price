@@ -618,7 +618,8 @@ Ele armazena atualmente:
 - `em`: timestamp da atualização;
 - `niveis`: estado persistente da máquina de rompimento/reteste;
 - `zonas`: coleção das zonas vivas por par/timeframe;
-- `contadoresZona`: contadores usados para preservar identidade das zonas.
+- `contadoresZona`: contadores usados para preservar identidade das zonas;
+- `historicoAssinaturas`: a assinatura da última condição registrada por par e timeframe. É o que faz a execução seguinte, sobre a mesma vela fechada, não repetir linha em `historico.jsonl`.
 
 O arquivo não substitui `relatorio.json` como interface pública de consumo.
 
@@ -638,10 +639,13 @@ o monitor cria ou atualiza:
 docs/
 ├── .nojekyll
 ├── estado.json
+├── historico.jsonl
 ├── index.html
 ├── index.txt
 └── relatorio.json
 ```
+
+`historico.jsonl` é o único que **cresce por acréscimo**: os outros cinco são reescritos inteiros a cada execução, e nele o monitor só acrescenta linhas.
 
 ### A página publicada (`index.html`)
 
@@ -819,14 +823,21 @@ O rodapé carrega o horizonte, e aceita quatro valores: `TÁTICO`, `ESTRATÉGICO
 
 `teste-fumaca.mjs` roda o monitor inteiro contra séries sintéticas no formato OHLC da Kraken, **sem tocar na rede**. Existe porque o monitor publica sozinho de hora em hora: sem ele, um refactor que quebre o parse ou o cálculo só apareceria em produção, com o relatório já no ar.
 
-Verifica:
+São **mais de 250 asserções**, em torno de trinta blocos. Entre elas:
 
-- que o relatório sai inteiro, sem `NaN` e sem `undefined`;
-- que RSI, ADX, EMA89 e a estrutura de pivôs são calculados;
-- que as linhas `eventos:` e `eventos_semanal:` continuam nos seus blocos;
-- que a fonte fora do ar vira `FALHA:` citando o status, sem interromper o relatório;
-- que um erro de aplicação da fonte aparece no relatório;
-- que a vela em formação não puxa a classificação de volume, e que uma queda ou um pico reais na vela fechada continuam sendo detectados;
+- que o relatório sai inteiro, sem `NaN` e sem `undefined`, e que as linhas `eventos:` e `eventos_semanal:` continuam nos seus blocos;
+- que RSI, ADX e EMA89 usam o período de cada timeframe, e que o relatório **declara** qual usou;
+- que os **cinco** valores de estrutura têm nomes distintos, e que os eventos de pivô não prometem o que não aconteceu;
+- que a fonte fora do ar vira `FALHA:` citando o status, e que um erro de aplicação também aparece;
+- que a vela em formação não puxa a classificação de volume nem a situação dos níveis;
+- que `afastado` mede distância e não etapa do ciclo, e que um rompimento vira notícia **uma vez só**;
+- que a tolerância de reteste acompanha a volatilidade do par;
+- que o relatório avisa quando a faixa manual sai de onde o mercado reage;
+- que o radar só aponta região madura **e** descoberta, e nunca no semanal;
+- que a ficha de uma zona coberta dorme em vez de ser rasgada, e que zona em observação envelhece;
+- que as leituras `longo` e `curto` saem sem jargão, e que todo rótulo tem explicação no `(?)`, sem explicação órfã;
+- que o seletor mostra um par por vez sem tocar no bloco que o agente lê;
+- que o histórico grava uma linha por vela fechada e não repete na mesma vela;
 - que o `relatorio.json` continua parseável e tipado, com as faixas manuais de cada par;
 - que uma segunda execução lê o estado da anterior sem quebrar.
 
