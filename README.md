@@ -273,6 +273,17 @@ Campos `*_fechado` usam somente velas concluídas e são a referência principal
 
 Campos `*_provisorio` incorporam a vela em formação e podem mudar até o fechamento.
 
+
+### Quando não existe vela em formação
+
+`vela_atual_em_formacao` responde isso, e vem logo antes do bloco que ele qualifica.
+
+Em cripto a resposta é sempre `sim`: o mercado não fecha, então a última barra está sempre aberta. Em fonte com pregão não: encerrado o pregão, a última barra **já é uma barra fechada**. Nesse caso o relatório publica `vela_atual_em_formacao: nao`, e o bloco `candle_atual_*` e a `fracao_periodo_decorrida` saem como `--`.
+
+Saem em branco de propósito. Com valores, o mesmo período aparecia duas vezes no mesmo bloco — uma como "atual", com `close_provisorio` e fração de período decorrida, outra como `ultimo_fechamento_*` —, e nada dizia que eram a mesma barra. Para quem lê, é a diferença entre uma evidência e duas. Nenhuma informação se perde: a barra continua em `ultimo_fechamento_*` e, com o OHLC completo, em `candle_fechado_1`.
+
+Os campos `*_provisorio` continuam publicados nesse caso, e repetem os fechados — o cabeçalho da seção diz isso em vez de prometer que ainda podem mudar.
+
 O mesmo princípio vale para:
 
 - padrões;
@@ -685,7 +696,8 @@ Considerando a estrutura atual do monitor e os arquivos de documentação:
 Monitor-XMR-Price/
 ├── .github/
 │   └── workflows/
-│       └── monitor.yml
+│       ├── monitor.yml
+│       └── paridade.yml
 ├── docs/
 │   ├── .nojekyll
 │   ├── estado.json
@@ -694,8 +706,19 @@ Monitor-XMR-Price/
 │   ├── index.txt
 │   └── relatorio.json
 ├── monitor.mjs
-├── teste-fumaca.mjs
+├── ema89-semanal.mjs
 ├── analisar-historico.mjs
+├── paridade.mjs
+├── paridade-esperada.mjs
+├── teste-fumaca.mjs
+├── teste-regressoes.mjs
+├── teste-ema89-semanal.mjs
+├── teste-paridade.mjs
+├── teste-niveis.mjs
+├── teste-limiares.mjs
+├── teste-retrato.mjs
+├── teste-retrato-cassete.json
+├── teste-retrato.txt
 ├── README.md
 └── PROMPT_XMR_TECHNICAL_WATCH.md
 ```
@@ -847,11 +870,13 @@ Rode com:
 node teste-fumaca.mjs
 ```
 
-Ele encadeia mais três arquivos no final: `teste-regressoes.mjs`, `teste-ema89-semanal.mjs` e `teste-retrato.mjs`. Rodar o de fumaça roda os quatro.
+Ele encadeia mais cinco arquivos no final: `teste-regressoes.mjs`, `teste-ema89-semanal.mjs`, `teste-paridade.mjs`, `teste-niveis.mjs`, `teste-limiares.mjs` e `teste-retrato.mjs`. Rodar o de fumaça roda todos.
 
 ### Paridade entre os três monitores
 
 `paridade.mjs` confere que os três continuam com o mesmo motor. Compara arquivo inteiro para os que devem ser idênticos em todos, e **símbolo a símbolo** no `monitor.mjs` — só os que existem nos três, porque o que é de um repositório só é configuração, não divergência. Pega o código dos outros dois do diretório irmão, quando os três estão clonados lado a lado, e do GitHub quando não estão.
+
+O recorte em símbolos já teve dois furos, os dois achados por mutação: a expressão que reconhece uma declaração não aceitava `export async function`, e a contagem de chaves contava também o que está dentro de string e de template. Resultado: `build()` — a função que monta o relatório inteiro — e as 142 linhas do `PAGINA_CSS` ficavam **fora da comparação**, e mexer nelas passava como "os três monitores estão em paridade". Hoje **todas** as linhas do `monitor.mjs` entram, inclusive os imports e o bloco de execução direta, que vão para um pseudo-símbolo `<topo>`. `teste-paridade.mjs` prende isso: se alguém reescrever o recorte e perder um símbolo de novo, o teste diz qual.
 
 Ao automatizar isso, apareceu que "só a configuração muda" nunca foi literalmente verdade. As divergências legítimas estão listadas em `paridade-esperada.mjs`, com o motivo, e o teste falha quando diverge um símbolo **fora** dessa lista — que é o caso de alguém corrigir um bug num repositório só.
 
@@ -881,7 +906,19 @@ node teste-retrato.mjs --atualizar
 
 e o diff do retrato entra no mesmo commit. Esse diff é a revisão mais honesta que existe aqui, porque mostra tudo que mudou.
 
-**O que ele não alcança:** só cobre os caminhos que a entrada fixa exercita. Numa prova de mutação, ele pegou mudanças nos pesos do score, no período do RSI e nos limites de uma faixa manual, mas **não** pegou uma alteração na tolerância de reteste — porque naquele cassete nenhum nível está em reteste. Retrato não substitui teste de caso.
+**O que ele não alcança:** só cobre os caminhos que a entrada fixa exercita. Numa prova de mutação, ele pegou mudanças nos pesos do score, no período do RSI e nos limites de uma faixa manual, mas **não** pegou uma alteração na tolerância de reteste — porque naquele cassete nenhum nível está em reteste. Retrato não substitui teste de caso; essa lacuna é coberta por `teste-niveis.mjs` e `teste-limiares.mjs`, abaixo.
+
+### A máquina de níveis e os números que decidem
+
+Uma prova de mutação sobre as constantes numéricas do `monitor.mjs` — mudar cada uma em 50% e ver se algum teste reclama — encontrou **26 das 40 passando sem ninguém notar**. Entre elas a tolerância do reteste, a distância de reset, a escala dos pivôs, o piso das divergências e os limiares de score das zonas: exatamente os números que decidem o que o relatório afirma.
+
+Constante que pode mudar sozinha sem quebrar teste nenhum não é calibragem, é acidente esperando acontecer. Três arquivos fecham isso:
+
+- **`teste-niveis.mjs`** dirige a máquina de rompimento e reteste vela a vela: candidato, rompido, em reteste, reteste confirmado, rompimento falhou, recuperado, arquivado e o reencontro depois do abandono. Também prende as regras que não são números — uma transição por vela fechada, vela atrasada não anda com o ciclo, o histórico não cresce para sempre.
+- **`teste-limiares.mjs`** escolhe entradas dos **dois lados de cada borda**: 0,20 ATR está dentro da tolerância do reteste e 0,30 está fora; 40% de sobreposição casa duas zonas e 25% não; um corpo de 60% do range é vela compradora forte e um de 50% não é. Uma afirmação de cada lado, para o teste morrer se o número se mexer. O reteste é testado pelo caminho de verdade, passando por `readPair` — é lá que as constantes em ATR viram preço, e era por isso que testar só a máquina não as alcançava.
+- O bloco **calibragem deste par**, dentro do próprio `teste-fumaca.mjs`, prende os cinco números que legitimamente **mudam** de um monitor para o outro. Eles não cabem nos dois arquivos acima, que são idênticos nos três repositórios.
+
+Depois disso, a prova de mutação não deixa sobreviver **nenhuma** das constantes numéricas deste repositório.
 
 O workflow roda esse teste **antes** de gerar o relatório: se algo quebrou, o job para ali em vez de publicar um relatório pela metade.
 

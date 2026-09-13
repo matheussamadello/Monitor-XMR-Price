@@ -4,6 +4,7 @@
 // Existe porque o monitor publica sozinho de hora em hora: sem isso, um
 // refactor que quebre o parse ou o calculo so apareceria em producao,
 // com o relatorio ja no ar.
+import * as monitor from "./monitor.mjs";
 import {
   build, relatorioParaJSON, toHTML, PARES_TESTE, TIMEFRAMES_TESTE, dmiSeries, rsiSeries, analisarVolume, situacaoNiveis, atualizarEstadoNivel, alertasTecnicos, sinteses, acharPivos, classificarEstrutura, mudancaEstrutura, alinhamentoNiveis, registrarHistorico, entradaHistorico, assinaturaHistorico, leituraLonga, leituraCurta, EXPLICACOES, reconciliarAnteriores, atualizarCiclo, forcaTendencia, ondeNosNiveis, zonasCandidatas,
 } from "./monitor.mjs";
@@ -1347,6 +1348,75 @@ ok(!/NaN|undefined/.test(r4.texto), "segunda execucao le o estado anterior sem q
 
 await import("./teste-regressoes.mjs");
 await import("./teste-ema89-semanal.mjs");
+await import("./teste-paridade.mjs");
+await import("./teste-niveis.mjs");
+await import("./teste-limiares.mjs");
+
+// ------------------------------------------------------------
+// CALIBRAGEM DESTE PAR
+//
+// Estes cinco numeros sao os unicos que MUDAM de um monitor para o
+// outro -- o resto do motor e' identico e esta preso em
+// teste-limiares.mjs, que e' o mesmo arquivo nos tres. Por serem
+// diferentes, eles nao cabem la: um arquivo identico nos tres nao pode
+// afirmar "0,3%" sem quebrar no monitor que usa 0,15%.
+//
+// Sem este bloco eram os ultimos numeros do projeto que podiam mudar
+// sozinhos sem nenhum teste reclamar.
+// ------------------------------------------------------------
+console.log("\n== calibragem deste par ==");
+{
+  // Largura da zona: piso e teto em % do centro.
+  const semAtr = monitor.limitesOperacionais(1000, 0);
+  ok(Math.abs(1000 - semAtr.inferior - 1.5) < 1e-9,
+    `sem ATR a meia-largura da zona e' o piso de 1.5 (${(1000 - semAtr.inferior).toFixed(4)})`);
+  const atrEnorme = monitor.limitesOperacionais(1000, 1e9);
+  ok(Math.abs(atrEnorme.superior - 1000 - 15.0) < 1e-9,
+    `com ATR enorme a meia-largura para no teto de 15.0 (${(atrEnorme.superior - 1000).toFixed(4)})`);
+
+  // Reteste sem ATR: tolerancia e reset caem para percentual do nivel.
+  // Tempos crescentes: a maquina so avanca uma vez por vela fechada, e
+  // repetir o mesmo carimbo faria toda transicao abaixo ser ignorada.
+  const T0 = 1_700_000_000, DIA = 86400;
+  const velaEm = (close, open, k = 1) => ({
+    time: T0 + k * DIA, open, close,
+    high: Math.max(open, close), low: Math.min(open, close),
+  });
+  const ctx = (vela) => ({ nivel: 1000, direcao: "alta", vela, tolAtr: 0.25, resetAtr: 1.5, atr: 0, maxCandles: 30, segundos: DIA });
+  const rompeu = monitor.atualizarEstadoNivel(null, ctx(velaEm(1060, 1010, 0)));
+  const tol = 1000 * 0.5 / 100;
+  const dentro = monitor.atualizarEstadoNivel(rompeu, ctx(velaEm(1000 + tol * 0.8, 1050)));
+  ok(dentro.estado === "em_reteste",
+    `sem ATR, a ${(tol * 0.8).toFixed(3)} do nivel (dentro de 0.5%) e' reteste (${dentro.estado})`);
+  const fora = monitor.atualizarEstadoNivel(rompeu, ctx(velaEm(1000 + tol * 1.2, 1050)));
+  ok(fora.estado !== "em_reteste",
+    `sem ATR, a ${(tol * 1.2).toFixed(3)} do nivel (fora de 0.5%) nao e' reteste (${fora.estado})`);
+
+  const reset = 1000 * 3 / 100;
+  const perto = monitor.atualizarEstadoNivel(rompeu, ctx(velaEm(1000 + reset * 0.9, 1000 + reset * 0.5)));
+  ok(perto.afastado === false,
+    `sem ATR, a ${(reset * 0.9).toFixed(3)} (aquem de 3%) o nivel nao esta afastado`);
+  const longe = monitor.atualizarEstadoNivel(rompeu, ctx(velaEm(1000 + reset * 1.1, 1000 + reset * 0.5)));
+  ok(longe.afastado === true,
+    `sem ATR, a ${(reset * 1.1).toFixed(3)} (alem de 3%) o nivel esta afastado`);
+
+  // Piso de variacao de preco para uma divergencia valer.
+  const n = 200, ult = n - 1;
+  const highs = Array(n).fill(103);
+  const div = (pct) => {
+    const lows = Array(n).fill(100);
+    lows[ult - 20] = 100;
+    lows[ult - 14] = 100 * (1 - pct / 100);
+    const rsi = Array(n).fill(50);
+    rsi[ult - 20] = 25; rsi[ult - 14] = 40;
+    return monitor.detectarDivergencias(highs, lows, rsi, { altos: [], baixos: [ult - 20, ult - 14] });
+  };
+  ok(div(0.3 * 1.2).length === 1,
+    `fundo ${(0.3 * 1.2).toFixed(3)}% mais baixo (acima de 0.3%) e' divergencia`);
+  ok(div(0.3 * 0.8).length === 0,
+    `fundo ${(0.3 * 0.8).toFixed(3)}% mais baixo (abaixo de 0.3%) nao e'`);
+}
+
 
 // O retrato vai por ULTIMO e mexe no relogio global, entao nada roda
 // depois dele. Ele sai do processo com codigo 1 por conta propria se o

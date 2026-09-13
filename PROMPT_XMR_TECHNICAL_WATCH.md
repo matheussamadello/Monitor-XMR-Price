@@ -127,6 +127,8 @@ Leia, quando disponíveis no relatório:
 
 Campos `*_fechado` têm prioridade como referência confirmada. Campos `*_provisorio` incluem a vela em formação e podem mudar até o fechamento.
 
+`vela_atual_em_formacao` diz se existe uma vela em formação. Com `sim`, o bloco `candle_atual_*` descreve essa vela e os campos `*_provisorio` ainda podem mudar. Com `nao` — fonte com pregão, fora do horário —, **não há vela em formação**: o bloco `candle_atual_*` e a `fracao_periodo_decorrida` saem como `--`, e os campos `*_provisorio` repetem os fechados. Nesse caso a última barra é a que está em `ultimo_fechamento_*` e em `candle_fechado_1`; ela aparece **uma vez só**, como fechada. Nunca conte o mesmo período como duas evidências.
+
 ### Horizontes: tático e estratégico
 
 Este monitor serve **dois horizontes com o mesmo relatório**. Nenhum campo do JSON muda: o que muda é o peso que você dá a cada timeframe.
