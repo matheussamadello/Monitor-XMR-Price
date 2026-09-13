@@ -17,7 +17,7 @@
   --alta:#3fb950; --baixa:#f85149; --atencao:#d29922;
   --pre-txt:#9fbde0; --sombra:none;
   --tv-fundo:#0f0f0f; --tv-barra:#0f0f0f; --tv-linha:#3c4043;
-  --tv-btn:#d3d3d3; --tv-btn-txt:#777777;
+  --tv-btn:#e6e6e6; --tv-btn-txt:#666666;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
 }
 html[data-tema="claro"]{
@@ -30,7 +30,7 @@ html[data-tema="claro"]{
   --alta:#12783a; --baixa:#c0362c; --atencao:#8a5d00;
   --pre-txt:#22364f; --sombra:0 1px 2px rgba(16,32,56,.06);
   --tv-fundo:#ffffff; --tv-barra:#ffffff; --tv-linha:#dadce0;
-  --tv-btn:#777777; --tv-btn-txt:#d3d3d3;
+  --tv-btn:#666666; --tv-btn-txt:#e6e6e6;
 }
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--txt);
@@ -152,21 +152,21 @@ dl{margin:0;display:grid;gap:8px}
    AS QUATRO CORES SAO ESCOLHA DO DONO DO MONITOR, pedidas uma a uma:
 
                     fundo          borda      texto
-     noite  solto   transparente   #d3d3d3    #d3d3d3
-     noite  marcado #d3d3d3        #d3d3d3    #777777
-     claro  solto   transparente   #777777    #777777
-     claro  marcado #777777        #777777    #d3d3d3
+     noite  solto   transparente   #e6e6e6    #e6e6e6
+     noite  marcado #e6e6e6        #e6e6e6    #666666
+     claro  solto   transparente   #666666    #666666
+     claro  marcado #666666        #666666    #e6e6e6
 
    Sao DUAS cores que trocam de papel, e por isso dois tokens e nao
    quatro. --tv-btn desenha a borda, o texto do solto e, quando
    marcado, o PREENCHIMENTO; --tv-btn-txt e' o texto do marcado, que
    so existe para contrastar com esse preenchimento.
 
-   CONTRASTE MEDIDO: 12,8:1 no solto do escuro e 4,5:1 no solto do
-   claro, ambos folgados; 3,0:1 nos dois marcados, abaixo dos 4,5:1
-   recomendados para texto de 11px. Os 3,0:1 foram avisados e
-   confirmados pelo dono do monitor: nao sao descuido, e nao devem ser
-   "corrigidos" sem perguntar. */
+   CONTRASTE MEDIDO: 15,4:1 no solto do escuro, 5,7:1 no solto do claro
+   e 4,6:1 nos dois marcados. O par comecou em #d3d3d3/#777777, que
+   dava 3,0:1 entre si; os dois andaram um passo em direcoes opostas
+   ate cruzar os 4,5:1 que se recomenda para texto de 11px, que e' o
+   motivo de PARAREM exatamente aqui e nao antes. */
 .tv-tf{font:11px/1 var(--mono);padding:6px 11px;border-radius:6px;cursor:pointer;
   background:none;border:1px solid var(--tv-btn);color:var(--tv-btn)}
 .tv-tf[aria-pressed="true"]{background:var(--tv-btn);color:var(--tv-btn-txt)}
@@ -190,12 +190,12 @@ dl{margin:0;display:grid;gap:8px}
 <script id="tema-inicial">try{var t=localStorage.getItem("tema");if(t==="claro"||(!t&&!matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.setAttribute("data-tema","claro")}catch(e){}</script>
 <body>
 <div class="pagina">
-<header class="topo"><h1>Monitor <b>XMR</b></h1><div class="carimbo"><time datetime="2026-09-13T02:18:00Z">2026-09-13 02:18 UTC</time><span class="idade" id="idade" data-ts="2026-09-13T02:18:00Z"></span><button type="button" class="btn-tema" id="btn-tema" aria-pressed="true" title="Alternar night mode" aria-label="Alternar night mode"><svg class="lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button></div></header>
+<header class="topo"><h1>Monitor <b>XMR</b></h1><div class="carimbo"><time datetime="2026-09-13T02:20:00Z">2026-09-13 02:20 UTC</time><span class="idade" id="idade" data-ts="2026-09-13T02:20:00Z"></span><button type="button" class="btn-tema" id="btn-tema" aria-pressed="true" title="Alternar night mode" aria-label="Alternar night mode"><svg class="lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button></div></header>
 <div class="sel-par" role="group" aria-label="Par exibido"><button type="button" data-sel="XMR/USD" aria-pressed="true">XMR/USD</button><button type="button" data-sel="XMR/BTC" aria-pressed="false">XMR/BTC</button></div>
 <section class="leituras"><h2>Contexto</h2><div class="leitura" data-par="XMR/USD"><span class="lp">XMR/USD</span><div class="lh atencao"><span class="lt">longo</span><span class="lr">esticado, mas a alta ainda tem força</span><button type="button" class="aj" aria-describedby="aj-usd-longo" aria-label="O que significa: esticado, mas a alta ainda tem força">?</button><span class="ajt" id="aj-usd-longo" role="tooltip">Subiu bem mais que a média das últimas 89 semanas, mas a compra ainda manda no movimento. Esticado não é o mesmo que acabando.</span><span class="lz">encostando na faixa manual de 494 a 507, bem acima da média longa (+54,2%), momentum esticado, alta ainda forte</span></div><div class="lh neutro"><span class="lt">curto</span><span class="lr">sem evento no diário</span><button type="button" class="aj" aria-describedby="aj-usd-curto" aria-label="O que significa: sem evento no diário">?</button><span class="ajt" id="aj-usd-curto" role="tooltip">Nada aconteceu no fechamento diário que mereça destaque.</span><span class="lz">29,8% acima da média diária</span></div></div><div class="leitura" data-par="XMR/BTC"><span class="lp">XMR/BTC</span><div class="lh neutro"><span class="lt">longo</span><span class="lr">acima da média, sem esticamento</span><button type="button" class="aj" aria-describedby="aj-btc-longo" aria-label="O que significa: acima da média, sem esticamento">?</button><span class="ajt" id="aj-btc-longo" role="tooltip">O fechamento está bem acima da média das últimas 89 semanas, sem exagero: é o estado normal de uma tendência de alta.</span><span class="lz">encostando na faixa manual de 0,00656 a 0,00705 (que o mercado não vem respeitando), bem acima da média longa (+48,3%), momentum normal, alta ainda forte</span></div><div class="lh atencao"><span class="lt">curto</span><span class="lr">sinais de enfraquecimento</span><button type="button" class="aj" aria-describedby="aj-btc-curto" aria-label="O que significa: sinais de enfraquecimento">?</button><span class="ajt" id="aj-btc-curto" role="tooltip">O fechamento diário trouxe sinais de perda de força, sem nenhum evento nas faixas manuais.</span><span class="lz">20,0% acima da média diária</span></div></div><p class="nota"><b>Longo</b> compara o fechamento semanal com a média das últimas 89 semanas. <b>Curto</b> diz o que aconteceu no fechamento diário, o timeframe de timing, calibrado para 1 a 6 semanas e não para o dia. Perto e longe levam em conta o quanto cada par oscila; amarelo quer dizer <b>vale olhar</b>, não bom nem ruim. Não é recomendação.</p></section>
-<section class="pares"><article class="par" data-par="XMR/USD"><header><h2>XMR/USD</h2><div class="preco">541,63</div></header><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">538,70<small>2026-09-12</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>29,83%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">65,9</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="alta">36,3<small>+26,3 / −7,3</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="alta">alta</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_494_507</small></dd></div></dl><div class="chips"><span class="chip">adx_subindo_com_di_plus_dominante</span><span class="chip">pullback_com_volume_decrescente</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">513,15<small>2026-09-03</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>54,22%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="atencao">71,6</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">27,7<small>+35,3 / −10,0</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="fraco">lateral_contracao</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_494_507</small></dd></div></dl><div class="chips"><span class="chip">toque_suporte_intradiario_500</span><span class="chip">rsi_acima_70</span><span class="chip">adx_subindo_com_di_plus_dominante</span><span class="chip">novo_HL_apos_fundo_mais_baixo</span><span class="chip">topo_mais_baixo_apos_HH</span><span class="chip">stalled_pattern</span><span class="chip risco">rompimento_falhou</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-usd"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRUSD" target="_blank" rel="noopener">KRAKEN:XMRUSD</a>.</span></div><p>Série da Kraken (KRAKEN:XMRUSD) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article><article class="par" data-par="XMR/BTC"><header><h2>XMR/BTC</h2><div class="preco">0,00700900</div></header><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00698700<small>2026-09-12</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>20,00%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">62,4</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="alta">28,4<small>+25,3 / −12,3</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="fraco">lateral_expansao</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_000656_000705</small></dd></div></dl><div class="chips"><span class="chip">faixa_000656_000705</span><span class="chip">rompimento_intradiario_000700</span><span class="chip">adx_subindo_com_di_plus_dominante</span><span class="chip">divergencia_bearish_regular_confirmada</span><span class="chip risco">perda_estrutura_alta_novo_LL</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00654400<small>2026-09-03</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>48,30%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="">67,0</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">48,2<small>+27,9 / −11,2</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="alta">alta</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_000656_000705</small></dd></div></dl><div class="chips"><span class="chip">faixa_000656_000705</span><span class="chip">rompimento_intradiario_000700</span><span class="chip">novo_HH_apos_topo_mais_baixo</span><span class="chip">rompimento_com_volume_fraco</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-btc"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRBTC" target="_blank" rel="noopener">KRAKEN:XMRBTC</a>.</span></div><p>Série da Kraken (KRAKEN:XMRBTC) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article></section>
+<section class="pares"><article class="par" data-par="XMR/USD"><header><h2>XMR/USD</h2><div class="preco">540,99</div></header><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">538,70<small>2026-09-12</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>29,83%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">65,9</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="alta">36,3<small>+26,3 / −7,3</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="alta">alta</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_494_507</small></dd></div></dl><div class="chips"><span class="chip">adx_subindo_com_di_plus_dominante</span><span class="chip">pullback_com_volume_decrescente</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">513,15<small>2026-09-03</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>54,22%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="atencao">71,6</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">27,7<small>+35,3 / −10,0</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="fraco">lateral_contracao</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_494_507</small></dd></div></dl><div class="chips"><span class="chip">toque_suporte_intradiario_500</span><span class="chip">rsi_acima_70</span><span class="chip">adx_subindo_com_di_plus_dominante</span><span class="chip">novo_HL_apos_fundo_mais_baixo</span><span class="chip">topo_mais_baixo_apos_HH</span><span class="chip">stalled_pattern</span><span class="chip risco">rompimento_falhou</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-usd"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRUSD" target="_blank" rel="noopener">KRAKEN:XMRUSD</a>.</span></div><p>Série da Kraken (KRAKEN:XMRUSD) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article><article class="par" data-par="XMR/BTC"><header><h2>XMR/BTC</h2><div class="preco">0,00700900</div></header><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00698700<small>2026-09-12</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>20,00%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">62,4</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="alta">28,4<small>+25,3 / −12,3</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="fraco">lateral_expansao</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_000656_000705</small></dd></div></dl><div class="chips"><span class="chip">faixa_000656_000705</span><span class="chip">rompimento_intradiario_000700</span><span class="chip">adx_subindo_com_di_plus_dominante</span><span class="chip">divergencia_bearish_regular_confirmada</span><span class="chip risco">perda_estrutura_alta_novo_LL</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00654400<small>2026-09-03</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>48,30%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="">67,0</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">48,2<small>+27,9 / −11,2</small></dd></div><div class="m"><dt>Estrutura</dt><dd class="alta">alta</dd></div><div class="m"><dt>Níveis manuais</dt><dd class="alta">atual<small>faixa_000656_000705</small></dd></div></dl><div class="chips"><span class="chip">faixa_000656_000705</span><span class="chip">rompimento_intradiario_000700</span><span class="chip">novo_HH_apos_topo_mais_baixo</span><span class="chip">rompimento_com_volume_fraco</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-btc"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRBTC" target="_blank" rel="noopener">KRAKEN:XMRBTC</a>.</span></div><p>Série da Kraken (KRAKEN:XMRBTC) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article></section>
 <section class="relatorio"><h2>Relatório completo</h2>
-<pre>timestamp: 2026-09-13 02:18 UTC
+<pre>timestamp: 2026-09-13 02:20 UTC
 fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)
 indicadores: RSI e DMI/ADX por Wilder/RMA com periodos por timeframe (RSI diario 21, semanal 14; DMI/ADX diario 28/42, semanal 14/21), EMA(89) exponencial
 nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
@@ -205,16 +205,16 @@ nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eve
 
 XMR/USD
 timeframe: diario
-preco_atual: 541.63
+preco_atual: 540.99
 candle_atual_data: 2026-09-13
 candle_atual_open: 539.59
 candle_atual_high: 544.83
 candle_atual_low: 536.83
-candle_atual_close_provisorio: 541.63
-candle_atual_var_pct_desde_abertura: 0.38
+candle_atual_close_provisorio: 540.99
+candle_atual_var_pct_desde_abertura: 0.26
 ema89: 414.92
 posicao_vs_ema89: acima
-distancia_ema89_pct: 30.54
+distancia_ema89_pct: 30.38
 
 # principais: calculados SOMENTE com velas fechadas
 rsi_length: 21
@@ -235,7 +235,7 @@ atr14_pct: 6.02
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi_provisorio: 66.25
+rsi_provisorio: 66.17
 di_plus_provisorio: 26.03
 di_minus_provisorio: 7.28
 adx_provisorio: 36.73
@@ -260,18 +260,18 @@ resistencia_macro_788_811_tipo: resistencia_macro_manual
 resistencia_macro_788_811_inferior: 788.00
 resistencia_macro_788_811_superior: 811.00
 resistencia_macro_788_811_estado: abaixo
-resistencia_macro_788_811_distancia_pct: -32.25
+resistencia_macro_788_811_distancia_pct: -32.33
 
-fracao_periodo_decorrida: 0.096
+fracao_periodo_decorrida: 0.098
 volume_parcial: sim
-volume_atual: 1206.0380
+volume_atual: 1210.2240
 volume_ultima_fechada: 6729.6537
 volume_media20: 11530.8213
 volume_vs_media_pct: -41.64
 volume_referencia: ultima_vela_fechada
 volume_classificacao: abaixo_da_media
 volume_tendencia_3_fechadas: decrescente
-trades_vela_atual: 949
+trades_vela_atual: 956
 
 estrutura_preco: HH_HL
 estrutura_tendencia: alta
@@ -290,11 +290,11 @@ sombra_sup_pct_range: 33.88
 sombra_inf_pct_range: 0.64
 sombra_sup_vs_corpo: 0.52
 sombra_inf_vs_corpo: 0.01
-candle_atual_corpo_pct_range: 25.50
-candle_atual_sombra_sup_pct_range: 40.00
+candle_atual_corpo_pct_range: 17.50
+candle_atual_sombra_sup_pct_range: 48.00
 candle_atual_sombra_inf_pct_range: 34.50
-candle_atual_sombra_sup_vs_corpo: 1.57
-candle_atual_sombra_inf_vs_corpo: 1.35
+candle_atual_sombra_sup_vs_corpo: 2.74
+candle_atual_sombra_inf_vs_corpo: 1.97
 
 eventos: nenhum cruzamento nesta vela
 mediana_corpo_20: 16.520000
@@ -309,12 +309,12 @@ padrao_em_formacao: nenhum
 alertas_tecnicos: adx_subindo_com_di_plus_dominante, pullback_com_volume_decrescente
 
 zonas_automaticas_total: 6
-zona_auto_1: id=usd|diario|z26 tipo=resistencia status=enfraquecida estado=abaixo score=35 estrutural=560.532309-570.987691 operacional=557.273599-574.246399 centro=565.759999 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-4.27 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_1: id=usd|diario|z26 tipo=resistencia status=enfraquecida estado=abaixo score=35 estrutural=560.532309-570.987691 operacional=557.273599-574.246399 centro=565.759999 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-4.38 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 zona_auto_2: id=usd|diario|z19 tipo=resistencia status=enfraquecida estado=abaixo score=26 estrutural=641.406035-658.593965 operacional=640.250000-659.750000 centro=650.000000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-20.46 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_3: id=usd|diario|z20 tipo=resistencia status=enfraquecida estado=abaixo score=36 estrutural=793.371398-806.408602 operacional=788.541433-811.238567 centro=799.890000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-32.29 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
-zona_auto_4: id=usd|diario|z18 tipo=resistencia status=ativa estado=acima score=67 estrutural=493.922537-506.947463 operacional=492.928475-507.941525 centro=500.435000 toques=5 rejeicoes=1 role_reversal=nao dist_pct=8.23 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_5: id=usd|diario|z17 tipo=resistencia status=ativa estado=acima score=74 estrutural=465.840255-474.159745 operacional=462.950000-477.050000 centro=470.000000 toques=7 rejeicoes=4 role_reversal=nao dist_pct=15.24 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_6: id=usd|diario|z16 tipo=resistencia status=ativa estado=acima score=74 estrutural=433.632096-443.947904 operacional=432.208150-445.371849 centro=438.789999 toques=7 rejeicoes=4 role_reversal=nao dist_pct=23.44 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_3: id=usd|diario|z20 tipo=resistencia status=enfraquecida estado=abaixo score=36 estrutural=793.371398-806.408602 operacional=788.541433-811.238567 centro=799.890000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-32.37 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
+zona_auto_4: id=usd|diario|z18 tipo=resistencia status=ativa estado=acima score=67 estrutural=493.922537-506.947463 operacional=492.928475-507.941525 centro=500.435000 toques=5 rejeicoes=1 role_reversal=nao dist_pct=8.10 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_5: id=usd|diario|z17 tipo=resistencia status=ativa estado=acima score=74 estrutural=465.840255-474.159745 operacional=462.950000-477.050000 centro=470.000000 toques=7 rejeicoes=4 role_reversal=nao dist_pct=15.10 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_6: id=usd|diario|z16 tipo=resistencia status=ativa estado=acima score=74 estrutural=433.632096-443.947904 operacional=432.208150-445.371850 centro=438.790000 toques=7 rejeicoes=4 role_reversal=nao dist_pct=23.29 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
 
 confluencia_entrada: estrutura_de_alta_preservada, di_plus_dominante
 confluencia_pullback: tendencia_hh_hl_preservada, di_plus_ainda_dominante, volume_decrescente_na_correcao
@@ -375,7 +375,7 @@ niveis_manuais_alinhamento: parcial
 niveis_manuais_faixas_corroboradas: 2 de 3
 zonas_candidatas_a_faixa: nenhuma
 
-fracao_periodo_decorrida: 0.096
+fracao_periodo_decorrida: 0.098
 volume_parcial: sim
 volume_atual: 56.3155
 volume_ultima_fechada: 1927.2910
@@ -437,16 +437,16 @@ deterioracao_tendencia: perda_estrutura_alta_novo_LL
 
 XMR/USD
 timeframe: semanal
-preco_atual: 541.63
+preco_atual: 540.99
 candle_atual_data: 2026-09-10
 candle_atual_open: 513.37
 candle_atual_high: 547.66
 candle_atual_low: 497.85
-candle_atual_close_provisorio: 541.63
-candle_atual_var_pct_desde_abertura: 5.50
+candle_atual_close_provisorio: 540.99
+candle_atual_var_pct_desde_abertura: 5.38
 ema89: 332.73
 posicao_vs_ema89: acima
-distancia_ema89_pct: 62.79
+distancia_ema89_pct: 62.59
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi_length: 14
@@ -467,7 +467,7 @@ atr14_pct: 11.52
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi_provisorio: 74.18
+rsi_provisorio: 74.13
 di_plus_provisorio: 33.19
 di_minus_provisorio: 9.41
 adx_provisorio: 29.05
@@ -497,18 +497,18 @@ resistencia_macro_788_811_tipo: resistencia_macro_manual
 resistencia_macro_788_811_inferior: 788.00
 resistencia_macro_788_811_superior: 811.00
 resistencia_macro_788_811_estado: abaixo
-resistencia_macro_788_811_distancia_pct: -32.25
+resistencia_macro_788_811_distancia_pct: -32.33
 
-fracao_periodo_decorrida: 0.442
+fracao_periodo_decorrida: 0.443
 volume_parcial: sim
-volume_atual: 25643.7448
+volume_atual: 25647.9309
 volume_ultima_fechada: 91204.9050
 volume_media20: 70292.7691
 volume_vs_media_pct: 29.75
 volume_referencia: ultima_vela_fechada
 volume_classificacao: acima_da_media
 volume_tendencia_3_fechadas: crescente
-trades_vela_atual: 21314
+trades_vela_atual: 21321
 volume_semana_dias_fechados: 3
 volume_semana_soma_dias_fechados: 24437.7069
 volume_semanas_anteriores_mesmos_dias_media: 26764.2249
@@ -532,11 +532,11 @@ sombra_sup_pct_range: 62.92
 sombra_inf_pct_range: 13.65
 sombra_sup_vs_corpo: 2.69
 sombra_inf_vs_corpo: 0.58
-candle_atual_corpo_pct_range: 56.74
-candle_atual_sombra_sup_pct_range: 12.11
+candle_atual_corpo_pct_range: 55.45
+candle_atual_sombra_sup_pct_range: 13.39
 candle_atual_sombra_inf_pct_range: 31.16
-candle_atual_sombra_sup_vs_corpo: 0.21
-candle_atual_sombra_inf_vs_corpo: 0.55
+candle_atual_sombra_sup_vs_corpo: 0.24
+candle_atual_sombra_inf_vs_corpo: 0.56
 
 eventos_semanal: RSI entrou em sobrecompra (>=70)
 mediana_corpo_20: 16.795000
@@ -551,10 +551,10 @@ padrao_em_formacao: nenhum
 alertas_tecnicos: toque_suporte_intradiario_500, rsi_acima_70, adx_subindo_com_di_plus_dominante, novo_HL_apos_fundo_mais_baixo, topo_mais_baixo_apos_HH, stalled_pattern
 
 zonas_automaticas_total: 4
-zona_auto_1: id=usd|semanal|z15 tipo=resistencia status=candidata estado=abaixo score=30 estrutural=788.359398-811.420602 operacional=787.891650-811.888350 centro=799.890000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-32.29 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
-zona_auto_2: id=usd|semanal|z14 tipo=resistencia status=ativa estado=acima score=77 estrutural=461.413941-525.686059 operacional=486.146750-500.953250 centro=493.550000 toques=3 rejeicoes=2 role_reversal=nao dist_pct=9.74 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_3: id=usd|semanal|z13 tipo=resistencia status=ativa estado=acima score=90 estrutural=409.866177-466.113823 operacional=431.420150-444.559850 centro=437.990000 toques=5 rejeicoes=4 role_reversal=nao dist_pct=23.66 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_4: id=usd|semanal|z12 tipo=suporte status=ativa estado=acima score=94 estrutural=339.680000-382.120000 operacional=355.486500-366.313500 centro=360.900000 toques=6 rejeicoes=5 role_reversal=sim dist_pct=50.08 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_1: id=usd|semanal|z15 tipo=resistencia status=candidata estado=abaixo score=30 estrutural=788.359398-811.420602 operacional=787.891650-811.888350 centro=799.890000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-32.37 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
+zona_auto_2: id=usd|semanal|z14 tipo=resistencia status=ativa estado=acima score=77 estrutural=461.413941-525.686059 operacional=486.146750-500.953250 centro=493.550000 toques=3 rejeicoes=2 role_reversal=nao dist_pct=9.61 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_3: id=usd|semanal|z13 tipo=resistencia status=ativa estado=acima score=90 estrutural=409.866177-466.113823 operacional=431.420150-444.559850 centro=437.990000 toques=5 rejeicoes=4 role_reversal=nao dist_pct=23.52 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_4: id=usd|semanal|z12 tipo=suporte status=ativa estado=acima score=94 estrutural=339.680000-382.120000 operacional=355.486500-366.313500 centro=360.900000 toques=6 rejeicoes=5 role_reversal=sim dist_pct=49.90 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: di_plus_dominante
 confluencia_pullback: novo_HL_formado, di_plus_ainda_dominante
@@ -615,7 +615,7 @@ niveis_manuais_alinhamento: desalinhado
 niveis_manuais_faixas_corroboradas: 0 de 3
 zonas_candidatas_a_faixa: nenhuma
 
-fracao_periodo_decorrida: 0.442
+fracao_periodo_decorrida: 0.443
 volume_parcial: sim
 volume_atual: 4187.0369
 volume_ultima_fechada: 12772.9343
