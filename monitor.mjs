@@ -10,6 +10,7 @@
 
 import { writeFileSync, appendFileSync, mkdirSync, readFileSync, realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { acompanharTravessiaEma89, camposTravessiaEma89 } from "./ema89-semanal.mjs";
 
 const PERIOD = 14;
 const EMA_PERIOD = 89;
@@ -1075,14 +1076,14 @@ export function alertasTecnicos(cfg, d, ind) {
   // --- volume como CONFIRMACAO, nunca sozinho ---
   const vol = ind.volume;
   const houveRompimento = a.some((x) => x.startsWith("rompimento_"));
-  const houvePerda = a.some((x) => x.startsWith("perda_suporte_") || x.startsWith("toque_suporte_"));
-  // Nao ha mais o que suprimir por vela parcial: vol.vsMediaPct compara
-  // vela FECHADA com media de velas fechadas, entao vale a qualquer hora
-  // em que a execucao rode.
+  const rompimentoFechado = a.some((x) => x.startsWith("rompimento_confirmado_"));
+  const perdaFechada = a.some((x) => x.startsWith("perda_suporte_confirmada_"));
+  // Este volume pertence a ultima FECHADA: confirma apenas um evento
+  // daquela mesma vela, nunca a maxima/minima da barra em formacao.
   if (vol && vol.vsMediaPct !== null) {
-    if (houveRompimento && vol.vsMediaPct >= 20) a.push("rompimento_com_volume_acima_da_media");
-    if (houveRompimento && vol.vsMediaPct <= -20) a.push("rompimento_com_volume_fraco");
-    if (houvePerda && vol.vsMediaPct >= 50) a.push("queda_com_expansao_de_volume");
+    if (rompimentoFechado && vol.vsMediaPct >= 20) a.push("rompimento_com_volume_acima_da_media");
+    if (rompimentoFechado && vol.vsMediaPct <= -20) a.push("rompimento_com_volume_fraco");
+    if (perdaFechada && vol.vsMediaPct >= 50) a.push("queda_com_expansao_de_volume");
   }
   if (
     vol &&
@@ -1163,6 +1164,13 @@ export function chaveNivel(parKey, tfKey, nivel) {
 // Devolve o novo registro (ou null para descartar).
 export function atualizarEstadoNivel(anterior, ctx) {
   const { nivel, direcao, vela, tolAtr, resetAtr, atr, maxCandles, segundos } = ctx;
+  // Uma transicao por vela fechada. Reexecucao, retry ou resposta antiga
+  // nao transformam a sombra do proprio rompimento em reteste posterior.
+  // Correcao da fonte sobre a mesma barra nao reescreve o ciclo ja emitido.
+  if (anterior && Number.isFinite(anterior.atualizado) && vela.time <= anterior.atualizado) {
+    return { ...anterior, historico: [...(anterior.historico || [])],
+      ...(anterior.mudancasNaVela ? { mudancasNaVela: [...anterior.mudancasNaVela] } : {}) };
+  }
   const temAtr = atr > 0;
   const tol = temAtr
     ? atr * tolAtr
@@ -1206,6 +1214,7 @@ export function atualizarEstadoNivel(anterior, ctx) {
       dataRompimento: vela.time,
       ultimoContato: vela.time,
       atualizado: vela.time,
+      afastado: Math.abs(vela.close - nivel) > limiteReset,
       historico: [],
     };
   }
@@ -1495,6 +1504,14 @@ export function sinteses(ctx) {
   } = ctx;
 
   const tem = (p) => alertas.some((x) => x.startsWith(p));
+  // Strings legadas nao informam direcao: podem dar contexto neutro,
+  // mas nunca confirmar entrada ou deterioracao direcional.
+  const niveis = (estadosNivel || []).map((n) =>
+    typeof n === "string" ? { estado: n, direcao: null } : n
+  ).filter(Boolean);
+  const temNivel = (estado, direcao = null) => niveis.some((n) =>
+    n.estado === estado && (direcao === null || n.direcao === direcao)
+  );
   const entrada = [];
   const pullback = [];
   const riscos = [];
@@ -1506,7 +1523,7 @@ export function sinteses(ctx) {
   // par, entao "existe forte e nao existe fraca" e' exato.
   if (tem("rompimento_confirmado") && !tem("rompimento_confirmado_fraco"))
     entrada.push("rompimento_confirmado_por_fechamento");
-  if (estadosNivel.includes("reteste_confirmado")) entrada.push("reteste_confirmado");
+  if (temNivel("reteste_confirmado", "alta")) entrada.push("reteste_confirmado");
   if (alertas.includes("rompimento_com_volume_acima_da_media"))
     entrada.push("volume_acima_da_media_no_rompimento");
   if (estrutura.tendencia === "alta") entrada.push("estrutura_de_alta_preservada");
@@ -1515,7 +1532,7 @@ export function sinteses(ctx) {
 
   // --- confluencia de pullback ---
   if (estrutura.tendencia === "alta") pullback.push("tendencia_hh_hl_preservada");
-  if (estadosNivel.includes("em_reteste")) pullback.push("em_reteste_de_nivel");
+  if (temNivel("em_reteste", "alta")) pullback.push("em_reteste_de_nivel");
   if (estruturaEventos.includes("novo_HL_apos_fundo_mais_baixo"))
     pullback.push("novo_HL_formado");
   if (rsiFech !== null && rsiAnt !== null && rsiFech < rsiAnt && rsiFech > 40)
@@ -1535,13 +1552,13 @@ export function sinteses(ctx) {
   if (tem("toque_suporte") || tem("perda_suporte")) riscos.push("suporte_sob_pressao");
   if (alertas.includes("queda_com_expansao_de_volume"))
     riscos.push("volume_expandindo_na_queda");
-  if (estadosNivel.includes("em_reteste")) riscos.push("nivel_em_teste");
+  if (temNivel("em_reteste")) riscos.push("nivel_em_teste");
 
   // --- deterioracao de tendencia (so o estrutural) ---
   if (estruturaEventos.includes("perda_estrutura_alta_novo_LL"))
     deterioracao.push("perda_estrutura_alta_novo_LL");
   if (estrutura.tendencia === "baixa") deterioracao.push("estrutura_de_baixa");
-  if (estadosNivel.includes("rompimento_falhou")) deterioracao.push("rompimento_falhou");
+  if (temNivel("rompimento_falhou", "alta")) deterioracao.push("rompimento_falhou");
   if (tem("perda_suporte_confirmada") && !tem("perda_suporte_confirmada_fraca"))
     deterioracao.push("perda_de_suporte_confirmada");
   if (
@@ -2321,7 +2338,9 @@ export function calcularZonas(cfg, tf, d, ctx) {
   }
 
   // casamento com as zonas anteriores (identidade estavel)
-  const pares = casarZonas(anteriores, zonas, atrAtual);
+  const pares = casarZonas(anteriores.filter((z) =>
+    z.status !== "remover" || z.ultimaVelaAvaliada === ultimaVelaFechada
+  ), zonas, atrAtual);
   const mapaAnt = new Map(pares.map((p) => [p.nova, p]));
   let proximoId = ctx.proximoId || 1;
 
@@ -2329,8 +2348,12 @@ export function calcularZonas(cfg, tf, d, ctx) {
     const par = mapaAnt.get(z);
     if (par) {
       z.id = par.ant.id;
-      // suaviza o centro para o valor nao oscilar a cada vela
-      z.centro = SUAVIZA_CENTRO * par.ant.centro + (1 - SUAVIZA_CENTRO) * z.centro;
+      // Suaviza UMA vez por vela nova, nao a cada retry do workflow.
+      // Na mesma barra o centro fica fixo; preco vivo ainda pode mudar
+      // estado_atual e distancia, que sao explicitamente contextuais.
+      z.centro = par.ant.ultimaVelaAvaliada === ultimaVelaFechada
+        ? par.ant.centro
+        : SUAVIZA_CENTRO * par.ant.centro + (1 - SUAVIZA_CENTRO) * z.centro;
       z.limites_operacionais = limitesOperacionais(z.centro, atrAtual);
       z.role_reversal = z.role_reversal || par.ant.role_reversal || par.trocouTipo;
       z.cruzamento_confirmado = par.ant.cruzamento_confirmado || false;
@@ -2500,9 +2523,12 @@ export function calcularZonas(cfg, tf, d, ctx) {
   // do ciclo de vida, nunca de um corte silencioso.
   // A marca de dormente nao existe em zona calculada, entao so entra
   // no estado: o relatorio publicado continua com os mesmos campos.
-  const estado = vivas.map((z) =>
-    z.absorvida ? { ...limparZona(z), absorvida: true } : limparZona(z)
-  );
+  // Guarda a remocao ate a proxima vela. Sem esta ficha, o mesmo
+  // cluster seria recriado com outro ID no retry imediatamente seguinte.
+  // Fichas removidas nunca sao publicadas nem contam como confluencia.
+  const estado = zonas.filter((z) =>
+    z.status !== "remover" || z.ultimaVelaAvaliada === ultimaVelaFechada
+  ).map((z) => z.absorvida ? { ...limparZona(z), absorvida: true } : limparZona(z));
 
   // Dormente nao e' publicada: a regiao dela ja esta na tela, na zona
   // calculada que a cobre. Publicar as duas seria a mesma regiao duas
@@ -2742,11 +2768,22 @@ function readPair(cfg, d, tf, opts = {}) {
       maxCandles: tf.retestMaxCandles,
       segundos: tf.segundos,
     });
-    if (depois) estadoNovo[chave] = depois;
-    if (depois && antes && depois.estado !== antes.estado)
-      mudancasNivel.push(`${depois.estado}_${nv.label}`);
-    if (depois && !antes && depois.estado === "rompido")
-      mudancasNivel.push(`rompido_${nv.label}`);
+    if (depois) {
+      const velaNova = !antes || !Number.isFinite(antes.atualizado) ||
+        velaFechada.time > antes.atualizado;
+      if (velaNova) {
+        depois.mudancasNaVela = [];
+        if (antes && depois.estado !== antes.estado)
+          depois.mudancasNaVela.push(`${depois.estado}_${nv.label}`);
+        if (!antes && depois.estado === "rompido")
+          depois.mudancasNaVela.push(`rompido_${nv.label}`);
+      }
+      estadoNovo[chave] = depois;
+      // O evento pertence a esta VELA, nao apenas a primeira execucao.
+      // O consumidor deduplica por par/timeframe/vela/nivel/tipo.
+      if (depois.atualizado === velaFechada.time)
+        mudancasNivel.push(...(depois.mudancasNaVela || []));
+    }
 
     linhasNivel.push(
       `nivel_${nv.label}_estado: ${depois ? depois.estado : "sem_registro"}`
@@ -2816,7 +2853,9 @@ function readPair(cfg, d, tf, opts = {}) {
   const zonasAutomaticas = zonasRes.zonas;
   const zonasEstadoPar = zonasRes.zonasEstado || [];
 
-  const estadosNivel = Object.values(estadoNovo).map((x) => x.estado);
+  // Preserva a direcao: a falha de uma perda de suporte nao e' a falha
+  // de um rompimento de resistencia.
+  const estadosNivel = Object.values(estadoNovo);
   const sint = sinteses({
     alertas,
     estrutura,
@@ -2852,6 +2891,9 @@ function readPair(cfg, d, tf, opts = {}) {
     emaAtual === null || !(atr[i] > 0)
       ? null
       : Math.abs(closes[i] - emaAtual) / atr[i];
+  const estadoEma89 = tf.key === "semanal"
+    ? acompanharTravessiaEma89(opts.estadoEma89 || null, { times, closes, emas: ema, atrs: atr })
+    : null;
   const varAbertura = ((live.close - live.open) / live.open) * 100;
   const distEma =
     emaAtual === null ? null : ((live.close - emaAtual) / emaAtual) * 100;
@@ -2899,6 +2941,10 @@ function readPair(cfg, d, tf, opts = {}) {
   L.push(`ema89_fechada_anterior: ${num(emaAnterior, D)}`);
   L.push(`ema89_cruzamento_fechado: ${cruzamentoFechado}`);
   L.push(`distancia_ema89_fechada_atr: ${num(distEmaAtr, 2)}`);
+  if (estadoEma89) {
+    for (const [campo, valor] of Object.entries(camposTravessiaEma89(estadoEma89, times[i], cfg.key)))
+      L.push(`${campo}: ${valor}`);
+  }
   // Em unidade de preco E em porcentagem. O percentual e' o que permite
   // comparar volatilidade entre pares e entre epocas -- 0,05 nao diz
   // nada sozinho, 1,2% diz.
@@ -3106,6 +3152,7 @@ function readPair(cfg, d, tf, opts = {}) {
   return {
     texto: L.join("\n"),
     estadoNiveis: estadoNovo,
+    estadoEma89,
     zonasAutomaticas,
     zonasEstadoPar,
     proximoIdZona: zonasRes.proximoId,
@@ -3216,6 +3263,8 @@ export function entradaHistorico(par, tfKey, bloco, agora) {
           : "abaixo"
         : null,
     ema89_cruz: bloco.ema89_cruzamento_fechado || null,
+    ema89_confirmacao: bloco.ema89_semanal_confirmacao || null,
+    ema89_evento_id: bloco.ema89_semanal_evento_id || null,
     ema89_dist_atr: bloco.distancia_ema89_fechada_atr,
     alertas: lista(bloco.alertas_tecnicos),
     deterioracao: lista(bloco.deterioracao_tendencia),
@@ -3237,6 +3286,7 @@ export function assinaturaHistorico(e) {
     e.vela,
     e.estrutura,
     e.ema89_cruz,
+    e.ema89_evento_id || "",
     e.ema89_lado,
     e.alertas.join("|"),
     e.deterioracao.join("|"),
@@ -3271,6 +3321,8 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
   const blocks = [];
   const dados = {};
   const estadoNiveis = {};
+  const ema89SemanalAnt = estadoAnterior?.ema89Semanal || {};
+  const estadoEma89Semanal = { ...ema89SemanalAnt };
   const estadoAnt = (estadoAnterior && estadoAnterior.niveis) || {};
   const zonasAnt = (estadoAnterior && estadoAnterior.zonas) || {};
   const contadoresZona = { ...((estadoAnterior && estadoAnterior.contadoresZona) || {}) };
@@ -3352,6 +3404,7 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
       const chaveZ = `${cfg.key}|${tf.key}`;
       const r = readPair(cfg, bruto.parsed, tf, {
         estadoNiveis: estadoAnt,
+        estadoEma89: ema89SemanalAnt[cfg.key],
         dadosDiario: (dados.diario || {})[cfg.key],
         zonasAnteriores: zonasAnt[chaveZ] || [],
         zonasSemanais: tf.key === "diario" ? zonasSemanaisPorPar[cfg.key] || [] : [],
@@ -3360,6 +3413,7 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
       blocosPorTf[tf.key].push(r.texto);
       blocosPorTf[tf.key].push("");
       Object.assign(estadoNiveis, r.estadoNiveis || {});
+      if (tf.key === "semanal" && r.estadoEma89) estadoEma89Semanal[cfg.key] = r.estadoEma89;
       zonasPublicadas[chaveZ] = r.zonasAutomaticas || [];
       zonasNovas[chaveZ] = (r.zonasEstadoPar || []).map(zonaParaEstado);
       contadoresZona[chaveZ] = Math.max(
@@ -3392,6 +3446,7 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
     texto: blocks.join("\n"),
     gatilhos,
     estadoNiveis,
+    estadoEma89Semanal,
     zonas: zonasPublicadas,
     zonasEstado: zonasNovas,
     contadoresZona,
@@ -3797,8 +3852,8 @@ const ADX_FORTE = 25;
 // As zonas automaticas sao CONTEXTO: nao alimentam a maquina de
 // rompimento/reteste, nao entram na linha de gatilhos e nao geram
 // alerta de entrada em faixa. Isso tudo roda so sobre os niveis
-// manuais. Entao uma regiao que o mercado passou a respeitar fica sem
-// maquina de estados ate alguem promove-la a faixa manual -- e zonas
+// manuais. O ciclo persistente acompanha so suporte e resistencia
+// pontuais: promover uma zona a faixa manual nao cria outro ciclo. Zonas
 // expiram (30 velas sem toque enfraquece, mais 15 remove), enquanto
 // faixas manuais nao.
 //
@@ -4519,7 +4574,7 @@ if (executadoDireto) {
   }
   const anteriores = estadoPrev.ativos || [];
 
-  const { texto, gatilhos, estadoNiveis, zonas, zonasEstado, contadoresZona } =
+  const { texto, gatilhos, estadoNiveis, estadoEma89Semanal, zonas, zonasEstado, contadoresZona } =
     await build(fetch, estadoPrev);
   mkdirSync("docs", { recursive: true });
   const ativos = gatilhos.map((g) => g.id);
@@ -4550,6 +4605,7 @@ if (executadoDireto) {
         ativos,
         em: new Date().toISOString(),
         niveis: estadoNiveis,
+        ema89Semanal: estadoEma89Semanal,
         zonas: zonasEstado,
         contadoresZona,
         historicoAssinaturas: hist.assinaturas,

@@ -521,7 +521,7 @@ Nenhuma das duas muda o que o monitor considera suporte, resistência, rompiment
 
 ### Radar de promoção
 
-As zonas automáticas são **contexto**. Elas não alimentam a máquina de rompimento e reteste, não entram na linha de gatilhos e não geram alerta de entrada em faixa: isso tudo roda só sobre os níveis manuais. Uma região que o mercado passou a respeitar fica sem máquina de estados até alguém promovê-la a faixa manual. E zonas **expiram** depois de semanas sem toque, enquanto faixas manuais não — o ciclo inteiro está na seção acima.
+As zonas automáticas são **contexto**. Elas não alimentam a máquina de rompimento e reteste, não entram na linha de gatilhos e não geram alerta de entrada em faixa: isso tudo roda só sobre os níveis manuais. Promover uma região a faixa manual acrescenta uma referência às regras de faixas, mas não cria uma máquina de rompimento/reteste para essa região: o ciclo persistente acompanha somente os preços pontuais de suporte e resistência. E zonas **expiram** depois de semanas sem toque, enquanto faixas manuais não — o ciclo inteiro está na seção acima.
 
 `zonas_candidatas_a_faixa` existe para essa promoção não depender de alguém reparar nela. Lista regiões com **score 70 ou mais e pelo menos 5 toques** que nenhuma faixa manual cobre, no máximo três, das de maior score para as menores, dizendo de que lado do preço cada uma está.
 
@@ -1093,3 +1093,30 @@ São duas camadas separadas:
 O prompt **não é necessário** para gerar `relatorio.json`.
 
 Ele funciona como uma camada externa de interpretação e notificação sobre os dados produzidos pelo monitor.
+
+## Consistência entre execuções e regressões
+
+O monitor pode rodar várias vezes sobre a mesma vela fechada. As regras abaixo evitam que a frequência de execução altere a leitura:
+
+- A máquina de níveis processa cada fechamento uma vez. Repetir a consulta não transforma a sombra do rompimento em um reteste posterior; respostas de velas anteriores também não regridem o estado.
+- `niveis_mudancas_nesta_vela` permanece disponível durante a mesma vela, inclusive após reiniciar o processo. O estado salva esses eventos em `mudancasNaVela`; consumidores deduplicam por par, timeframe, data da vela, nível e tipo de evento. Estados antigos continuam legíveis e não geram anúncios retroativos.
+- As sínteses consideram a direção do nível. Um reteste de uma perda de suporte não confirma entrada compradora; recuperar um suporte perdido não representa falha de um rompimento de alta.
+- O centro das zonas é suavizado uma vez por nova vela fechada. Uma ficha de remoção é mantida até a próxima vela para impedir que um retry recrie a zona com outro ID. Distância e posição em relação ao preço atual continuam podendo variar.
+- O volume da última vela fechada confirma apenas rompimentos ou perdas daquela mesma vela. Toques e rompimentos intradiários não recebem confirmação pelo volume do dia anterior.
+- `analisar-historico.mjs` conta uma observação por par, timeframe, vela e condição, incluindo a referência. Snapshots repetidos não aumentam a amostra; uma condição que aparece depois na mesma vela continua sendo registrada uma vez. Isso corrige a contagem, sem transformar a análise descritiva em backtest de execução.
+
+Execute `node teste-fumaca.mjs` para rodar a suíte existente e as regressões de `teste-regressoes.mjs`, sem rede. Para executar somente as reproduções dos defeitos, use `node teste-regressoes.mjs`. O workflow existente já roda o teste de fumaça antes de gerar o relatório.
+
+As correções preservam períodos dos indicadores, tolerâncias e níveis manuais. O estado histórico não é reescrito: transições falsas já registradas precisam ser distinguidas das novas leituras, corrigidas pelo código.
+
+## Travessia pendente da EMA89 semanal
+
+A margem macro continua em **0,25 ATR**, avaliada apenas no fechamento semanal. Uma travessia com margem insuficiente fica pendente em `docs/estado.json`, no mapa `ema89Semanal`, por chave de par. Um fechamento posterior no mesmo lado com margem suficiente confirma; voltar ao lado anterior por fechamento cancela a pendência sem confirmar a direção oposta. Um novo cruzamento posterior inicia outro ciclo. Oscilações da semana em formação não alteram esse estado.
+
+`ema89_cruzamento_fechado` mantém sua semântica de cruzamento entre duas semanas consecutivas. O novo evento `ema89_semanal_confirmacao` permite confirmar mais tarde mesmo quando o cruzamento bruto é `nenhum`. O campo `ema89_semanal_evento_id` permanece estável durante a vela de confirmação e deve ser usado pelo agente para deduplicar mensagens. O código calcula o evento; não registra que uma mensagem foi efetivamente enviada. Os demais campos `ema89_semanal_*` mostram estado, direção e datas de origem, confirmação e cancelamento. A comparação usa a margem sem arredondamento.
+
+A memória sobrevive a reinícios, falhas de fonte e retries; respostas antigas não fazem o estado regredir. Se várias semanas novas estiverem disponíveis, elas são processadas em ordem para não perder cancelamentos intermediários. Sem continuidade histórica, a referência é reiniciada conservadoramente. Na primeira execução sem esse estado, somente a última semana fechada é avaliada, sem reconstruir alertas antigos. Uma confirmação de uma semana passada permanece como contexto, mas não vira evento novo na semana atual.
+
+O histórico registra `ema89_confirmacao` e `ema89_evento_id`; a análise histórica conta `ema89_confirmou=acima/abaixo` na semana de confirmação, uma vez por vela. Registros antigos continuam legíveis.
+
+`node teste-ema89-semanal.mjs` verifica as sequências e a persistência em disco. Essa suíte também roda por `node teste-fumaca.mjs`. Os prompts públicos usam os novos campos e mantêm os filtros, os pares de referência e as regras de prioridade já existentes.
