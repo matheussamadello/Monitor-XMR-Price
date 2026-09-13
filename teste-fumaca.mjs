@@ -1348,5 +1348,11 @@ ok(!/NaN|undefined/.test(r4.texto), "segunda execucao le o estado anterior sem q
 await import("./teste-regressoes.mjs");
 await import("./teste-ema89-semanal.mjs");
 
+// O retrato vai por ULTIMO e mexe no relogio global, entao nada roda
+// depois dele. Ele sai do processo com codigo 1 por conta propria se o
+// relatorio tiver mudado, e ai a contagem abaixo nem chega a imprimir.
+console.log("\n== retrato do relatorio ==");
+await import("./teste-retrato.mjs");
+
 console.log(falhas ? `\n${falhas} FALHA(S)` : "\ntudo passou");
 process.exit(falhas ? 1 : 0);
