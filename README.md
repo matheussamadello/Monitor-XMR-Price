@@ -1093,3 +1093,18 @@ São duas camadas separadas:
 O prompt **não é necessário** para gerar `relatorio.json`.
 
 Ele funciona como uma camada externa de interpretação e notificação sobre os dados produzidos pelo monitor.
+
+## Consistência entre execuções e regressões
+
+O monitor pode rodar várias vezes sobre a mesma vela fechada. As regras abaixo evitam que a frequência de execução altere a leitura:
+
+- A máquina de níveis processa cada fechamento uma vez. Repetir a consulta não transforma a sombra do rompimento em um reteste posterior; respostas de velas anteriores também não regridem o estado.
+- `niveis_mudancas_nesta_vela` permanece disponível durante a mesma vela, inclusive após reiniciar o processo. O estado salva esses eventos em `mudancasNaVela`; consumidores deduplicam por par, timeframe, data da vela, nível e tipo de evento. Estados antigos continuam legíveis e não geram anúncios retroativos.
+- As sínteses consideram a direção do nível. Um reteste de uma perda de suporte não confirma entrada compradora; recuperar um suporte perdido não representa falha de um rompimento de alta.
+- O centro das zonas é suavizado uma vez por nova vela fechada. Uma ficha de remoção é mantida até a próxima vela para impedir que um retry recrie a zona com outro ID. Distância e posição em relação ao preço atual continuam podendo variar.
+- O volume da última vela fechada confirma apenas rompimentos ou perdas daquela mesma vela. Toques e rompimentos intradiários não recebem confirmação pelo volume do dia anterior.
+- `analisar-historico.mjs` conta uma observação por par, timeframe, vela e condição, incluindo a referência. Snapshots repetidos não aumentam a amostra; uma condição que aparece depois na mesma vela continua sendo registrada uma vez. Isso corrige a contagem, sem transformar a análise descritiva em backtest de execução.
+
+Execute `node teste-fumaca.mjs` para rodar a suíte existente e as regressões de `teste-regressoes.mjs`, sem rede. Para executar somente as reproduções dos defeitos, use `node teste-regressoes.mjs`. O workflow existente já roda o teste de fumaça antes de gerar o relatório.
+
+As correções preservam períodos dos indicadores, tolerâncias e níveis manuais. O estado histórico não é reescrito: transições falsas já registradas precisam ser distinguidas das novas leituras, corrigidas pelo código.

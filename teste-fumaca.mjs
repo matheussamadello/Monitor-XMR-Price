@@ -1345,5 +1345,7 @@ const r4 = await build(fakeFetch(), {
 });
 ok(!/NaN|undefined/.test(r4.texto), "segunda execucao le o estado anterior sem quebrar");
 
+await import("./teste-regressoes.mjs");
+
 console.log(falhas ? `\n${falhas} FALHA(S)` : "\ntudo passou");
 process.exit(falhas ? 1 : 0);
