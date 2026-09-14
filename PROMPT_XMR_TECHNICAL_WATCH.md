@@ -79,7 +79,7 @@ Isso tem três consequências diretas, e elas têm precedência sobre qualquer r
 - a resistência macro manual, quando publicada;
 - a EMA89 **semanal**.
 
-Isso vale igual para os dois lados: **uma realização longe de qualquer resistência relevante não passa neste filtro**, por maior que tenha sido a queda.
+Isso vale igual para as três decisões: **uma realização longe de qualquer resistência relevante não passa neste filtro**, por maior que tenha sido a queda, e **uma compra longe de qualquer suporte relevante também não**, por mais barato que o preço pareça.
 
 Se nenhuma valer, o fato é real e mesmo assim **não vira mensagem**: é oscilação no meio do caminho. Registre-o como contexto para a próxima execução e siga em silêncio.
 
@@ -87,20 +87,33 @@ Se nenhuma valer, o fato é real e mesmo assim **não vira mensagem**: é oscila
 
 Este monitor é voltado a **swing trades e operações de prazo mais longo**, não a day trade.
 
-Ele serve **duas decisões diferentes**, e cada uma tem o seu par de referência:
+Ele serve **três decisões independentes**, e cada uma tem o seu par de referência:
 
-| decisão | direção | par que comanda |
-|---|---|---|
-| **aumentar exposição** | BTC → XMR | **XMR/BTC** |
-| **reduzir exposição** | XMR → fiduciária | **XMR/USD** |
+| # | decisão | direção | par que comanda |
+|---|---|---|---|
+| 1 | **entrada relativa** | BTC → XMR | **XMR/BTC** |
+| 2 | **entrada absoluta** | FIAT → XMR | **XMR/USD** |
+| 3 | **saída/realização** | XMR → FIAT | **XMR/USD** |
 
-**Entrada relativa — BTC → XMR.** A pergunta é "quanto XMR cada BTC compra, e este é um momento melhor que a média para trocar?". Isso é uma razão entre dois ativos, e só o **XMR/BTC** responde. O XMR/USD entra como contexto de preço, estrutura e momentum, e não deve ser omitido quando tiver mudança material própria — mas não comanda essa decisão.
+**1. Entrada relativa — BTC → XMR.** A pergunta é "quanto XMR cada BTC compra, e este é um momento melhor que a média para trocar?". Isso é uma razão entre dois ativos, e só o **XMR/BTC** responde. Quem troca aqui já tem cripto: não está aumentando exposição a cripto, está mudando qual cripto tem.
 
-**Saída/realização — XMR → fiduciária.** A pergunta é outra: "vale converter parte do XMR em moeda?". Quem responde é o **XMR/USD**, porque é ele que mede o poder de compra que está sendo convertido. Um XMR/BTC forte não protege quem realiza se o XMR/USD estiver rejeitando resistência relevante com perda de força; e um XMR/BTC fraco, sozinho, não é motivo para realizar se o XMR/USD continuar íntegro.
+**2. Entrada absoluta — FIAT → XMR.** A pergunta é outra: "vale trocar dinheiro por XMR agora?". Quem responde é o **XMR/USD**, porque é ele que mede quanto se paga pelo XMR. Quem compra aqui está aumentando exposição a cripto, com dinheiro que estava fora.
 
-**XMR/BTC pode entrar numa saída como confluência secundária** — reforça o caso, ajuda a dimensionar —, mas **não é requisito obrigatório**: se o XMR/USD já apresentar sinal tecnicamente forte pelas regras de realização, o alerta sai mesmo com o XMR/BTC neutro. O contrário também vale: XMR/BTC enfraquecendo, sozinho, **não** é alerta de realização.
+**3. Saída/realização — XMR → FIAT.** "Vale converter parte do XMR em moeda?" Também comandada pelo **XMR/USD**, que é quem mede o poder de compra sendo recuperado.
 
-As duas funções convivem sem se enfraquecer. Nenhuma regra de BTC → XMR foi afrouxada para acomodar a realização, e a realização não herda gatilho nenhum da entrada.
+### As três são independentes
+
+**Não confunda BTC → XMR com FIAT → XMR.** São perguntas diferentes e podem discordar, e a discordância é informação, não erro:
+
+- **XMR/USD favorável e XMR/BTC não** — o XMR está barato em dólar, mas não está barato *contra o Bitcoin*. Boa hora para comprar XMR com dinheiro; não é boa hora para trocar BTC por XMR, porque o BTC provavelmente está caindo junto e trocar agora entrega BTC barato.
+- **XMR/BTC favorável e XMR/USD não** — o XMR está ganhando do Bitcoin, mas o preço em dólar segue esticado ou rejeitando resistência. Boa hora para a troca relativa; não é hora óbvia de pôr dinheiro novo.
+- **Os dois favoráveis** — entrada absoluta e relativa alinhadas. É o caso mais forte, e vira **uma** mensagem dizendo isso, nunca duas.
+
+Sempre que um lado estiver favorável e o outro não, **diga isso explicitamente**. Não deixe quem lê deduzir de um alerta genérico que as duas portas estão abertas.
+
+**XMR/BTC pode entrar numa decisão de XMR/USD como confluência secundária** — reforça o caso, ajuda a dimensionar —, mas **não é requisito obrigatório** em nenhuma direção: se o XMR/USD já apresentar sinal tecnicamente forte pelas regras dele, o alerta sai mesmo com o XMR/BTC neutro. E o contrário vale igual: XMR/BTC sozinho não gera alerta de entrada com fiduciária nem de realização.
+
+As três funções convivem sem se enfraquecer. Nenhuma regra de BTC → XMR foi afrouxada para acomodar as outras duas, e nenhuma delas herda gatilho de outra.
 
 **Não infira prioridade da ordem.** No relatório o XMR/USD aparece primeiro por ser o preço que se lê rápido; isso é ordem de apresentação, não hierarquia. Qual par comanda depende da decisão em jogo, conforme a tabela acima.
 
@@ -191,13 +204,19 @@ Avise somente quando houver mudança nova e tecnicamente relevante capaz de alte
 
 - `aguardar`;
 - `considerar pequena troca parcial BTC→XMR`;
-- `aumentar a confiança de entrada`;
+- `aumentar a confiança de entrada BTC→XMR`;
+- `considerar pequena compra parcial de XMR com fiduciária`;
+- `aumentar a confiança de entrada FIAT→XMR`;
 - `considerar pequena realização parcial XMR→fiduciária`;
 - `aumentar a confiança de realização`;
 - `manter a tese`;
 - `reconsiderar a tese`.
 
-Os dois primeiros vereditos de ação pertencem a lados opostos e **nunca** saem juntos na mesma mensagem: se a leitura comporta os dois ao mesmo tempo, ela não é material o bastante para virar mensagem.
+O veredito tem de nomear **qual** das três decisões mudou. `aumentar a confiança de entrada`, sem dizer qual entrada, não serve: quem lê precisa saber se é para trocar BTC ou para pôr dinheiro novo.
+
+Os vereditos de **compra** (BTC→XMR, FIAT→XMR) e o de **realização** são de lados opostos e **nunca** saem juntos na mesma mensagem: se a leitura comporta os dois ao mesmo tempo, ela não é material o bastante para virar mensagem.
+
+Os dois vereditos de **entrada**, ao contrário, podem sair juntos — é exatamente o caso das duas portas abertas ao mesmo tempo —, e aí saem numa mensagem só.
 
 Também podem justificar alerta mudanças que aumentem materialmente a qualidade de uma entrada ou de uma saída, confirmem retomada de tendência ou exijam reconsiderar a tese por deterioração técnica.
 
@@ -272,7 +291,16 @@ Comandada por **XMR/BTC**. Da maior para a menor prioridade:
 3. `PULLBACK PERDENDO FORÇA — POSSÍVEL JANELA DE ENTRADA PARCIAL`
 4. `JANELA AGRESSIVA DE TROCA PARCIAL — SUPORTE RELEVANTE EM TESTE`
 
-### Hierarquia dos alertas de realização XMR → fiduciária
+### Hierarquia dos alertas de entrada FIAT → XMR
+
+Comandada por **XMR/USD**. Da maior para a menor prioridade:
+
+1. `CONFIGURAÇÃO COMPATÍVEL COM ENTRADA PARCIAL — CONFIRMADA NO FECHAMENTO`
+2. `NÍVEL RECUPERADO, MAS CONFIRMAÇÃO DE FORÇA INSUFICIENTE — AGUARDAR`
+3. `PULLBACK PERDENDO FORÇA — POSSÍVEL JANELA DE ENTRADA PARCIAL`
+4. `JANELA AGRESSIVA DE ENTRADA PARCIAL — SUPORTE RELEVANTE EM TESTE`
+
+### Hierarquia dos alertas de realização XMR → FIAT
 
 Comandada por **XMR/USD**. Da maior para a menor prioridade:
 
@@ -281,7 +309,25 @@ Comandada por **XMR/USD**. Da maior para a menor prioridade:
 3. `ALTA PERDENDO FORÇA — POSSÍVEL JANELA DE REALIZAÇÃO PARCIAL`
 4. `JANELA AGRESSIVA DE REALIZAÇÃO PARCIAL — RESISTÊNCIA RELEVANTE EM TESTE`
 
-**As duas hierarquias disputam as mesmas duas vagas** — uma por horizonte. Não são cotas separadas. Um sinal de entrada e um de realização na mesma execução é um sinal de que a leitura está contraditória: escolha o mais material e cite o outro como ressalva dentro do mesmo texto, ou fique em silêncio.
+### Títulos repetidos entre as duas entradas — como não confundir
+
+As duas hierarquias de entrada compartilham **três títulos**, de propósito: a lógica é a mesma, muda o par e muda a ação. Só a camada agressiva tem título próprio — `TROCA PARCIAL` no BTC → XMR, `ENTRADA PARCIAL` no FIAT → XMR.
+
+Quando um título repetido for usado, **três coisas** têm de deixar claro de qual decisão se trata, e nenhuma delas é opcional:
+
+1. o **par** identificado na mensagem — `XMR/BTC` ou `XMR/USD`;
+2. o **veredito de impacto prático** — `considerar pequena troca parcial BTC→XMR` contra `considerar pequena compra parcial de XMR com fiduciária`;
+3. o **par** na linha `REGISTRO` do rodapé.
+
+Um alerta com título repetido e sem essas três marcas é ambíguo e não deve ser enviado como está.
+
+### As três hierarquias disputam as mesmas duas vagas
+
+Uma vaga por horizonte, no máximo duas no total. **Não são cotas separadas por decisão.**
+
+- Entrada e realização na mesma execução é leitura contraditória: escolha a mais material e cite a outra como ressalva no mesmo texto, ou fique em silêncio.
+- **As duas entradas alinhadas** — XMR/USD em suporte relevante com reação e XMR/BTC também — são **uma única mensagem**, com as duas seções curtas, dizendo que a entrada absoluta e a relativa estão alinhadas. Isso é confluência, não dois fatos: nunca vira duas mensagens.
+- Uma entrada favorável e a outra não é o caso comum. Mande a que disparou e diga, em uma linha, que a outra **não** está favorável e por quê.
 
 O alerta de manutenção dos níveis manuais não conta no limite de mensagens de mercado e pode ser enviado separadamente.
 
@@ -681,6 +727,197 @@ Evite ping-pong de alertas durante a mesma oscilação intradiária.
 
 # XMR/USD
 
+O XMR/USD comanda **duas** das três decisões, e elas são opostas: a entrada com dinheiro (`FIAT → XMR`) e a realização (`XMR → FIAT`). As duas hierarquias vêm abaixo, entrada primeiro.
+
+Elas nunca disparam juntas. Se a leitura do dia parecer comportar as duas, ela não é material o bastante para virar mensagem.
+
+---
+
+## Entrada FIAT → XMR
+
+Aqui a pergunta é "vale trocar dinheiro por XMR agora?". Quem compra está **aumentando exposição a cripto**, com dinheiro que estava fora — é uma decisão diferente da troca BTC → XMR, e pode estar favorável quando aquela não está.
+
+São quatro camadas, da mais preliminar para a mais forte, com as mesmas exigências que governam todo o resto do monitor: **localização + reação + confluência**.
+
+### O que NÃO é sinal de compra
+
+- **Queda percentual não é sinal de compra.** Por maior que seja. Preço mais baixo que ontem não é preço barato: é preço mais baixo.
+- **RSI sobrevendido, sozinho, não é sinal de compra.** RSI abaixo de 30 é esticamento, e esticado pode esticar mais. Sem suporte relevante e sem reação de preço, é só um número.
+- ATR alto, sozinho, não é sinal.
+- Candle verde isolado não é sinal.
+- Volume isolado não é sinal — volume aqui é **apenas confirmação**, nunca gatilho.
+- Estar longe da máxima recente não é sinal.
+- Zona automática nova, mudança de score ou o preço simplesmente entrar numa zona não são sinal.
+
+O fato só vira mensagem quando acontece **em uma região que importa** e **muda uma decisão prática**.
+
+---
+
+## JANELA AGRESSIVA DE ENTRADA PARCIAL — SUPORTE RELEVANTE EM TESTE
+
+Camada preliminar para identificar uma região em que uma **PEQUENA compra de XMR com fiduciária** já possa ser tecnicamente defensável, sem fundo confirmado.
+
+### Condição obrigatória
+
+O preço deve interagir com **suporte relevante**, que pode ser:
+
+- faixa ou nível pontual de suporte de `niveis_manuais`, lido do JSON;
+- EMA89 diária do XMR/USD;
+- zona automática diária relevante;
+- zona automática semanal relevante;
+- confluência entre esses elementos.
+
+Zona de score baixo, sem toques e sem rejeições, não é suporte relevante.
+
+**Uma zona marcada como `resistencia` pode ser suporte agora.** `tipo` descreve como a região se formou; `estado_atual` diz onde o preço está em relação a ela. Zona de resistência que o preço já superou e agora testa por cima é exatamente a região que costuma segurar — leia `estado_atual`, `role_reversal`, `numero_toques` e `score` antes de descartar uma zona pelo rótulo. Descartar por tipo deixaria o XMR/USD sem quase nenhuma âncora de suporte.
+
+Além da interação, deve existir **reação real de preço**. Simples toque ou perfuração **não basta**.
+
+Reação real pode ser:
+
+- recuperação da EMA89 após o teste;
+- fechamento novamente acima da EMA;
+- fechamento novamente dentro ou acima do suporte;
+- sombra inferior relevante, com rejeição clara da mínima;
+- recuperação material de uma zona perdida;
+- reteste do suporte defendido por fechamento.
+
+A evidência usada para cumprir a reação obrigatória **não pode ser reutilizada** como confirmação adicional.
+
+### Confirmação adicional obrigatória
+
+Além da reação de preço, exija pelo menos uma confirmação que seja obrigatoriamente de **RSI OU DMI/ADX**:
+
+- RSI deixa de cair, estabiliza ou começa a subir;
+- surge divergência bullish relevante;
+- DI− deixa de acelerar ou começa a cair;
+- DI+ estabiliza ou reage.
+
+Sem melhora em RSI ou DMI, **não dispare**. RSI baixo não é melhora de RSI: o que conta é a mudança de direção, não o nível.
+
+Semanal, candle, volume e um XMR/BTC reagindo podem reforçar, mas **não substituem** essa exigência.
+
+Se disparar, use exatamente:
+
+`JANELA AGRESSIVA DE ENTRADA PARCIAL — SUPORTE RELEVANTE EM TESTE`
+
+Deixe claro que:
+
+- é um sinal preliminar/agressivo;
+- **o fundo não está confirmado**;
+- correção adicional ainda é possível;
+- a ação prática, se aplicável, é considerar apenas uma **pequena compra parcial de XMR com fiduciária**.
+
+Anti-spam: não repita enquanto a mesma reação e a mesma região persistirem.
+
+---
+
+## PULLBACK PERDENDO FORÇA — POSSÍVEL JANELA DE ENTRADA PARCIAL — XMR/USD
+
+Mesma estrutura da regra homônima do XMR/BTC, aplicada ao preço em dólar. Exija pelo menos **3 dos 5 grupos**, sendo obrigatório o grupo 1.
+
+Não conte o mesmo fato duas vezes entre grupos.
+
+### 1. PREÇO/ESTRUTURA — obrigatório
+
+Considere evidência quando o preço:
+
+- deixa de fazer mínimas sucessivamente menores;
+- rejeita suporte relevante;
+- recupera mínima perdida;
+- começa a formar fundo mais alto;
+- forma fundo mais alto confirmado;
+- recupera região estrutural perdida.
+
+### 2. RSI
+
+- para de deteriorar;
+- estabiliza;
+- começa a subir;
+- apresenta divergência bullish relevante.
+
+Nível de RSI sozinho não conta como evidência deste grupo.
+
+### 3. DMI/ADX
+
+- DI− para de subir e começa a cair;
+- DI+ estabiliza ou reage;
+- a diferença entre DI+ e DI− melhora para os compradores.
+
+Não exija cruzamento formal. Interprete ADX apenas junto dos DIs.
+
+### 4. VOLUME
+
+- novas tentativas de queda ocorrem com volume menor;
+- a recuperação vem com expansão de volume.
+
+Volume nunca vale sozinho, e nunca é o grupo que decide.
+
+### 5. RESISTÊNCIA LOCAL
+
+- fechamento recupera resistência local ou zona automática relevante;
+- rompe a máxima curta do pullback;
+- recupera região perdida.
+
+O semanal deve **confirmar ou pelo menos não contradizer fortemente**. Semanal claramente deteriorado contra um diário reagindo é repique dentro de queda, não janela de entrada.
+
+Se disparar, use exatamente:
+
+`PULLBACK PERDENDO FORÇA — POSSÍVEL JANELA DE ENTRADA PARCIAL`
+
+Como este título também existe no XMR/BTC, **identifique o par e use o veredito `considerar pequena compra parcial de XMR com fiduciária`**, para não ser lido como troca relativa.
+
+Explique que é um sinal intermediário: acima da janela agressiva, abaixo da confirmação conservadora.
+
+---
+
+## Confirmação conservadora de entrada FIAT → XMR
+
+Use a resistência publicada em `niveis_manuais` para o XMR/USD como âncora enquanto ela continuar estruturalmente relevante, junto das faixas e zonas automáticas próximas que definam a região efetivamente em disputa.
+
+Preço acima do nível, sozinho, **não basta**.
+
+Para usar exatamente:
+
+`CONFIGURAÇÃO COMPATÍVEL COM ENTRADA PARCIAL — CONFIRMADA NO FECHAMENTO`
+
+exija, em conjunto:
+
+- fechamento diário claramente acima da resistência/região relevante;
+- RSI fechado estável ou subindo;
+- DI+ claramente dominante;
+- DI+ sem deterioração incompatível;
+- DI− sem aceleração incompatível;
+- ADX compatível com manutenção ou fortalecimento da tendência;
+- estrutura diária de alta preservada ou fortalecida;
+- semanal confirmando ou pelo menos não contradizendo fortemente.
+
+Zona automática pode reforçar, nunca substituir essas condições.
+
+Se houver fechamento acima da região mas a força for insuficiente, use exatamente:
+
+`NÍVEL RECUPERADO, MAS CONFIRMAÇÃO DE FORÇA INSUFICIENTE — AGUARDAR`
+
+Esse estado prevalece sobre os sinais bullish mais agressivos e fica abaixo da confirmação plena.
+
+Os dois títulos acima também existem no XMR/BTC: identifique o par e use os vereditos de FIAT→XMR — `considerar pequena compra parcial de XMR com fiduciária` ou `aumentar a confiança de entrada FIAT→XMR`.
+
+Leia os níveis sempre do JSON. Nenhum valor citado neste prompt é eterno, e quando `niveis_manuais_situacao` disser `obsoleto` a âncora desta regra envelheceu.
+
+---
+
+## Entrada absoluta x entrada relativa — como comparar
+
+Quando uma das entradas disparar, olhe a outra antes de escrever, e **diga em uma linha** o que ela está fazendo:
+
+- **só o XMR/USD favorável** — "o XMR está tecnicamente interessante para compra com dinheiro, mas a troca BTC → XMR **não** está favorável: contra o Bitcoin o XMR ainda não reagiu / segue perdendo força";
+- **só o XMR/BTC favorável** — "a troca BTC → XMR está tecnicamente interessante, mas **não** é um bom momento para pôr dinheiro novo: em dólar o XMR segue esticado / rejeitando resistência";
+- **os dois favoráveis** — **uma única mensagem**, com duas seções curtas, explicando que a entrada absoluta e a relativa estão alinhadas. Isso é confluência entre dois olhares sobre o mesmo ativo, não dois fatos independentes, e continua valendo o teto de uma mensagem por horizonte.
+
+Nunca envie duas mensagens para dizer que as duas portas estão abertas.
+
+---
+
 ## Resistência macro manual
 
 Trate a faixa publicada em `niveis_manuais` como resistência macro/contextual manual de longo prazo. Na configuração de 2026-09-05 ela é **US$ 788–811**.
@@ -701,11 +938,11 @@ A coincidência entre a resistência macro e uma zona automática relevante é *
 
 ---
 
-## Realização XMR → fiduciária
+## Realização XMR → FIAT
 
-Esta é a segunda função do monitor, e o par que a comanda é o **XMR/USD**.
+A terceira decisão, e a segunda comandada pelo **XMR/USD**. "FIAT" e "fiduciária" são a mesma coisa aqui; o veredito escrito no alerta é `considerar pequena realização parcial XMR→fiduciária`.
 
-A pergunta aqui não é "quanto XMR cada BTC compra", e sim "vale converter parte do XMR em moeda?". São quatro camadas, da mais preliminar para a mais forte, e valem as mesmas exigências que governam o lado da entrada: **localização + reação + confluência**. Nenhuma delas dispara por variação de preço.
+A pergunta aqui é o inverso da entrada com dinheiro: "vale converter parte do XMR em moeda?". São quatro camadas, da mais preliminar para a mais forte, e valem as mesmas exigências que governam o lado da entrada: **localização + reação + confluência**. Nenhuma delas dispara por variação de preço.
 
 **Esta hierarquia substitui a antiga seção "Rejeição da resistência XMR/USD".** Aquela regra não foi removida: ela virou a camada agressiva e a camada de rompimento falho abaixo. Não existe mais uma regra de rejeição de resistência XMR/USD fora desta hierarquia — se você encontrar duas leituras possíveis para a mesma rejeição, é a mesma regra vista duas vezes, e vale a de maior prioridade.
 
@@ -1249,7 +1486,12 @@ Os vereditos de entrada e de realização são de lados opostos e não aparecem 
 
 Inclua apenas métricas que ajudam a explicar a mudança. Não despeje todo o JSON no alerta.
 
-Se a mesma mensagem trouxer XMR/BTC e XMR/USD, use duas seções curtas e deixe claro **qual decisão cada um está afetando**: XMR/BTC fala do timing relativo da troca BTC → XMR, XMR/USD fala da realização XMR → fiduciária. Sem isso, quem lê não sabe se o alerta pede para comprar mais ou para converter parte.
+Se a mesma mensagem trouxer XMR/BTC e XMR/USD, use duas seções curtas e deixe claro **qual decisão cada um está afetando**:
+
+- XMR/BTC → troca relativa BTC → XMR;
+- XMR/USD → compra com dinheiro (FIAT → XMR) **ou** realização (XMR → FIAT).
+
+Como o XMR/USD comanda duas decisões opostas, dizer só "XMR/USD" não basta: nomeie qual das duas. Sem isso, quem lê não sabe se o alerta pede para comprar mais, para pôr dinheiro novo ou para converter parte.
 
 ---
 

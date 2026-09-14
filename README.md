@@ -4,16 +4,19 @@ Monitor técnico automatizado de **XMR/USD** e **XMR/BTC** que coleta candles da
 
 Este monitor é voltado a **swing trades de médio prazo** e **position trades**, com ênfase em **acumulação, realização parcial e decisões de prazo mais longo**. O gráfico **diário** é a referência principal de timing e o **semanal**, o filtro de contexto estrutural. Não é destinado a operações de curto prazo ou day trade.
 
-O monitor serve **dois objetivos**, e cada um tem o seu par de referência:
+O monitor serve **três objetivos independentes**, e cada um tem o seu par de referência:
 
-| decisão | direção | par que comanda |
-|---|---|---|
-| **aumentar exposição** | BTC → XMR | **XMR/BTC** |
-| **reduzir exposição** | XMR → fiduciária | **XMR/USD** |
+| # | decisão | direção | par que comanda |
+|---|---|---|---|
+| 1 | **entrada relativa** | BTC → XMR | **XMR/BTC** |
+| 2 | **entrada absoluta** | FIAT → XMR | **XMR/USD** |
+| 3 | **saída/realização** | XMR → FIAT | **XMR/USD** |
 
-Para a **entrada**, a pergunta é quanto XMR cada BTC compra, e só uma razão entre os dois ativos responde: **XMR/BTC**. Para a **realização**, a pergunta é se vale converter parte do XMR em moeda, e quem mede o poder de compra convertido é o **XMR/USD**.
+Cada pergunta tem o seu par. "Quanto XMR cada BTC compra" só uma razão entre os dois ativos responde — **XMR/BTC**. "Vale trocar dinheiro por XMR agora" e "vale converter parte do XMR em moeda" são ambas sobre quanto se paga pelo XMR, e quem mede isso é o **XMR/USD**.
 
-Cada par continua sendo contexto do outro. XMR/BTC pode entrar numa decisão de realização como confluência secundária, mas não é requisito: um sinal tecnicamente forte no XMR/USD basta.
+**As três são independentes, e a discordância entre elas é informação.** O XMR pode estar barato em dólar sem estar barato contra o Bitcoin: nesse caso comprar com dinheiro faz sentido e trocar BTC por XMR não, porque o BTC provavelmente está caindo junto. O inverso também acontece. Quando um lado está favorável e o outro não, o alerta diz isso explicitamente.
+
+XMR/BTC pode entrar numa decisão de XMR/USD como confluência secundária, mas não é requisito: um sinal tecnicamente forte no XMR/USD basta.
 
 ## Links públicos
 
@@ -26,7 +29,7 @@ Cada par continua sendo contexto do outro. XMR/BTC pode entrar numa decisão de 
 
 O monitor acompanha dois pares:
 
-- **XMR/USD** — leitura do Monero em dólar. É a referência principal da decisão de **realização**: converter parte do XMR em moeda fiduciária.
+- **XMR/USD** — leitura do Monero em dólar. É a referência principal de **duas** decisões opostas: a **entrada absoluta** (comprar XMR com dinheiro) e a **realização** (converter parte do XMR em moeda).
 - **XMR/BTC** — leitura relativa do Monero contra Bitcoin. É a referência principal da decisão de **entrada**: troca parcial BTC → XMR.
 
 A análise de cada par é independente, mas o relatório permite combinar as duas leituras.
@@ -1186,9 +1189,11 @@ O arquivo [`PROMPT_XMR_TECHNICAL_WATCH.md`](./PROMPT_XMR_TECHNICAL_WATCH.md) con
 
 No prompt atual:
 
-- XMR/BTC é a referência principal para o timing relativo de BTC → XMR (entrada);
-- XMR/USD é a referência principal para o timing de realização parcial XMR → fiduciária (saída), e continua servindo de contexto para o outro lado;
-- as duas hierarquias disputam as mesmas duas vagas de mensagem, uma por horizonte: não são cotas separadas;
+- XMR/BTC é a referência principal para o timing relativo de BTC → XMR (entrada relativa);
+- XMR/USD é a referência principal de duas decisões opostas: comprar XMR com fiduciária (entrada absoluta) e realizar parcialmente XMR → FIAT (saída);
+- as três hierarquias disputam as mesmas duas vagas de mensagem, uma por horizonte: não são cotas separadas;
+- as duas entradas compartilham três títulos de alerta, e o par citado na mensagem e o veredito de impacto prático são o que distingue uma da outra;
+- quando as duas entradas estão favoráveis ao mesmo tempo, sai **uma** mensagem dizendo que a entrada absoluta e a relativa estão alinhadas;
 - um sinal de realização no diário não significa, por si só, quebra da tese estratégica — com o semanal íntegro, o alerta sai como `[TÁTICO]` e diz isso;
 - dados provisórios e fechados recebem pesos diferentes;
 - RSI, DMI/ADX, divergências, volume e zonas não devem gerar alertas isolados sem contexto;
