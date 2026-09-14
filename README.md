@@ -354,10 +354,13 @@ Calibrado em 2026-09-05, com o XMR/BTC a 0,006643:
 | 0,00656–0,00705 BTC | faixa manual | zona diária onde o preço está |
 | 0,00602–0,00639 BTC | faixa manual | zona diária de score 66 |
 | 0,00565–0,00603 BTC | região manual de suporte | zona diária de score 83, por dentro da semanal de score 83 |
+| 0,00524–0,00544 BTC | faixa manual | promovida pelo radar em 2026-09-14: zona de score 92 sem penalidade, 11 toques e 10 rejeições |
 | 0,00700 BTC | resistência pontual | centro da zona diária **e** pivô de topo de 02/09 — o mesmo número por duas leituras |
 | 0,00584 BTC | suporte pontual | centro da zona de score 83 |
 
 Antes havia uma faixa só, já abaixo do preço, e o suporte pontual era `null` — metade da máquina de estados ficava inerte. Agora os dois lados existem.
+
+A última linha da tabela é a primeira faixa que **não** foi calibrada à mão: ela veio do radar de promoção, que apontou uma região com score 92, 11 toques e 10 rejeições que nenhuma faixa cobria. Os números são os limites **estruturais** da zona, arredondados para fora nas mesmas cinco casas das outras — não os operacionais, que são uma janela derivada da volatilidade corrente e mudariam de regime para regime. Promover não cria ciclo de rompimento e reteste: isso continua valendo só para os pontuais. O que a faixa faz é preservar a região depois que a zona automática expirar, e é por isso que o radar deixou de apontá-la assim que ela entrou.
 
 As zonas automáticas seguem cumprindo o papel de contexto dinâmico, sem exigir uma nova linha manual toda vez que o regime muda.
 
@@ -1107,6 +1110,7 @@ const NIVEIS_BTC = {
     [0.00656, 0.00705, "faixa_000656_000705"],
     [0.00602, 0.00639, "faixa_000602_000639"],
     [0.00565, 0.00603, "regiao_suporte_000565_000603"],
+    [0.00524, 0.00544, "faixa_000524_000544"],
   ],
   resistencia: 0.00700,
   resistenciaLabel: "000700",

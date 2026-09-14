@@ -154,6 +154,22 @@ const NIVEIS_BTC = {
     [0.00656, 0.00705, "faixa_000656_000705"],
     [0.00602, 0.00639, "faixa_000602_000639"],
     [0.00565, 0.00603, "regiao_suporte_000565_000603"],
+    // Promovida do radar de manutencao em 2026-09-14. A zona automatica
+    // btc|diario|z39 vinha com score 92 sem nenhuma penalidade, 11
+    // toques e 10 rejeicoes, forca de reacao media de 1,91 ATR,
+    // confirmada no diario E no semanal, com role reversal e sem
+    // confluencia com nenhuma faixa manual. Primeiro toque em
+    // 2026-02-28, ultimo em 2026-08-24.
+    //
+    // Os numeros sao os limites ESTRUTURais da zona (0,00524313 e
+    // 0,00543887), arredondados para fora nas cinco casas usadas pelas
+    // outras faixas -- nao os operacionais que o radar publicava, que
+    // sao uma janela percentual do centro e mudam com o regime.
+    //
+    // A faixa existe para a regiao sobreviver ao vencimento da zona:
+    // zona automatica enfraquece com 30 velas sem toque e some 15
+    // depois; faixa manual nao expira.
+    [0.00524, 0.00544, "faixa_000524_000544"],
   ],
   resistencia: 0.00700,
   resistenciaLabel: "000700",

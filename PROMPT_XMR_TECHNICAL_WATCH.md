@@ -178,8 +178,11 @@ Na configuração atual do projeto, as referências conhecidas são:
 - faixa `0,00656–0,00705` — `faixa_000656_000705`;
 - faixa `0,00602–0,00639` — `faixa_000602_000639`;
 - região de suporte `0,00565–0,00603` — `regiao_suporte_000565_000603`;
+- faixa `0,00524–0,00544` — `faixa_000524_000544`, promovida do radar de manutenção em 2026-09-14;
 - resistência pontual principal `0,00700`;
 - suporte pontual principal `0,00584`.
+
+A última é a mais nova e a mais distante do preço. Ela veio de uma zona automática de score 92 sem penalidade, com 11 toques e 10 rejeições, confirmada no diário e no semanal. Promover não cria ciclo de rompimento/reteste — isso continua valendo só para os níveis pontuais. O que a promoção faz é preservar a região como referência depois que a zona automática expirar.
 
 #### XMR/USD
 
