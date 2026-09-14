@@ -189,9 +189,12 @@ A última é a mais nova e a mais distante do preço. Ela veio de uma zona autom
 - faixa `US$ 494–507`;
 - faixa `US$ 463–477`;
 - região de suporte `US$ 423–445`;
+- faixa `US$ 399–423`, **suporte profundo**, promovida pelo radar em 2026-09-14;
 - resistência pontual `US$ 550`, **acima de todas as faixas**: não há resistência bem testada acima do preço, então nenhuma faixa foi marcada lá;
 - suporte pontual `US$ 500`;
 - resistência macro manual `US$ 788–811`.
+
+A faixa de 399–423 encosta na região de 423–445, sem sobrepor: no ponto de encontro vale a de cima. Ela é a região mais tocada deste par (14 toques, 10 rejeições) e fica a cerca de 24% abaixo do preço atual. Trate-a como **contexto de queda profunda**, não como nível de trabalho: ela só passa a importar se o preço de fato descer para lá. Não a use para antecipar alvo de queda nem para sugerir espera.
 
 A resistência macro é contextual e propositalmente diferente da máquina de estados dos níveis pontuais.
 
@@ -1376,7 +1379,7 @@ Use o JSON como fonte de verdade da configuração atual sempre que ele publicar
 Dois campos diferentes medem coisas diferentes, e é fácil confundi-los:
 
 - `niveis_manuais_situacao` mede a distância do **preço** até a faixa mais próxima, em ATR. Diz se os níveis ainda cercam o preço;
-- `niveis_manuais_alinhamento` mede se as faixas ainda caem **onde o mercado de fato reage**, comparando cada uma com as zonas automáticas observadas. Sai como `alinhado`, `parcial`, `desalinhado` ou `indefinido`, com a contagem em `niveis_manuais_faixas_corroboradas`.
+- `niveis_manuais_alinhamento` mede se as faixas ainda caem **onde o mercado de fato reage**, comparando cada uma com **todas** as zonas automáticas vivas do par — inclusive as que não cabem na lista publicada, que mostra no máximo três de cada lado. Sai como `alinhado`, `parcial`, `desalinhado` ou `indefinido`, com a contagem em `niveis_manuais_faixas_corroboradas`. Uma faixa de suporte profundo, longe do preço, só pode ser corroborada por zona longe do preço: se a contagem fosse feita sobre a lista publicada, essa faixa sairia como não corroborada para sempre.
 
 Uma faixa pode estar `atual` e `desalinhado` ao mesmo tempo: perto do preço, mas deslocada da região que o mercado respeita. É justamente o caso que mais merece revisão, e o único dos dois campos que enxerga isso é o alinhamento.
 

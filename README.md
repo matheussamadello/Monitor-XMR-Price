@@ -322,11 +322,16 @@ Reancorado em 2026-09-11, com o XMR/USD a 515,50:
 | US$ 494–507 | faixa manual | zona diária de score 67, e semanal de score 77 |
 | US$ 463–477 | faixa manual | zona diária de score 75, com 6 toques |
 | US$ 423–445 | região manual de suporte | zona diária de score 74 sobre a semanal de score 90 |
+| US$ 399–423 | faixa manual de suporte profundo | zona diária de score 79, a mais tocada do par. Ver abaixo |
 | US$ 550 | resistência pontual | **não corroborada**, mantida de propósito. Ver abaixo |
 | US$ 500 | suporte pontual | centro da zona diária de score 67 |
 | US$ 788–811 | resistência macro manual/contextual | única estrutura acima do preço, presente no diário **e** no semanal |
 
 A faixa de 544–553 saiu porque ficou órfã: não encostava em zona nenhuma, nem no diário nem no semanal. E **acima do preço atual não existe resistência bem testada** — a única zona lá em cima tem 1 toque e score 35. Marcar uma faixa sobre ela passaria no teste de alinhamento apoiada em evidência fraca, que é pior que não marcar. Então o conjunto desceu para as três regiões que o mercado de fato testou, e o par fica **sem faixa marcada acima do preço** até que uma se forme. O alinhamento diário passou de 2 de 3 para 3 de 3.
+
+A faixa de **399–423 entrou em 2026-09-14**, na primeira execução em que o radar passou a ler o conjunto inteiro de zonas. A região é a **mais tocada deste par**: score 79 (bruto 93), 14 toques e 10 rejeições, reação média de 2,39 ATR, volume acima da média da época, confirmada no diário e no semanal. Ela nunca foi fraca — só não cabia na lista de três zonas por lado que a página publica.
+
+Os limites estruturais da zona iam de 399,02 a 426,32, e o teto da faixa ficou em **423**, não em 426. De 423 para cima a região de 423–445 já cobre, e duas faixas sobrepostas fariam o preço disparar as duas ao mesmo tempo nesse pedaço. Encostadas, não sobrepostas — o mesmo critério da promoção de 74–76k no monitor de BTC. Nada de cobertura se perde, só a ambiguidade.
 
 A resistência pontual de 550 foi mantida mesmo sem corroboração, e por um motivo específico: ela marca o próximo nível a vencer acima do preço, e descê-la para dentro da região já testada faria o monitor anunciar como rompimento **novo** uma passagem que já aconteceu. Quando o preço construir estrutura acima, esse número deve ser revisto.
 
@@ -413,7 +418,9 @@ As duas pontas da conta usam **vela fechada** — o fechamento e o ATR. A primei
 
 A distância é medida em ATR, e não em porcentagem, de propósito. Cinco por cento é muito num par de câmbio e pouco num de cripto, enquanto "três vezes a volatilidade diária" quer dizer a mesma coisa em qualquer um — um limiar só serve para os três monitores, sem recalibragem.
 
-**Situação e alinhamento medem coisas diferentes.** A situação mede a distância do preço; o alinhamento mede se as faixas continuam caindo onde o mercado de fato reage, comparando cada uma com as zonas automáticas pelo mesmo critério de sobreposição usado nas confluências. Os dois podem discordar, e é justamente a discordância que interessa: uma faixa pode estar a 0,66 ATR do preço, portanto `atual`, e mesmo assim estar deslocada da região que o mercado respeita.
+**Situação e alinhamento medem coisas diferentes.** A situação mede a distância do preço; o alinhamento mede se as faixas continuam caindo onde o mercado de fato reage, comparando cada uma com as zonas automáticas pelo mesmo critério de sobreposição usado nas confluências. A comparação usa **todas as zonas vivas do par**, não a lista publicada.
+
+Essa distinção não é detalhe. A página mostra no máximo três zonas de cada lado do preço, e o alinhamento herdava esse corte — então uma faixa longe do preço só podia ser comparada com zonas perto do preço, e estava condenada a sair como não corroborada para sempre. Uma faixa de suporte profundo, marcada exatamente sobre uma zona de dez toques, seria acusada de desalinhada pelo relatório. O corte de três é de exibição; medir alinhamento com ele era medir a coisa errada. No retrato de regressão do BTC o conserto sozinho levou o diário de `desalinhado`, 0 de 4, para 3 de 5 corroboradas. Os dois podem discordar, e é justamente a discordância que interessa: uma faixa pode estar a 0,66 ATR do preço, portanto `atual`, e mesmo assim estar deslocada da região que o mercado respeita.
 
 Era o caso do monitor de BTC quando este campo foi criado. Nenhuma das três faixas manuais atingia o limite de sobreposição em nenhum dos dois timeframes, e as duas do diário ficavam logo abaixo dele porque estavam cerca de 1.500 dólares abaixo de onde o mercado reagia: a zona automática de score 99 ficava em 79.536 a 81.093, contra a faixa configurada de 78.000 a 80.000. Nada no relatório dizia isso, porque o único campo que olhava as faixas media distância até o preço. O sinal existia por zona, em `confluencia_faixa_manual`, mas nunca era somado.
 

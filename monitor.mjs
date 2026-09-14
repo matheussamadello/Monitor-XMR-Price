@@ -104,11 +104,30 @@ const TIMEFRAMES = [
 //   494-507  zona diaria de score 67, e semanal de score 77
 //   463-477  zona diaria de score 75, 6 toques -- e' a que entrou
 //   423-445  zona diaria de score 74, e semanal de score 90
+//   399-423  zona diaria de score 79, 14 toques -- promovida em
+//            2026-09-14 pelo radar, na primeira execucao em que ele
+//            passou a olhar o conjunto inteiro de zonas
 const NIVEIS_USD = {
   faixas: [
     [494, 507, "faixa_494_507"],
     [463, 477, "faixa_463_477"],
     [423, 445, "regiao_suporte_423_445"],
+    // Promovida do radar de manutencao em 2026-09-14. A zona automatica
+    // usd|diario|z15 vinha com score 79 (bruto 93, penalizada em
+    // rompida_2x_sem_reacao), 14 toques e 10 rejeicoes -- a mais tocada
+    // deste par --, forca de reacao media de 2,39 ATR, volume acima da
+    // media na epoca, confirmada no diario E no semanal, com role
+    // reversal e sem confluencia com faixa manual nenhuma. Primeiro
+    // toque em 2025-05-26, ultimo em 2026-08-22.
+    //
+    // Os limites ESTRUTURais eram 399,02 e 426,32. O teto ficou em 423,
+    // nao em 426: de 423 para cima a regiao_suporte_423_445 ja cobre, e
+    // duas faixas sobrepostas fariam o preco disparar as duas ao mesmo
+    // tempo nesse pedaco. Encostadas, nao sobrepostas -- mesmo criterio
+    // da promocao de 74-76k no BTC. Nada de cobertura se perde, so a
+    // ambiguidade: a sobreposicao com a zona ainda da 0,999, porque o
+    // pedaco cortado ja tem dona.
+    [399, 423, "faixa_399_423"],
   ],
   // NAO corroborada por zona nenhuma, e mantida de proposito: e' a marca
   // do proximo nivel a vencer acima do preco. Descer a resistencia para
@@ -3069,7 +3088,15 @@ export function readPair(cfg, d, tf, opts = {}) {
   L.push(`niveis_manuais_situacao: ${sitNiveis.situacao}`);
   L.push(`niveis_manuais_faixa_mais_proxima: ${sitNiveis.faixa || "--"}`);
   L.push(`niveis_manuais_distancia_atr: ${num(sitNiveis.distanciaAtr, 2)}`);
-  const alinNiveis = alinhamentoNiveis(cfg.niveis, zonasAutomaticas);
+  // Conjunto INTEIRO de zonas vivas, pelo mesmo motivo do radar logo
+  // abaixo. "As faixas manuais ainda caem onde o mercado reage?" nao
+  // pode depender do corte de exibicao: a faixa de suporte profundo do
+  // BTC (64-67k) cobre uma zona de 10 toques que nao cabe na lista
+  // publicada, e comparando so com a lista o relatorio diria "parcial",
+  // acusando de desalinhada justamente a faixa mais bem apoiada.
+  const alinNiveis = alinhamentoNiveis(
+    cfg.niveis, zonasRes.zonasVivas || zonasAutomaticas
+  );
   L.push(`niveis_manuais_alinhamento: ${alinNiveis.situacao}`);
   L.push(
     `niveis_manuais_faixas_corroboradas: ${alinNiveis.corroboradas} de ${alinNiveis.total}`
