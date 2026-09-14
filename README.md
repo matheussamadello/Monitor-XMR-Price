@@ -1208,6 +1208,7 @@ No prompt atual:
 - XMR/USD é a referência principal de duas decisões opostas: comprar XMR com fiduciária (entrada absoluta) e realizar parcialmente XMR → FIAT (saída);
 - as três hierarquias disputam as mesmas duas vagas de mensagem, uma por horizonte: não são cotas separadas;
 - as duas entradas compartilham três títulos de alerta, e o par citado na mensagem e o veredito de impacto prático são o que distingue uma da outra;
+- no alerta de nível recuperado com força insuficiente, o veredito é **aguardar**. Na entrada FIAT→XMR, compra parcial ou aumento da confiança de entrada exigem a confirmação correspondente; não acompanham o título de espera;
 - quando as duas entradas estão favoráveis ao mesmo tempo, sai **uma** mensagem dizendo que a entrada absoluta e a relativa estão alinhadas;
 - um sinal de realização no diário não significa, por si só, quebra da tese estratégica — com o semanal íntegro, o alerta sai como `[TÁTICO]` e diz isso;
 - dados provisórios e fechados recebem pesos diferentes;

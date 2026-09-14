@@ -198,7 +198,7 @@ A faixa de 399–423 encosta na região de 423–445, sem sobrepor: no ponto de 
 
 A resistência macro é contextual e propositalmente diferente da máquina de estados dos níveis pontuais.
 
-**Estes números são a configuração de 2026-09-11 e vão envelhecer.** Leia sempre `niveis_manuais` do JSON, que é a fonte de verdade, e observe `niveis_manuais_situacao`: quando ela disser `obsoleto`, é a lista acima que está velha, não o mercado que está errado.
+**Estes números são a configuração de 2026-09-14 e vão envelhecer.** Leia sempre `niveis_manuais` do JSON, que é a fonte de verdade, e observe `niveis_manuais_situacao`: quando ela disser `obsoleto`, é a lista acima que está velha, não o mercado que está errado.
 
 Se o JSON atualizado passar a publicar valores diferentes, **prevalece o JSON**.
 
@@ -906,7 +906,10 @@ Se houver fechamento acima da região mas a força for insuficiente, use exatame
 
 Esse estado prevalece sobre os sinais bullish mais agressivos e fica abaixo da confirmação plena.
 
-Os dois títulos acima também existem no XMR/BTC: identifique o par e use os vereditos de FIAT→XMR — `considerar pequena compra parcial de XMR com fiduciária` ou `aumentar a confiança de entrada FIAT→XMR`.
+Os dois títulos acima também existem no XMR/BTC: identifique **XMR/USD** e a decisão **FIAT→XMR**, mas mantenha o impacto prático compatível com a confirmação:
+
+- `CONFIGURAÇÃO COMPATÍVEL COM ENTRADA PARCIAL — CONFIRMADA NO FECHAMENTO`: pode usar `considerar pequena compra parcial de XMR com fiduciária` ou `aumentar a confiança de entrada FIAT→XMR`, conforme a mudança observada.
+- `NÍVEL RECUPERADO, MAS CONFIRMAÇÃO DE FORÇA INSUFICIENTE — AGUARDAR`: o veredito é obrigatoriamente `aguardar`. Não sugira compra nem aumento da confiança de entrada nesse alerta; diga qual confirmação ainda falta.
 
 Leia os níveis sempre do JSON. Nenhum valor citado neste prompt é eterno, e quando `niveis_manuais_situacao` disser `obsoleto` a âncora desta regra envelheceu.
 
@@ -1214,11 +1217,13 @@ No diário, uma defesa ou perda pode reforçar sinais já existentes.
 
 Não gere alerta isolado apenas porque o preço cruzou a EMA intradiariamente.
 
-No semanal, valem para o XMR/USD as mesmas condições descritas em **EMA89 semanal — XMR/BTC**: `ema89_cruzamento_fechado` semanal diferente de `nenhum`, `distancia_ema89_fechada_atr` semanal de pelo menos 0,25, e os títulos `CONTEXTO MACRO ALTERADO — EMA89 SEMANAL PERDIDA NO FECHAMENTO` e `CONTEXTO MACRO ALTERADO — EMA89 SEMANAL RECUPERADA NO FECHAMENTO`.
+No semanal, aplique ao XMR/USD as **Condições comuns aos dois alertas macro** da seção **EMA89 semanal — XMR/BTC**: `ema89_semanal_confirmacao` deve ser `acima` ou `abaixo`, com `ema89_semanal_evento_id` preenchido e ainda não comunicado para este par. O código exige fechamento semanal com margem de pelo menos **0,25 ATR**, antes do arredondamento. Use os mesmos títulos de perda/recuperação da EMA89 semanal.
 
-Avalie a travessia **por par**: XMR/USD e XMR/BTC têm EMAs e ATRs próprios, e um pode atravessar sem o outro. Quando os dois atravessarem na mesma semana, é uma mensagem só, citando ambos.
+A confirmação pode ocorrer na semana da travessia ou numa semana posterior. **Não exija `ema89_cruzamento_fechado` diferente de `nenhum` e não recalcule a confirmação pela distância arredondada.** Pendência, cancelamento e indisponibilidade não autorizam alerta macro; `confirmada` sem evento novo é apenas contexto.
 
-E vale também a corroboração semanal para a perda da EMA89 **diária** do XMR/USD: com o semanal intacto, ela é contexto, não deterioração.
+Avalie a travessia **por par**: XMR/USD e XMR/BTC têm EMAs, ATRs, pendências e IDs próprios. Quando os dois tiverem confirmação inédita na mesma execução, é uma mensagem só, citando ambos e registrando os dois IDs, mesmo que as travessias tenham começado em semanas diferentes.
+
+Para a perda da EMA89 **diária** do XMR/USD, aplique a mesma regra de **PERDA DA EMA89 DIÁRIA — DETERIORAÇÃO DO PULLBACK**: fechamento diário abaixo da média e pelo menos duas confirmações adicionais independentes. Com o semanal intacto, um sinal material pode ser `[TÁTICO]`, deixando explícito que a tese estratégica segue íntegra; não o apresente como deterioração da tese de prazo longo.
 
 ---
 
@@ -1486,7 +1491,9 @@ No impacto prático, diga explicitamente qual leitura prevalece:
 
 - `aguardar`;
 - `considerar pequena troca parcial BTC→XMR`;
-- `aumentar a confiança de entrada`;
+- `aumentar a confiança de entrada BTC→XMR`;
+- `considerar pequena compra parcial de XMR com fiduciária`;
+- `aumentar a confiança de entrada FIAT→XMR`;
 - `considerar pequena realização parcial XMR→fiduciária`;
 - `aumentar a confiança de realização`;
 - `manter a tese`;
