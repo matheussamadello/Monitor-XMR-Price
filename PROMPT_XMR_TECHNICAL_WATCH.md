@@ -586,6 +586,11 @@ Se houver fechamento acima da região, mas a força for insuficiente, use exatam
 
 Esse estado prevalece sobre os sinais bullish mais agressivos e fica abaixo da confirmação plena.
 
+Os dois títulos acima também existem no XMR/USD: identifique **XMR/BTC** e a decisão **BTC→XMR**, mas mantenha o impacto prático compatível com a confirmação:
+
+- `CONFIGURAÇÃO COMPATÍVEL COM ENTRADA PARCIAL — CONFIRMADA NO FECHAMENTO`: pode usar `considerar pequena troca parcial BTC→XMR` ou `aumentar a confiança de entrada BTC→XMR`, conforme a mudança observada.
+- `NÍVEL RECUPERADO, MAS CONFIRMAÇÃO DE FORÇA INSUFICIENTE — AGUARDAR`: o veredito é obrigatoriamente `aguardar`. Não sugira troca nem aumento da confiança de entrada nesse alerta; diga qual confirmação ainda falta.
+
 ---
 
 ## EMA89 diária — XMR/BTC
