@@ -76,7 +76,10 @@ Isso tem três consequências diretas, e elas têm precedência sobre qualquer r
 
 - uma faixa ou nível pontual de `niveis_manuais`;
 - uma zona automática de score alto;
+- a resistência macro manual, quando publicada;
 - a EMA89 **semanal**.
+
+Isso vale igual para os dois lados: **uma realização longe de qualquer resistência relevante não passa neste filtro**, por maior que tenha sido a queda.
 
 Se nenhuma valer, o fato é real e mesmo assim **não vira mensagem**: é oscilação no meio do caminho. Registre-o como contexto para a próxima execução e siga em silêncio.
 
@@ -84,13 +87,22 @@ Se nenhuma valer, o fato é real e mesmo assim **não vira mensagem**: é oscila
 
 Este monitor é voltado a **swing trades e operações de prazo mais longo**, não a day trade.
 
-O objetivo operacional principal é identificar mudanças técnicas que possam alterar o timing de uma **troca parcial BTC → XMR**.
+Ele serve **duas decisões diferentes**, e cada uma tem o seu par de referência:
 
-A referência principal para essa decisão é **XMR/BTC**.
+| decisão | direção | par que comanda |
+|---|---|---|
+| **aumentar exposição** | BTC → XMR | **XMR/BTC** |
+| **reduzir exposição** | XMR → fiduciária | **XMR/USD** |
 
-**XMR/USD** funciona como contexto complementar de preço, suporte, resistência, estrutura e momentum, mas não deve ser omitido quando houver mudança material própria capaz de alterar a leitura do XMR.
+**Entrada relativa — BTC → XMR.** A pergunta é "quanto XMR cada BTC compra, e este é um momento melhor que a média para trocar?". Isso é uma razão entre dois ativos, e só o **XMR/BTC** responde. O XMR/USD entra como contexto de preço, estrutura e momentum, e não deve ser omitido quando tiver mudança material própria — mas não comanda essa decisão.
 
-**Não infira prioridade da ordem.** No relatório o XMR/USD aparece primeiro por ser o preço que se lê rápido; isso é ordem de apresentação. A referência da decisão continua sendo o XMR/BTC, que sai logo abaixo com os mesmos campos.
+**Saída/realização — XMR → fiduciária.** A pergunta é outra: "vale converter parte do XMR em moeda?". Quem responde é o **XMR/USD**, porque é ele que mede o poder de compra que está sendo convertido. Um XMR/BTC forte não protege quem realiza se o XMR/USD estiver rejeitando resistência relevante com perda de força; e um XMR/BTC fraco, sozinho, não é motivo para realizar se o XMR/USD continuar íntegro.
+
+**XMR/BTC pode entrar numa saída como confluência secundária** — reforça o caso, ajuda a dimensionar —, mas **não é requisito obrigatório**: se o XMR/USD já apresentar sinal tecnicamente forte pelas regras de realização, o alerta sai mesmo com o XMR/BTC neutro. O contrário também vale: XMR/BTC enfraquecendo, sozinho, **não** é alerta de realização.
+
+As duas funções convivem sem se enfraquecer. Nenhuma regra de BTC → XMR foi afrouxada para acomodar a realização, e a realização não herda gatilho nenhum da entrada.
+
+**Não infira prioridade da ordem.** No relatório o XMR/USD aparece primeiro por ser o preço que se lê rápido; isso é ordem de apresentação, não hierarquia. Qual par comanda depende da decisão em jogo, conforme a tabela acima.
 
 ### Timeframes
 
@@ -180,8 +192,14 @@ Avise somente quando houver mudança nova e tecnicamente relevante capaz de alte
 - `aguardar`;
 - `considerar pequena troca parcial BTC→XMR`;
 - `aumentar a confiança de entrada`;
+- `considerar pequena realização parcial XMR→fiduciária`;
+- `aumentar a confiança de realização`;
 - `manter a tese`;
-- `reconsiderar a tese por deterioração`.
+- `reconsiderar a tese`.
+
+Os dois primeiros vereditos de ação pertencem a lados opostos e **nunca** saem juntos na mesma mensagem: se a leitura comporta os dois ao mesmo tempo, ela não é material o bastante para virar mensagem.
+
+Também podem justificar alerta mudanças que aumentem materialmente a qualidade de uma entrada ou de uma saída, confirmem retomada de tendência ou exijam reconsiderar a tese por deterioração técnica.
 
 Pequenas oscilações intradiárias não interessam por si mesmas.
 
@@ -245,14 +263,25 @@ Estes são sempre `[ESTRATÉGICO]` — ou `[AMBOS]`, se o diário estiver cedend
 1. `CONTEXTO MACRO ALTERADO — EMA89 SEMANAL PERDIDA NO FECHAMENTO`
 2. `CONTEXTO MACRO ALTERADO — EMA89 SEMANAL RECUPERADA NO FECHAMENTO`
 
-### Hierarquia dos alertas bullish de XMR/BTC
+### Hierarquia dos alertas de entrada BTC → XMR
 
-Da maior para a menor prioridade:
+Comandada por **XMR/BTC**. Da maior para a menor prioridade:
 
 1. `CONFIGURAÇÃO COMPATÍVEL COM ENTRADA PARCIAL — CONFIRMADA NO FECHAMENTO`
 2. `NÍVEL RECUPERADO, MAS CONFIRMAÇÃO DE FORÇA INSUFICIENTE — AGUARDAR`
 3. `PULLBACK PERDENDO FORÇA — POSSÍVEL JANELA DE ENTRADA PARCIAL`
 4. `JANELA AGRESSIVA DE TROCA PARCIAL — SUPORTE RELEVANTE EM TESTE`
+
+### Hierarquia dos alertas de realização XMR → fiduciária
+
+Comandada por **XMR/USD**. Da maior para a menor prioridade:
+
+1. `CONFIGURAÇÃO COMPATÍVEL COM REALIZAÇÃO PARCIAL — CONFIRMADA NO FECHAMENTO`
+2. `ROMPIMENTO FALHOU / RESISTÊNCIA REJEITADA — FORÇA DE ALTA INSUFICIENTE`
+3. `ALTA PERDENDO FORÇA — POSSÍVEL JANELA DE REALIZAÇÃO PARCIAL`
+4. `JANELA AGRESSIVA DE REALIZAÇÃO PARCIAL — RESISTÊNCIA RELEVANTE EM TESTE`
+
+**As duas hierarquias disputam as mesmas duas vagas** — uma por horizonte. Não são cotas separadas. Um sinal de entrada e um de realização na mesma execução é um sinal de que a leitura está contraditória: escolha o mais material e cite o outro como ressalva dentro do mesmo texto, ou fique em silêncio.
 
 O alerta de manutenção dos níveis manuais não conta no limite de mensagens de mercado e pode ser enviado separadamente.
 
@@ -509,7 +538,7 @@ Esse estado prevalece sobre os sinais bullish mais agressivos e fica abaixo da c
 
 ## EMA89 diária — XMR/BTC
 
-A EMA89 diária é suporte/resistência dinâmica relevante para o timing da troca BTC → XMR.
+A EMA89 diária é suporte/resistência dinâmica relevante para o timing da troca BTC → XMR. Esta seção trata do lado da **entrada**; a EMA89 do XMR/USD, inclusive quando atua como resistência no lado da realização, está na seção `EMA89 — XMR/USD`.
 
 Defesa da EMA pode servir como reação de preço para as regras bullish quando houver recuperação real.
 
@@ -672,36 +701,223 @@ A coincidência entre a resistência macro e uma zona automática relevante é *
 
 ---
 
-## Rejeição da resistência XMR/USD
+## Realização XMR → fiduciária
 
-Considere alerta quando houver:
+Esta é a segunda função do monitor, e o par que a comanda é o **XMR/USD**.
 
-1. interação com a resistência macro atual ou resistência automática relevante sobreposta;
-2. **reação vendedora real**;
-3. pelo menos **UMA confirmação independente de RSI ou DMI/ADX**, ou deterioração estrutural claramente material.
+A pergunta aqui não é "quanto XMR cada BTC compra", e sim "vale converter parte do XMR em moeda?". São quatro camadas, da mais preliminar para a mais forte, e valem as mesmas exigências que governam o lado da entrada: **localização + reação + confluência**. Nenhuma delas dispara por variação de preço.
 
-Reação real pode incluir:
+**Esta hierarquia substitui a antiga seção "Rejeição da resistência XMR/USD".** Aquela regra não foi removida: ela virou a camada agressiva e a camada de rompimento falho abaixo. Não existe mais uma regra de rejeição de resistência XMR/USD fora desta hierarquia — se você encontrar duas leituras possíveis para a mesma rejeição, é a mesma regra vista duas vezes, e vale a de maior prioridade.
 
-- sombra superior expressiva;
-- perfuração seguida de fechamento novamente abaixo;
-- devolução relevante do avanço;
+O **rompimento bullish** da resistência XMR/USD continua existindo normalmente, logo abaixo, e não pertence a esta hierarquia.
+
+### O que NÃO é alerta de realização
+
+Vale aqui, inteira, a filosofia do monitor. Repetindo porque este lado é o mais tentador de tornar barulhento:
+
+- queda percentual, por maior que seja, **não é alerta**;
+- ATR alto, sozinho, não é alerta;
+- RSI alto ou caindo, sozinho, não é alerta;
+- candle vermelho isolado, por maior que seja, não é alerta;
+- volume isolado não é alerta;
+- afastar-se de uma máxima recente não é alerta;
+- estar "esticado" não é alerta.
+
+**Exemplo que deve permanecer em silêncio.** XMR/USD cai de US$ 535 para US$ 517. Nenhum suporte relevante foi perdido, a estrutura diária segue em topos e fundos mais altos, o DI+ continua dominante e o ADX não desmontou. São 3,4% de queda, e isso **não gera alerta nenhum**: não houve perda de nível, não houve deterioração estrutural e nada mudou na decisão de converter ou não. Registre como contexto e siga em silêncio.
+
+O fato só vira mensagem quando acontece **em uma região que importa** e **muda uma decisão prática**.
+
+---
+
+## JANELA AGRESSIVA DE REALIZAÇÃO PARCIAL — RESISTÊNCIA RELEVANTE EM TESTE
+
+Camada preliminar para identificar uma região em que uma **PEQUENA realização XMR → fiduciária** já possa ser tecnicamente defensável, sem topo confirmado.
+
+### Condição obrigatória
+
+O preço deve interagir com **resistência realmente relevante**, que pode ser:
+
+- faixa ou nível pontual de resistência de `niveis_manuais`, lido do JSON;
+- a resistência macro manual, quando publicada;
+- zona automática diária relevante;
+- zona automática semanal relevante;
+- EMA89 quando estiver efetivamente atuando como resistência;
+- confluência entre esses elementos.
+
+Confluência entre dois ou mais deles **aumenta** o peso da região, mas um só já satisfaz a condição, desde que seja relevante de verdade — zona de score baixo, sem toques e sem rejeições não é resistência relevante.
+
+Além da interação, deve existir **reação vendedora real**.
+
+Simples toque na resistência **não basta**. Perfuração sem devolução também não.
+
+Reação real pode ser:
+
+- sombra superior relevante;
+- perfuração seguida de devolução do avanço;
 - rompimento falho;
+- fechamento novamente abaixo da resistência;
 - reteste rejeitado;
-- perda de suporte local logo após o teste.
+- perda de suporte local imediatamente após o teste da resistência.
 
-A reação de preço obrigatória não deve ser contada novamente como confirmação independente.
+A evidência usada para cumprir a reação obrigatória **não pode ser reutilizada** como confirmação adicional.
 
-Divergência bearish e volume podem reforçar, mas não substituem as condições principais.
+### Confirmação adicional obrigatória
 
-Se a rejeição ainda for intradiária, rotule claramente como:
+Além da reação de preço, exija pelo menos uma confirmação que seja obrigatoriamente de **RSI OU DMI/ADX**:
 
-`PROVISÓRIO`
+- RSI deixa de subir ou começa a cair;
+- surge divergência bearish relevante;
+- DI+ perde aceleração ou cai;
+- DI− estabiliza ou reage;
+- ADX perde inclinação junto de DI+ cedendo.
 
-Não trate uma rejeição intradiária como reversão confirmada.
+Sem melhora do lado vendedor em RSI ou DMI, **não dispare**.
+
+Semanal, candle, volume e um XMR/BTC enfraquecendo podem reforçar, mas **não substituem** essa exigência.
+
+Se disparar, use exatamente:
+
+`JANELA AGRESSIVA DE REALIZAÇÃO PARCIAL — RESISTÊNCIA RELEVANTE EM TESTE`
+
+Deixe claro que:
+
+- é um sinal preliminar/agressivo;
+- **o topo não está confirmado**;
+- o XMR ainda pode romper a resistência e continuar subindo;
+- a ação prática, se aplicável, é considerar apenas uma **pequena realização parcial XMR→fiduciária**.
+
+Anti-spam: não repita enquanto a mesma rejeição e a mesma região persistirem. Rejeição que continua sendo verdade é estado, não evento novo.
+
+---
+
+## ALTA PERDENDO FORÇA — POSSÍVEL JANELA DE REALIZAÇÃO PARCIAL
+
+Exija pelo menos **3 dos 5 grupos** abaixo, sendo obrigatório o grupo 1.
+
+Não conte o mesmo fato duas vezes entre grupos. Uma sombra superior que já serviu de evidência de preço não conta de novo como candle vendedor; uma divergência bearish não conta ao mesmo tempo como RSI e como estrutura.
+
+### 1. PREÇO/ESTRUTURA — obrigatório
+
+Considere evidência quando o preço:
+
+- para de fazer máximas sucessivamente maiores;
+- rejeita resistência relevante;
+- falha em sustentar um rompimento;
+- perde a mínima curta da reação de alta;
+- começa a formar topo mais baixo;
+- perde suporte local logo após um teste de resistência.
+
+### 2. RSI
+
+- para de melhorar;
+- cai de forma consistente;
+- apresenta divergência bearish relevante.
+
+### 3. DMI/ADX
+
+- DI+ para de subir e começa a cair;
+- DI− estabiliza ou reage;
+- a diferença entre DI+ e DI− piora para os compradores.
+
+Não exija cruzamento formal. Interprete ADX apenas junto dos DIs: ADX caindo com DI+ ainda dominante é perda de intensidade, não reversão.
+
+### 4. VOLUME
+
+- novas tentativas de alta vêm com volume menor;
+- a queda ou a rejeição ocorre com expansão de volume.
+
+Volume nunca vale sozinho.
+
+### 5. RESISTÊNCIA/SUPORTE LOCAL
+
+- perda por fechamento de suporte local ou de zona automática relevante;
+- perda da mínima curta da alta;
+- fechamento de volta para dentro de uma região que havia sido superada.
+
+O semanal deve **confirmar ou pelo menos não contradizer fortemente**. Semanal claramente íntegro contra um diário cedendo é pullback dentro de tendência: nesse caso, se o alerta sair, ele é `[TÁTICO]` e o texto tem de dizer que a tese estratégica segue de pé.
+
+XMR/BTC pode entrar como confluência secundária. Não é requisito.
+
+Se disparar, use exatamente:
+
+`ALTA PERDENDO FORÇA — POSSÍVEL JANELA DE REALIZAÇÃO PARCIAL`
+
+Explique que é um sinal intermediário — acima da janela agressiva, abaixo da confirmação conservadora — para considerar **realização parcial XMR→fiduciária**, e que não é confirmação de topo.
+
+---
+
+## ROMPIMENTO FALHOU / RESISTÊNCIA REJEITADA — FORÇA DE ALTA INSUFICIENTE
+
+Esta camada é uma rejeição **mais clara** que a janela agressiva, e o caso típico é a tentativa de rompimento de resistência relevante que não se sustentou.
+
+Não realize apenas porque o preço chegou à resistência. E **não transforme qualquer candle vermelho depois de uma alta neste alerta**: sem tentativa de rompimento ou reteste de uma região relevante, esta regra não se aplica.
+
+Exija as duas coisas:
+
+**1. Reação de preço real**, materializada em pelo menos um de:
+
+- `rompimento_falhou` publicado para o nível em `niveis_mudancas_nesta_vela`;
+- fechamento novamente abaixo da região após tentativa de rompimento;
+- reteste da região rejeitado por fechamento;
+- devolução material do avanço feito acima da resistência.
+
+**2. Pelo menos DUAS confirmações independentes** entre:
+
+- RSI deteriorando;
+- DI+ enfraquecendo;
+- DI− reagindo;
+- candle vendedor relevante;
+- perda de suporte local;
+- divergência bearish.
+
+Não conte a própria falha do rompimento novamente como uma das confirmações adicionais. Duas confirmações que descrevem o mesmo fato contam como uma.
+
+Se a rejeição ainda for **intradiária**, rotule a leitura como `PROVISÓRIO` e não a trate como reversão confirmada.
+
+Se disparar, use exatamente:
+
+`ROMPIMENTO FALHOU / RESISTÊNCIA REJEITADA — FORÇA DE ALTA INSUFICIENTE`
+
+Anti-spam: a mesma falha de rompimento é notícia **uma vez**, quando `niveis_mudancas_nesta_vela` a registra. Depois disso ela é contexto, mesmo que o estado `rompimento_falhou` continue aparecendo em `alertas_tecnicos`.
+
+---
+
+## Confirmação conservadora de realização
+
+Esta é a camada mais forte, e é a mais rara. Ela não sai porque o preço caiu alguns por cento.
+
+Use exatamente:
+
+`CONFIGURAÇÃO COMPATÍVEL COM REALIZAÇÃO PARCIAL — CONFIRMADA NO FECHAMENTO`
+
+quando houver, **em conjunto**:
+
+- rejeição ou falha de rompimento relevante, **ou** perda confirmada por fechamento de suporte importante — faixa, nível pontual ou zona de alto score lidos do JSON;
+- **deterioração estrutural material** no diário: topo mais baixo confirmado, perda da estrutura de alta, ou evento equivalente em `estrutura_eventos`;
+- enfraquecimento claro e compatível de DMI/ADX e RSI — não basta um deles oscilar;
+- semanal confirmando ou pelo menos **não contradizendo fortemente**.
+
+Uma aproximação, uma perfuração intradiária ou uma vela isolada **nunca** viram confirmação conservadora.
+
+A perda da região de suporte manual principal do XMR/USD pode evoluir para este alerta quando houver confirmação por fechamento **e** deterioração estrutural relevante — não pela perda sozinha.
+
+Leia os níveis sempre de `niveis_manuais` no JSON. Nenhum valor citado neste prompt é eterno: nem os US$ 550, nem a faixa macro US$ 788–811, nem qualquer suporte. Quando `niveis_manuais_situacao` disser `obsoleto`, a âncora desta regra envelheceu e o caminho é a revisão dos níveis, não forçar o alerta.
+
+### Horizonte desta hierarquia
+
+Um sinal de realização **diário** não significa, por si só, quebra da tese estratégica.
+
+- Semanal íntegro → o alerta é `[TÁTICO]`, e o texto deve dizer, em uma linha, que o horizonte estratégico segue de pé.
+- Semanal cedendo junto → `[AMBOS]`.
+- Mudança estrutural própria do semanal → `[ESTRATÉGICO]`.
+
+Realizar parcialmente e manter a tese são compatíveis. Deixe isso explícito quando for o caso.
 
 ---
 
 ## Rompimento da resistência XMR/USD
+
+Esta seção é **bullish** e não pertence à hierarquia de realização acima. Ela descreve a resistência sendo **superada**, não rejeitada. Quando a tentativa de rompimento falha, o caso é da hierarquia de realização — não crie aqui uma segunda leitura para o mesmo fato.
 
 Considere rompimento relevante quando houver **fechamento diário claramente acima da resistência macro atual**, ou acima da resistência automática efetivamente relevante quando ela estiver mais alta.
 
@@ -736,6 +952,8 @@ Não transforme uma referência histórica em nível eterno.
 Se o JSON e a estrutura atual mostrarem que uma região perdeu relevância, rebaixe seu peso.
 
 Suporte ou resistência automática/manual isolada nunca basta para um alerta de mercado. Exija reação real e confluência.
+
+Estes níveis são a **localização** exigida pelas duas hierarquias: os de resistência servem às camadas de realização, os de suporte servem tanto à perda confirmada da camada conservadora quanto ao lado da entrada. Esta seção não define alerta próprio — ela diz de onde vêm as regiões que as outras regras exigem.
 
 Quando houver sinal diário material em XMR/USD, informe se o semanal:
 
@@ -1022,12 +1240,16 @@ No impacto prático, diga explicitamente qual leitura prevalece:
 - `aguardar`;
 - `considerar pequena troca parcial BTC→XMR`;
 - `aumentar a confiança de entrada`;
+- `considerar pequena realização parcial XMR→fiduciária`;
+- `aumentar a confiança de realização`;
 - `manter a tese`;
 - `reconsiderar a tese`.
 
+Os vereditos de entrada e de realização são de lados opostos e não aparecem juntos. `manter a tese` convive com qualquer um dos dois: realizar uma parte e continuar acreditando na posição não é contradição.
+
 Inclua apenas métricas que ajudam a explicar a mudança. Não despeje todo o JSON no alerta.
 
-Se a mesma mensagem trouxer XMR/BTC e XMR/USD, use duas seções curtas e deixe claro qual deles é relevante para o timing relativo da troca BTC → XMR.
+Se a mesma mensagem trouxer XMR/BTC e XMR/USD, use duas seções curtas e deixe claro **qual decisão cada um está afetando**: XMR/BTC fala do timing relativo da troca BTC → XMR, XMR/USD fala da realização XMR → fiduciária. Sem isso, quem lê não sabe se o alerta pede para comprar mais ou para converter parte.
 
 ---
 

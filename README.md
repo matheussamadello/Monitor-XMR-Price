@@ -4,7 +4,16 @@ Monitor técnico automatizado de **XMR/USD** e **XMR/BTC** que coleta candles da
 
 Este monitor é voltado a **swing trades de médio prazo** e **position trades**, com ênfase em **acumulação, realização parcial e decisões de prazo mais longo**. O gráfico **diário** é a referência principal de timing e o **semanal**, o filtro de contexto estrutural. Não é destinado a operações de curto prazo ou day trade.
 
-No prompt de alertas incluído no projeto, **XMR/BTC** é o par principal para avaliar o momento relativo de uma troca BTC → XMR, enquanto **XMR/USD** funciona como contexto complementar de preço, suporte, resistência, estrutura e momentum.
+O monitor serve **dois objetivos**, e cada um tem o seu par de referência:
+
+| decisão | direção | par que comanda |
+|---|---|---|
+| **aumentar exposição** | BTC → XMR | **XMR/BTC** |
+| **reduzir exposição** | XMR → fiduciária | **XMR/USD** |
+
+Para a **entrada**, a pergunta é quanto XMR cada BTC compra, e só uma razão entre os dois ativos responde: **XMR/BTC**. Para a **realização**, a pergunta é se vale converter parte do XMR em moeda, e quem mede o poder de compra convertido é o **XMR/USD**.
+
+Cada par continua sendo contexto do outro. XMR/BTC pode entrar numa decisão de realização como confluência secundária, mas não é requisito: um sinal tecnicamente forte no XMR/USD basta.
 
 ## Links públicos
 
@@ -17,8 +26,8 @@ No prompt de alertas incluído no projeto, **XMR/BTC** é o par principal para a
 
 O monitor acompanha dois pares:
 
-- **XMR/USD** — leitura do Monero em dólar.
-- **XMR/BTC** — leitura relativa do Monero contra Bitcoin. É a referência principal da decisão de troca parcial BTC → XMR, que é o objetivo deste monitor.
+- **XMR/USD** — leitura do Monero em dólar. É a referência principal da decisão de **realização**: converter parte do XMR em moeda fiduciária.
+- **XMR/BTC** — leitura relativa do Monero contra Bitcoin. É a referência principal da decisão de **entrada**: troca parcial BTC → XMR.
 
 A análise de cada par é independente, mas o relatório permite combinar as duas leituras.
 
@@ -1177,8 +1186,10 @@ O arquivo [`PROMPT_XMR_TECHNICAL_WATCH.md`](./PROMPT_XMR_TECHNICAL_WATCH.md) con
 
 No prompt atual:
 
-- XMR/BTC é a referência principal para timing relativo de BTC → XMR;
-- XMR/USD funciona como contexto secundário, mas pode gerar leitura própria quando houver mudança material;
+- XMR/BTC é a referência principal para o timing relativo de BTC → XMR (entrada);
+- XMR/USD é a referência principal para o timing de realização parcial XMR → fiduciária (saída), e continua servindo de contexto para o outro lado;
+- as duas hierarquias disputam as mesmas duas vagas de mensagem, uma por horizonte: não são cotas separadas;
+- um sinal de realização no diário não significa, por si só, quebra da tese estratégica — com o semanal íntegro, o alerta sai como `[TÁTICO]` e diz isso;
 - dados provisórios e fechados recebem pesos diferentes;
 - RSI, DMI/ADX, divergências, volume e zonas não devem gerar alertas isolados sem contexto;
 - sinais relacionados são fundidos para reduzir spam.
