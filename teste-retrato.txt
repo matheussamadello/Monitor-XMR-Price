@@ -87,7 +87,7 @@ estrutura_preco: LH_LL
 estrutura_tendencia: baixa
 estrutura_ultimo_topo: LH
 estrutura_ultimo_fundo: LL
-estrutura_eventos: topo_mais_baixo_apos_HH
+estrutura_eventos: nenhum
 pivos_fractal: 5/5
 pivos_topos_recentes: 2026-08-02=205.48 2026-08-13=205.87 2026-08-20=205.01
 pivos_fundos_recentes: 2026-07-28=197.17 2026-08-06=194.49 2026-08-28=191.76
@@ -111,12 +111,12 @@ mediana_corpo_20: 1.674542
 contexto_antes_do_trio: alta_regiao_alta
 padrao_trio_contexto: nao_aplicavel
 padrao_trio_confirmacao_estrutural: contradiz
-padrao_trio_evidencias_fraqueza: estrutura_topo_mais_baixo_apos_HH
+padrao_trio_evidencias_fraqueza: nenhuma
 padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_500, topo_mais_baixo_apos_HH, rompido_500
+alertas_tecnicos: perda_suporte_confirmada_500, rompido_500
 
 zonas_automaticas_total: 5
 zona_auto_1: id=usd|diario|z13 tipo=resistencia status=candidata estado=em_teste score=69 estrutural=204.747400-207.806461 operacional=205.082385-207.471476 centro=206.276931 toques=9 rejeicoes=6 role_reversal=sim dist_pct=-0.15 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -205,7 +205,7 @@ estrutura_preco: LH_LL
 estrutura_tendencia: baixa
 estrutura_ultimo_topo: LH
 estrutura_ultimo_fundo: LL
-estrutura_eventos: topo_mais_baixo_apos_HH
+estrutura_eventos: nenhum
 pivos_fractal: 5/5
 pivos_topos_recentes: 2026-07-22=0.00278823 2026-08-09=0.00282227 2026-09-01=0.00271825
 pivos_fundos_recentes: 2026-07-04=0.00255100 2026-07-24=0.00266057 2026-08-25=0.00259556
@@ -229,12 +229,12 @@ mediana_corpo_20: 0.00001769
 contexto_antes_do_trio: queda_regiao_baixa
 padrao_trio_contexto: nao_aplicavel
 padrao_trio_confirmacao_estrutural: confirma
-padrao_trio_evidencias_fraqueza: estrutura_topo_mais_baixo_apos_HH
+padrao_trio_evidencias_fraqueza: nenhuma
 padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: hammer
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_000584, adx_subindo_com_di_minus_dominante, topo_mais_baixo_apos_HH, rompido_000584
+alertas_tecnicos: perda_suporte_confirmada_000584, adx_subindo_com_di_minus_dominante, rompido_000584
 
 zonas_automaticas_total: 6
 zona_auto_1: id=btc|diario|z8 tipo=suporte status=candidata estado=abaixo score=69 estrutural=0.00256425-0.00258922 operacional=0.00256092-0.00259256 centro=0.00257674 toques=9 rejeicoes=5 role_reversal=sim dist_pct=-1.00 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -338,7 +338,7 @@ estrutura_preco: HH_HL
 estrutura_tendencia: alta
 estrutura_ultimo_topo: HH
 estrutura_ultimo_fundo: HL
-estrutura_eventos: novo_HL_apos_fundo_mais_baixo
+estrutura_eventos: nenhum
 pivos_fractal: 2/2
 pivos_topos_recentes: 2026-03-26=219.95 2026-05-28=215.65 2026-07-30=215.85
 pivos_fundos_recentes: 2026-06-04=210.64 2026-07-23=208.85 2026-08-13=210.21
@@ -367,7 +367,7 @@ padroes_enfraquecimento: stalled_pattern
 tres_soldados_diagnostico: c1:fecha_longe_da_maxima_0.67 c1:sombra_sup_0.50x_corpo c2:corpo_range_0.51 c3:corpo_range_0.19 c3:fecha_longe_da_maxima_0.38 c3:sombra_sup_3.32x_corpo c3:corpo_pequeno_0.13x_mediana
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_500, adx_subindo_com_di_plus_dominante, novo_HL_apos_fundo_mais_baixo, rompido_500, stalled_pattern
+alertas_tecnicos: perda_suporte_confirmada_500, adx_subindo_com_di_plus_dominante, rompido_500, stalled_pattern
 
 zonas_automaticas_total: 4
 zona_auto_1: id=usd|semanal|z15 tipo=resistencia status=enfraquecida estado=abaixo score=26 estrutural=219.390850-220.503166 operacional=218.749252-221.144764 centro=219.947008 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-1.99 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -376,7 +376,7 @@ zona_auto_3: id=usd|semanal|z12 tipo=suporte status=enfraquecida estado=acima sc
 zona_auto_4: id=usd|semanal|z11 tipo=suporte status=enfraquecida estado=acima score=69 estrutural=199.830734-204.160571 operacional=200.797896-203.193408 centro=201.995652 toques=4 rejeicoes=3 role_reversal=nao dist_pct=6.72 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: estrutura_de_alta_preservada, di_plus_dominante
-confluencia_pullback: tendencia_hh_hl_preservada, novo_HL_formado, di_plus_ainda_dominante
+confluencia_pullback: tendencia_hh_hl_preservada, di_plus_ainda_dominante
 riscos_tecnicos: stalled_pattern, suporte_sob_pressao
 deterioracao_tendencia: perda_de_suporte_confirmada
 
@@ -462,7 +462,7 @@ estrutura_preco: LH_HL
 estrutura_tendencia: lateral_contracao
 estrutura_ultimo_topo: LH
 estrutura_ultimo_fundo: HL
-estrutura_eventos: novo_HL_apos_fundo_mais_baixo
+estrutura_eventos: nenhum
 pivos_fractal: 2/2
 pivos_topos_recentes: 2026-05-07=0.00313170 2026-06-25=0.00303487 2026-07-23=0.00303390
 pivos_fundos_recentes: 2026-06-18=0.00296118 2026-07-23=0.00295369 2026-08-13=0.00297368
@@ -491,7 +491,7 @@ padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_000584, novo_HL_apos_fundo_mais_baixo, rompido_000584
+alertas_tecnicos: perda_suporte_confirmada_000584, rompido_000584
 
 zonas_automaticas_total: 4
 zona_auto_1: id=btc|semanal|z15 tipo=resistencia status=enfraquecida estado=abaixo score=68 estrutural=0.00308613-0.00314278 operacional=0.00309595-0.00313296 centro=0.00311445 toques=3 rejeicoes=3 role_reversal=nao dist_pct=-2.57 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -500,7 +500,7 @@ zona_auto_3: id=btc|semanal|z24 tipo=suporte status=candidata estado=acima score
 zona_auto_4: id=btc|semanal|z13 tipo=suporte status=candidata estado=acima score=65 estrutural=0.00295369-0.00300121 operacional=0.00295894-0.00299595 centro=0.00297745 toques=3 rejeicoes=1 role_reversal=nao dist_pct=1.91 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: nenhuma
-confluencia_pullback: novo_HL_formado
+confluencia_pullback: nenhuma
 riscos_tecnicos: sombras_superiores_crescentes, suporte_sob_pressao
 deterioracao_tendencia: perda_de_suporte_confirmada, di_minus_dominante_com_estrutura_nao_altista
 
@@ -597,7 +597,7 @@ estrutura_preco: LH_LL
 estrutura_tendencia: baixa
 estrutura_ultimo_topo: LH
 estrutura_ultimo_fundo: LL
-estrutura_eventos: topo_mais_baixo_apos_HH
+estrutura_eventos: nenhum
 pivos_fractal: 5/5
 pivos_topos_recentes: 2026-08-02=205.48 2026-08-13=205.87 2026-08-20=205.01
 pivos_fundos_recentes: 2026-07-28=197.17 2026-08-06=194.49 2026-08-28=191.76
@@ -621,12 +621,12 @@ mediana_corpo_20: 1.674542
 contexto_antes_do_trio: alta_regiao_alta
 padrao_trio_contexto: nao_aplicavel
 padrao_trio_confirmacao_estrutural: contradiz
-padrao_trio_evidencias_fraqueza: estrutura_topo_mais_baixo_apos_HH
+padrao_trio_evidencias_fraqueza: nenhuma
 padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_500, topo_mais_baixo_apos_HH, rompido_500
+alertas_tecnicos: perda_suporte_confirmada_500, rompido_500
 
 zonas_automaticas_total: 5
 zona_auto_1: id=usd|diario|z13 tipo=resistencia status=candidata estado=em_teste score=69 estrutural=204.747400-207.806461 operacional=205.082385-207.471476 centro=206.276931 toques=9 rejeicoes=6 role_reversal=sim dist_pct=-0.15 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -715,7 +715,7 @@ estrutura_preco: LH_LL
 estrutura_tendencia: baixa
 estrutura_ultimo_topo: LH
 estrutura_ultimo_fundo: LL
-estrutura_eventos: topo_mais_baixo_apos_HH
+estrutura_eventos: nenhum
 pivos_fractal: 5/5
 pivos_topos_recentes: 2026-07-22=0.00278823 2026-08-09=0.00282227 2026-09-01=0.00271825
 pivos_fundos_recentes: 2026-07-04=0.00255100 2026-07-24=0.00266057 2026-08-25=0.00259556
@@ -739,12 +739,12 @@ mediana_corpo_20: 0.00001769
 contexto_antes_do_trio: queda_regiao_baixa
 padrao_trio_contexto: nao_aplicavel
 padrao_trio_confirmacao_estrutural: confirma
-padrao_trio_evidencias_fraqueza: estrutura_topo_mais_baixo_apos_HH
+padrao_trio_evidencias_fraqueza: nenhuma
 padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: hammer
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_000584, adx_subindo_com_di_minus_dominante, topo_mais_baixo_apos_HH, rompido_000584
+alertas_tecnicos: perda_suporte_confirmada_000584, adx_subindo_com_di_minus_dominante, rompido_000584
 
 zonas_automaticas_total: 6
 zona_auto_1: id=btc|diario|z8 tipo=suporte status=candidata estado=abaixo score=69 estrutural=0.00256425-0.00258922 operacional=0.00256092-0.00259256 centro=0.00257674 toques=9 rejeicoes=5 role_reversal=sim dist_pct=-1.00 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -848,7 +848,7 @@ estrutura_preco: HH_HL
 estrutura_tendencia: alta
 estrutura_ultimo_topo: HH
 estrutura_ultimo_fundo: HL
-estrutura_eventos: novo_HL_apos_fundo_mais_baixo
+estrutura_eventos: nenhum
 pivos_fractal: 2/2
 pivos_topos_recentes: 2026-03-26=219.95 2026-05-28=215.65 2026-07-30=215.85
 pivos_fundos_recentes: 2026-06-04=210.64 2026-07-23=208.85 2026-08-13=210.21
@@ -877,7 +877,7 @@ padroes_enfraquecimento: stalled_pattern
 tres_soldados_diagnostico: c1:fecha_longe_da_maxima_0.67 c1:sombra_sup_0.50x_corpo c2:corpo_range_0.51 c3:corpo_range_0.19 c3:fecha_longe_da_maxima_0.38 c3:sombra_sup_3.32x_corpo c3:corpo_pequeno_0.13x_mediana
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_500, adx_subindo_com_di_plus_dominante, novo_HL_apos_fundo_mais_baixo, rompido_500, stalled_pattern
+alertas_tecnicos: perda_suporte_confirmada_500, adx_subindo_com_di_plus_dominante, rompido_500, stalled_pattern
 
 zonas_automaticas_total: 4
 zona_auto_1: id=usd|semanal|z15 tipo=resistencia status=enfraquecida estado=abaixo score=26 estrutural=219.390850-220.503166 operacional=218.749252-221.144764 centro=219.947008 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-1.99 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -886,7 +886,7 @@ zona_auto_3: id=usd|semanal|z12 tipo=suporte status=enfraquecida estado=acima sc
 zona_auto_4: id=usd|semanal|z11 tipo=suporte status=enfraquecida estado=acima score=69 estrutural=199.830734-204.160571 operacional=200.797896-203.193408 centro=201.995652 toques=4 rejeicoes=3 role_reversal=nao dist_pct=6.72 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: estrutura_de_alta_preservada, di_plus_dominante
-confluencia_pullback: tendencia_hh_hl_preservada, novo_HL_formado, di_plus_ainda_dominante
+confluencia_pullback: tendencia_hh_hl_preservada, di_plus_ainda_dominante
 riscos_tecnicos: stalled_pattern, suporte_sob_pressao
 deterioracao_tendencia: perda_de_suporte_confirmada
 
@@ -972,7 +972,7 @@ estrutura_preco: LH_HL
 estrutura_tendencia: lateral_contracao
 estrutura_ultimo_topo: LH
 estrutura_ultimo_fundo: HL
-estrutura_eventos: novo_HL_apos_fundo_mais_baixo
+estrutura_eventos: nenhum
 pivos_fractal: 2/2
 pivos_topos_recentes: 2026-05-07=0.00313170 2026-06-25=0.00303487 2026-07-23=0.00303390
 pivos_fundos_recentes: 2026-06-18=0.00296118 2026-07-23=0.00295369 2026-08-13=0.00297368
@@ -1001,7 +1001,7 @@ padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: perda_suporte_confirmada_000584, novo_HL_apos_fundo_mais_baixo, rompido_000584
+alertas_tecnicos: perda_suporte_confirmada_000584, rompido_000584
 
 zonas_automaticas_total: 4
 zona_auto_1: id=btc|semanal|z15 tipo=resistencia status=enfraquecida estado=abaixo score=68 estrutural=0.00308613-0.00314278 operacional=0.00309595-0.00313296 centro=0.00311445 toques=3 rejeicoes=3 role_reversal=nao dist_pct=-2.57 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
@@ -1010,7 +1010,7 @@ zona_auto_3: id=btc|semanal|z24 tipo=suporte status=candidata estado=acima score
 zona_auto_4: id=btc|semanal|z13 tipo=suporte status=candidata estado=acima score=65 estrutural=0.00295369-0.00300121 operacional=0.00295894-0.00299595 centro=0.00297745 toques=3 rejeicoes=1 role_reversal=nao dist_pct=1.91 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: nenhuma
-confluencia_pullback: novo_HL_formado
+confluencia_pullback: nenhuma
 riscos_tecnicos: sombras_superiores_crescentes, suporte_sob_pressao
 deterioracao_tendencia: perda_de_suporte_confirmada, di_minus_dominante_com_estrutura_nao_altista
 
