@@ -1275,6 +1275,7 @@ export function atualizarEstadoNivel(anterior, ctx) {
   // Correcao da fonte sobre a mesma barra nao reescreve o ciclo ja emitido.
   if (anterior && Number.isFinite(anterior.atualizado) && vela.time <= anterior.atualizado) {
     return { ...anterior, historico: [...(anterior.historico || [])],
+      ...(anterior.transicoesNaVela ? { transicoesNaVela: [...anterior.transicoesNaVela] } : {}),
       ...(anterior.mudancasNaVela ? { mudancasNaVela: [...anterior.mudancasNaVela] } : {}) };
   }
   const temAtr = atr > 0;
@@ -1289,7 +1290,12 @@ export function atualizarEstadoNivel(anterior, ctx) {
   const acima = vela.close > nivel + tol;
   const abaixo = vela.close < nivel - tol;
   const naZona = !acima && !abaixo;
-  const penetrou = alta ? vela.low < nivel : vela.high > nivel;
+  // Estar inteiro do outro lado nao e' contato. A vela precisa
+  // intersectar a faixa do nivel; penetracao exige atravessar o ponto.
+  const tocou = vela.low <= nivel + tol && vela.high >= nivel - tol;
+  const penetrou = alta
+    ? vela.low < nivel && vela.high >= nivel
+    : vela.high > nivel && vela.low <= nivel;
 
   // lado "valido" = lado para onde o rompimento apontou
   const ladoValido = alta ? acima : abaixo;
@@ -1322,10 +1328,12 @@ export function atualizarEstadoNivel(anterior, ctx) {
       atualizado: vela.time,
       afastado: Math.abs(vela.close - nivel) > limiteReset,
       historico: [],
+      transicoesNaVela: rompimentoRigoroso ? ["rompido"] : [],
     };
   }
 
-  const e = { ...anterior, historico: [...(anterior.historico || [])] };
+  const e = { ...anterior, historico: [...(anterior.historico || [])],
+    transicoesNaVela: [] };
 
   // Registro DORMENTE. Enquanto o preco estiver longe, fica parado e nao
   // anuncia nada. Quando o preco VOLTA a encostar no nivel, o ciclo
@@ -1333,7 +1341,7 @@ export function atualizarEstadoNivel(anterior, ctx) {
   // vela -- um nivel rompido ha meses que e' reencostado esta sendo
   // retestado, e e' isso que o relatorio deve dizer.
   if (e.estado === "arquivado") {
-    if (!(naZona || penetrou)) return { ...e, atualizado: vela.time };
+    if (!tocou) return { ...e, atualizado: vela.time };
     e.estado = "rompido";
     e.ultimoContato = vela.time;
     if (!e.dataRompimento) e.dataRompimento = vela.time;
@@ -1347,7 +1355,7 @@ export function atualizarEstadoNivel(anterior, ctx) {
   // parado longe, 7 anuncios em 200 dias. O prompt promete o contrario,
   // que um rompimento vira noticia uma vez so.
   const velasSemContato = (vela.time - (e.ultimoContato || e.dataRompimento)) / segundos;
-  if (velasSemContato > maxCandles && !(naZona || penetrou)) {
+  if (velasSemContato > maxCandles && !tocou) {
     return {
       estado: "arquivado",
       direcao: e.direcao,
@@ -1357,16 +1365,20 @@ export function atualizarEstadoNivel(anterior, ctx) {
       atualizado: vela.time,
       afastado: true,
       historico: e.historico,
+      transicoesNaVela: ["arquivado"],
     };
   }
 
   e.atualizado = vela.time;
-  if (naZona || penetrou) e.ultimoContato = vela.time;
+  if (tocou) e.ultimoContato = vela.time;
 
   const anota = (novo) => {
     if (e.estado !== novo) {
       e.historico.push(`${novo}@${fmtDia(vela.time)}`);
       if (e.historico.length > HISTORICO_MAX) e.historico.shift();
+      // O evento continua existindo se o afastamento encerrar o ciclo
+      // operacional logo abaixo, na MESMA vela.
+      e.transicoesNaVela.push(novo);
     }
     e.estado = novo;
   };
@@ -1616,7 +1628,8 @@ export function sinteses(ctx) {
     typeof n === "string" ? { estado: n, direcao: null } : n
   ).filter(Boolean);
   const temNivel = (estado, direcao = null) => niveis.some((n) =>
-    n.estado === estado && (direcao === null || n.direcao === direcao)
+    (n.estado === estado || (n.transicoesNaVela || []).includes(estado)) &&
+      (direcao === null || n.direcao === direcao)
   );
   const entrada = [];
   const pullback = [];
@@ -2311,12 +2324,16 @@ export function reconciliarAnteriores(anteriores, zonasCalculadas, tfKey, ultima
   const out = [];
   for (const ant of anteriores || []) {
     if (idsCalculados.has(ant.id) || ant.status === "remover") continue;
+    if (ultimaVelaFechada < ant.ultimaVelaAvaliada) {
+      out.push({ ...ant });
+      continue;
+    }
     const orfa = { ...ant };
     if (orfa.status === "ativa" || orfa.status === "candidata") {
       orfa.status = "enfraquecida";
       orfa.velasEnfraquecida = 0;
     } else if (orfa.status === "enfraquecida") {
-      if (ant.ultimaVelaAvaliada !== ultimaVelaFechada) {
+      if (!Number.isFinite(ant.ultimaVelaAvaliada) || ultimaVelaFechada > ant.ultimaVelaAvaliada) {
         orfa.velasEnfraquecida = (orfa.velasEnfraquecida || 0) + 1;
       }
       if (orfa.velasEnfraquecida >= par.enfraquecidaRemove) orfa.status = "remover";
@@ -2341,8 +2358,11 @@ function evidenciaEstruturalIndependente(z, confluenciaSemanal) {
 }
 
 export function atualizarCiclo(z, anterior, ctx) {
+  if (anterior && ctx.ultimaVelaFechada < anterior.ultimaVelaAvaliada)
+    return { ...anterior };
   const par = PARAMS_TF[ctx.tfKey] || PARAMS_TF.diario;
-  const velaNova = !anterior || anterior.ultimaVelaAvaliada !== ctx.ultimaVelaFechada;
+  const velaNova = !anterior || !Number.isFinite(anterior.ultimaVelaAvaliada) ||
+    ctx.ultimaVelaFechada > anterior.ultimaVelaAvaliada;
 
   z.status = anterior ? anterior.status : "candidata";
   z.velasComScoreAlto = anterior ? anterior.velasComScoreAlto || 0 : 0;
@@ -2407,6 +2427,7 @@ export function suavizarCentro(anterior, novo) {
 }
 
 export function calcularZonas(cfg, tf, d, ctx) {
+  validarAtualidadeSerie(cfg, tf, d, ctx);
   const { highs, lows, closes, times, opens } = d;
   const anteriores = ctx.zonasAnteriores || [];
   const atr = atrSeries(highs, lows, closes);
@@ -2774,7 +2795,26 @@ function detalheDiv(x, times, dec, timeViva) {
 // a maquina de estado. Testar so a maquina nao alcanca esses numeros --
 // era por isso que mudar RETEST_TOLERANCIA_ATR de 0,25 para 0,40 nao
 // quebrava nenhum teste.
+// Uma resposta atrasada nao pode recalcular indicadores e zonas de uma
+// vela anterior nem alimentar gatilhos como se fosse uma leitura nova.
+// As memorias especificas cobrem tambem estados antigos sem o carimbo.
+function validarAtualidadeSerie(cfg, tf, d, opts = {}) {
+  const prefixo = `${cfg.key}|${tf.key}|`;
+  const carimbos = [
+    opts.ultimaVelaProcessada,
+    ...(opts.zonasAnteriores || []).map((z) => z.ultimaVelaAvaliada),
+    ...Object.entries(opts.estadoNiveis || {})
+      .filter(([chave]) => chave.startsWith(prefixo)).map(([, n]) => n.atualizado),
+    tf.key === "semanal" ? opts.estadoEma89?.atualizado : null,
+  ].filter(Number.isFinite);
+  const referencia = Math.max(0, ...carimbos);
+  const ultima = d.times.at(-1);
+  if (ultima < referencia)
+    throw new Error(`serie desatualizada: vela ${fmtDia(ultima)} anterior a ${fmtDia(referencia)} ja processada`);
+}
+
 export function readPair(cfg, d, tf, opts = {}) {
+  validarAtualidadeSerie(cfg, tf, d, opts);
   const estadoAnt = opts.estadoNiveis || {};
   // Carimbo da ultima vela fechada JA processada para este par+timeframe,
   // gravado pelo build. Existe para separar dois casos que, sem ele, sao
@@ -2929,11 +2969,8 @@ export function readPair(cfg, d, tf, opts = {}) {
       const velaNova = !anteriorVela || !Number.isFinite(anteriorVela.atualizado) ||
         times[idx] > anteriorVela.atualizado;
       if (depois && velaNova) {
-        depois.mudancasNaVela = [];
-        if (anteriorVela && depois.estado !== anteriorVela.estado)
-          depois.mudancasNaVela.push(`${depois.estado}_${nv.label}`);
-        if (!anteriorVela && depois.estado === "rompido")
-          depois.mudancasNaVela.push(`rompido_${nv.label}`);
+        depois.mudancasNaVela = (depois.transicoesNaVela || [])
+          .map((estado) => `${estado}_${nv.label}`);
       }
     }
     if (depois) {
@@ -3563,6 +3600,12 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const parsed = parseKraken(await res.json());
+        const chaveZ = `${cfg.key}|${tf.key}`;
+        validarAtualidadeSerie(cfg, tf, parsed, {
+          ultimaVelaProcessada: ultimaVelaProcessada[chaveZ],
+          estadoNiveis: estadoAnt, zonasAnteriores: zonasAnt[chaveZ],
+          estadoEma89: ema89SemanalAnt[cfg.key],
+        });
         dados[tf.key][cfg.key] = parsed;
         brutos[tf.key][cfg.key] = { ok: true, parsed };
       } catch (err) {
@@ -4456,7 +4499,7 @@ const ESTADOS_CURTO = [
   ["em_reteste", "reteste em curso"],
   ["rompimento_falhou", "rompimento falhou"],
   ["recuperado", "nível recuperado"],
-  ["rompido", "rompido, sem reteste ainda"],
+  ["rompido", "nível rompido"],
   ["rompimento_candidato", "rompimento em avaliação"],
 ];
 
@@ -4487,7 +4530,8 @@ export function leituraCurta(dia, cfg) {
   let achado = null;
   for (const [estado, texto] of ESTADOS_CURTO) {
     for (const nv of niveisDoPar(cfg)) {
-      if (dia[`nivel_${nv.label}_estado`] !== estado) continue;
+      const evento = (dia.niveis_mudancas_nesta_vela || []).includes(`${estado}_${nv.label}`);
+      if (dia[`nivel_${nv.label}_estado`] !== estado && !evento) continue;
       achado = {
         chave: estado,
         rotulo: texto,
@@ -4581,7 +4625,7 @@ export const EXPLICACOES = {
   recuperado:
     "O fechamento voltou ao lado do rompimento de um nível pontual manual após uma falha. A direção depende do nível indicado.",
   rompido:
-    "O preço atravessou um nível pontual manual e ainda não voltou para testá-lo neste ciclo.",
+    "O nível pontual manual está rompido. Após um reteste ou recuperação, o afastamento pode encerrar o ciclo e manter este estado; o evento da vela continua registrado.",
   rompimento_candidato:
     "O preço começou a atravessar um nível pontual manual, e o rompimento ainda não " +
     "foi confirmado.",
