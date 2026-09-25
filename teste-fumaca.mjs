@@ -1376,6 +1376,7 @@ await import("./teste-ema89-semanal.mjs");
 await import("./teste-paridade.mjs");
 await import("./teste-niveis.mjs");
 await import("./teste-limiares.mjs");
+await import("./teste-zonas.mjs");
 
 // ------------------------------------------------------------
 // CALIBRAGEM DESTE PAR

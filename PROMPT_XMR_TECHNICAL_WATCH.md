@@ -167,6 +167,8 @@ Todo alerta de mercado deve ser rotulado por horizonte — ver `Formato obrigat�
 
 ### Fonte de verdade dos níveis manuais
 
+Faixas revisadas em 2026-09-25 com teto de 0,8 ATR diário na calibração. As que já cabiam foram mantidas. Continuam fixas até revisão manual, e não acompanham o ATR automaticamente. Uma troca de limites ou labels é manutenção de configuração, não evidência de movimento novo do preço.
+
 Sempre que o `relatorio.json` publicar explicitamente valores, faixas ou metadados atuais dentro de `niveis_manuais`, trate o relatório como **fonte de verdade**.
 
 Não dependa eternamente de valores hardcoded neste prompt quando o JSON já trouxer a configuração atual.
@@ -175,9 +177,10 @@ Na configuração atual do projeto, as referências conhecidas são:
 
 #### XMR/BTC
 
-- faixa `0,00656–0,00705` — `faixa_000656_000705`;
+- 0,00694072–0,00715328 — `faixa_000694072_000715328`;
+- 0,00657122–0,00675278 — `faixa_000657122_000675278`;
 - faixa `0,00602–0,00639` — `faixa_000602_000639`;
-- região de suporte `0,00565–0,00603` — `regiao_suporte_000565_000603`;
+- 0,00561647–0,00586953 — `regiao_suporte_000561647_000586953`;
 - faixa `0,00524–0,00544` — `faixa_000524_000544`, promovida do radar de manutenção em 2026-09-14;
 - resistência pontual principal `0,00700`;
 - suporte pontual principal `0,00584`.
@@ -198,7 +201,7 @@ A faixa de 399–423 encosta na região de 423–445, sem sobrepor: no ponto de 
 
 A resistência macro é contextual e propositalmente diferente da máquina de estados dos níveis pontuais.
 
-**Estes números são a configuração de 2026-09-14 e vão envelhecer.** Leia sempre `niveis_manuais` do JSON, que é a fonte de verdade, e observe `niveis_manuais_situacao`: quando ela disser `obsoleto`, é a lista acima que está velha, não o mercado que está errado.
+**Estas faixas foram revisadas em 2026-09-25 e vão envelhecer.** Leia sempre `niveis_manuais` do JSON, que é a fonte de verdade, e observe `niveis_manuais_situacao`: quando ela disser `obsoleto`, é a lista acima que está velha, não o mercado que está errado.
 
 Se o JSON atualizado passar a publicar valores diferentes, **prevalece o JSON**.
 

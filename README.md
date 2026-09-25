@@ -331,94 +331,38 @@ Em integrações com bots ou LLMs, sinais de maior convicção podem exigir fech
 
 ## Níveis manuais
 
-Os níveis manuais ficam centralizados em `NIVEIS_USD` e `NIVEIS_BTC`, no topo de `monitor.mjs`. Cada entrada de `PAIRS` apenas aponta para o objeto do seu par.
-
-Três consumidores leem daí e só daí: `alertasTecnicos` (faixas e rompimento/perda intradiários), `niveisDoPar` (máquina de estados de rompimento/reteste) e `avaliarGatilhos` (a linha `GATILHOS ATIVOS`). Nenhum valor de preço aparece duas vezes no arquivo, então revisar níveis é editar um bloco só.
+As faixas foram revisadas em **2026-09-25**, usando o teto de **0,8 ATR diário** na calibração. São referências fixas até a próxima revisão, não limites dinâmicos. Faixas já compatíveis foram mantidas. Os níveis pontuais e seus ciclos de rompimento/reteste permanecem iguais.
 
 ### XMR/USD
 
-Na versão atual do código:
+| Faixa atual | Label |
+| --- | --- |
+| 494–507 | `faixa_494_507` |
+| 463–477 | `faixa_463_477` |
+| 423–445 | `regiao_suporte_423_445` |
+| 399–423 | `faixa_399_423` |
 
-Reancorado em 2026-09-11, com o XMR/USD a 515,50:
+Resistência pontual: **550**. Suporte pontual: **500**.
 
-| Região | Função | De onde veio |
-| --- | --- | --- |
-| US$ 494–507 | faixa manual | zona diária de score 67, e semanal de score 77 |
-| US$ 463–477 | faixa manual | zona diária de score 75, com 6 toques |
-| US$ 423–445 | região manual de suporte | zona diária de score 74 sobre a semanal de score 90 |
-| US$ 399–423 | faixa manual de suporte profundo | zona diária de score 79, a mais tocada do par. Ver abaixo |
-| US$ 550 | resistência pontual | **não corroborada**, mantida de propósito. Ver abaixo |
-| US$ 500 | suporte pontual | centro da zona diária de score 67 |
-| US$ 788–811 | resistência macro manual/contextual | única estrutura acima do preço, presente no diário **e** no semanal |
-
-A faixa de 544–553 saiu porque ficou órfã: não encostava em zona nenhuma, nem no diário nem no semanal. E **acima do preço atual não existe resistência bem testada** — a única zona lá em cima tem 1 toque e score 35. Marcar uma faixa sobre ela passaria no teste de alinhamento apoiada em evidência fraca, que é pior que não marcar. Então o conjunto desceu para as três regiões que o mercado de fato testou, e o par fica **sem faixa marcada acima do preço** até que uma se forme. O alinhamento diário passou de 2 de 3 para 3 de 3.
-
-A faixa de **399–423 entrou em 2026-09-14**, na primeira execução em que o radar passou a ler o conjunto inteiro de zonas. A região é a **mais tocada deste par**: score 79 (bruto 93), 14 toques e 10 rejeições, reação média de 2,39 ATR, volume acima da média da época, confirmada no diário e no semanal. Ela nunca foi fraca — só não cabia na lista de três zonas por lado que a página publica.
-
-Os limites estruturais da zona iam de 399,02 a 426,32, e o teto da faixa ficou em **423**, não em 426. De 423 para cima a região de 423–445 já cobre, e duas faixas sobrepostas fariam o preço disparar as duas ao mesmo tempo nesse pedaço. Encostadas, não sobrepostas — o mesmo critério da promoção de 74–76k no monitor de BTC. Nada de cobertura se perde, só a ambiguidade.
-
-A resistência pontual de 550 foi mantida mesmo sem corroboração, e por um motivo específico: ela marca o próximo nível a vencer acima do preço, e descê-la para dentro da região já testada faria o monitor anunciar como rompimento **novo** uma passagem que já aconteceu. Quando o preço construir estrutura acima, esse número deve ser revisto.
-
-Os anteriores (resistência 410, faixas 350–385) ficaram obsoletos: o nível de 410 foi rompido em 17/08 e o preço seguiu 29% acima da faixa mais alta. Foi esse caso que motivou a [vigilância dos níveis manuais](#vigilância-dos-níveis-manuais).
-
-A resistência macro é intencionalmente diferente dos níveis da máquina de estados.
-
-Ela funciona como **referência contextual de longo prazo** e não gera, por si só:
-
-- evento;
-- gatilho;
-- alerta técnico;
-- mudança na máquina de estados.
-
-O relatório publica seu tipo, limites, estado relativo ao preço e distância.
+A resistência macro **788–811** continua contextual. Sua largura já cabe no teto semanal e não cria gatilho ou máquina de estados.
 
 ### XMR/BTC
 
-Na versão atual do código:
+| Faixa atual | Label |
+| --- | --- |
+| 0,00694072–0,00715328 | `faixa_000694072_000715328` |
+| 0,00657122–0,00675278 | `faixa_000657122_000675278` |
+| 0,00602–0,00639 | `faixa_000602_000639` |
+| 0,00561647–0,00586953 | `regiao_suporte_000561647_000586953` |
+| 0,00524–0,00544 | `faixa_000524_000544` |
 
-Calibrado em 2026-09-05, com o XMR/BTC a 0,006643:
+Resistência pontual: **0,007**. Suporte pontual: **0,00584**.
 
-| Região | Função | De onde veio |
-| --- | --- | --- |
-| 0,00656–0,00705 BTC | faixa manual | zona diária onde o preço está |
-| 0,00602–0,00639 BTC | faixa manual | zona diária de score 66 |
-| 0,00565–0,00603 BTC | região manual de suporte | zona diária de score 83, por dentro da semanal de score 83 |
-| 0,00524–0,00544 BTC | faixa manual | promovida pelo radar em 2026-09-14: zona de score 92 sem penalidade, 11 toques e 10 rejeições |
-| 0,00700 BTC | resistência pontual | centro da zona diária **e** pivô de topo de 02/09 — o mesmo número por duas leituras |
-| 0,00584 BTC | suporte pontual | centro da zona de score 83 |
+A revisão inclui faixas promovidas pelo radar. Quando uma faixa antiga cobria duas ou mais concentrações separadas, ela foi dividida. Regiões muito próximas puderam continuar juntas quando todos os pivôs relevantes e uma margem couberam no limite. Não foram criados suportes ou resistências pontuais novos.
 
-Antes havia uma faixa só, já abaixo do preço, e o suporte pontual era `null` — metade da máquina de estados ficava inerte. Agora os dois lados existem.
+O [relatório da revisão](REVISAO_ZONAS_2026-09-25.md) registra os valores anteriores, os novos, a origem dos dados e os efeitos observados. Os scores e contagens desse relatório são históricos. O `relatorio.json` continua sendo a fonte de verdade para a configuração e leitura atuais.
 
-A última linha da tabela é a primeira faixa que **não** foi calibrada à mão: ela veio do radar de promoção, que apontou uma região com score 92, 11 toques e 10 rejeições que nenhuma faixa cobria. Os números são os limites **estruturais** da zona, arredondados para fora nas mesmas cinco casas das outras — não os operacionais, que são uma janela derivada da volatilidade corrente e mudariam de regime para regime. Promover não cria ciclo de rompimento e reteste: isso continua valendo só para os pontuais. O que a faixa faz é preservar a região depois que a zona automática expirar, e é por isso que o radar deixou de apontá-la assim que ela entrou.
-
-As zonas automáticas seguem cumprindo o papel de contexto dinâmico, sem exigir uma nova linha manual toda vez que o regime muda.
-
-### Faixas manuais e JSON
-
-As faixas manuais fazem parte da configuração do código e também são consideradas no cálculo de confluência das zonas automáticas.
-
-Dentro de `niveis_manuais` aparecem, por par e por timeframe: as faixas manuais, a máquina de estados dos níveis pontuais e — apenas em XMR/USD — a resistência macro.
-
-As faixas são publicadas como metadado derivado da configuração:
-
-```json
-"faixas": [
-  { "inferior": 377, "superior": 385, "label": "faixa_377_385" },
-  { "inferior": 365, "superior": 375, "label": "faixa_365_375" },
-  { "inferior": 350, "superior": 355, "label": "regiao_suporte_350_355" }
-]
-```
-
-Não existe cópia manual desses números na serialização: alterar `NIVEIS_USD.faixas` ou `NIVEIS_BTC.faixas` muda o JSON sozinho. Consumidores externos devem preferir o JSON como fonte de verdade em vez de manter cópias eternas dos valores.
-
-As zonas automáticas também publicam campos próprios de confluência, como:
-
-- `confluencia_nivel_manual`;
-- `confluencia_faixa_manual`;
-- `confluencia_resistencia_macro`;
-- `confluencia_manual_qualquer`.
-
-Portanto, consumidores externos não devem inferir que `confluencia_nivel_manual` representa sozinho toda forma possível de confluência manual.
+As faixas são serializadas diretamente em `niveis_manuais.faixas`, com `inferior`, `superior` e `label`. A mudança de configuração não reescreve `historico.jsonl`. Labels antigos permanecem nos registros históricos.
 
 ## Vigilância dos níveis manuais
 
@@ -499,43 +443,25 @@ Elas não alteram sozinhas:
 
 ### ATR e agrupamento de pivôs
 
-As zonas usam ATR(14) de Wilder calculado sobre velas fechadas.
+Usa ATR(14) de Wilder sobre velas fechadas e conserva o ATR da época de cada pivô. O agrupamento inicial continua exigindo compatibilidade entre **todos os pares** de pivôs, evitando encadeamento.
 
-Cada pivô recebe o ATR correspondente à época em que ocorreu.
+O limite estrutural total, incluindo a folga, é **0,8 ATR fechado atual no diário** e **1,2 ATR no semanal**. Se um cluster exceder esse limite, procura-se o maior vão que separe duas concentrações: pelo menos dois pivôs de datas distintas em cada parte, vão de pelo menos 0,2 ATR de referência e pelo menos duas vezes o espaçamento médio interno de cada lado. O processo pode repetir-se para mais de duas concentrações.
 
-Os pivôs são agrupados usando distância normalizada pela volatilidade histórica.
-
-O algoritmo também verifica a compatibilidade entre os membros do cluster para evitar que uma cadeia de pivôs próximos acabe juntando artificialmente extremos que já não pertencem à mesma região.
+Sem evidência de duas concentrações, conserva-se apenas o núcleo compacto com mais pivôs. Recência e menor amplitude desempatam a seleção. Pivôs periféricos não viram automaticamente novas zonas. Um cluster já compacto mantém todos os membros. Os filtros de score, rejeições, maturidade e o limite de três zonas publicadas por lado continuam valendo.
 
 ### Limites estruturais
 
-`limites_estruturais` representam a região histórica da zona.
+As bordas são os extremos dos **membros selecionados**, com folga de 0,15 vezes o menor entre o ATR médio desses pivôs e o ATR fechado atual de cada lado. Não se corta a borda de uma zona deixando seus membros fora dela.
 
-Eles são derivados dos pivôs que formaram o cluster e da volatilidade existente na época desses pivôs.
+A fusão topo/fundo continua exigindo sobreposição estrutural mínima de 50%, mas agora também verifica todos os pares de pivôs e a largura final. O ATR dos membros é conservado até essa etapa. A suavização do centro só é aproveitada se permanecer dentro da concentração de pivôs da zona recalculada.
 
-São usados principalmente para:
-
-- identidade da zona;
-- matching entre execuções;
-- merge de regiões;
-- confluência histórica.
-
-Eles não são recalculados retroativamente apenas porque o ATR atual mudou.
+Um ATR atual menor pode exigir novo agrupamento. Mantidos os mesmos membros, um ATR atual maior não infla a folga histórica. Fichas antigas que excedem o teto ficam dormentes durante sua carência, sem aparecer no relatório ou corroborar outras zonas. Seus registros permanecem no estado até o envelhecimento normal.
 
 ### Limites operacionais
 
-`limites_operacionais` representam uma área mais estreita adaptada à volatilidade atual.
+A janela operacional usa **centro ±0,25 ATR**, até 0,5 ATR de largura total. O teto percentual específico do ativo continua limitando volatilidades extremas. O piso percentual é apenas fallback quando não há ATR válido, para não alargar a janela em períodos de baixa volatilidade.
 
-No código atual, a meia largura operacional usa aproximadamente `0.35 × ATR` fechado atual, respeitando limites mínimos e máximos relativos.
-
-Esses limites são usados principalmente para:
-
-- interação atual do preço;
-- estado `em_teste`, `acima` ou `abaixo`;
-- distância operacional;
-- confluência atual com faixas manuais.
-
-Assim, uma zona pode preservar sua identidade histórica enquanto sua área operacional se adapta ao regime corrente de volatilidade.
+Os episódios históricos usam o ATR de cada vela. Mantido o centro, a volatilidade de hoje não reescreve os toques passados. Quando há divisão ou mudança de agrupamento, os episódios, as rejeições, o volume e o role reversal são recalculados para cada região resultante, sem copiar o score da região antiga.
 
 ### Score e qualidade da zona
 
@@ -1150,9 +1076,10 @@ Os níveis ficam em objetos próprios, e o array de pares apenas aponta para ele
 ```js
 const NIVEIS_BTC = {
   faixas: [
-    [0.00656, 0.00705, "faixa_000656_000705"],
+    [0.00694072, 0.00715328, "faixa_000694072_000715328"],
+    [0.00657122, 0.00675278, "faixa_000657122_000675278"],
     [0.00602, 0.00639, "faixa_000602_000639"],
-    [0.00565, 0.00603, "regiao_suporte_000565_000603"],
+    [0.00561647, 0.00586953, "regiao_suporte_000561647_000586953"],
     [0.00524, 0.00544, "faixa_000524_000544"],
   ],
   resistencia: 0.00700,
@@ -1287,3 +1214,7 @@ A memória sobrevive a reinícios, falhas de fonte e retries; respostas antigas 
 O histórico registra `ema89_confirmacao` e `ema89_evento_id`; a análise histórica conta `ema89_confirmou=acima/abaixo` na semana de confirmação, uma vez por vela. Registros antigos continuam legíveis.
 
 `node teste-ema89-semanal.mjs` verifica as sequências e a persistência em disco. Essa suíte também roda por `node teste-fumaca.mjs`. Os prompts públicos usam os novos campos e mantêm os filtros, os pares de referência e as regras de prioridade já existentes.
+
+### Regressões de largura das zonas
+
+`node teste-zonas.mjs` verifica compactação, divisão com evidência, ausência de divisão artificial, limites diário/semanal, fusão, tolerância operacional, score/toques/rejeições, role reversal, migração de fichas antigas e as faixas manuais desta calibração. É executado por `teste-fumaca.mjs`.
