@@ -167,7 +167,7 @@ Todo alerta de mercado deve ser rotulado por horizonte — ver `Formato obrigat�
 
 ### Fonte de verdade dos níveis manuais
 
-Faixas refinadas em 2026-09-25 com teto total de **0,25 ATR diário e 1% do preço central**, usando o menor dos dois limites na calibração. São referências fixas ancoradas em pivôs confirmados. Não acompanham o ATR automaticamente. Os níveis pontuais e seus ciclos de rompimento/reteste permanecem iguais. Uma troca de limites ou labels é manutenção de configuração, não evidência de movimento novo do preço.
+Faixas revistas em 2026-09-25 conforme as concentrações de pivôs e reações. O teto de segurança na calibração é **0,5 ATR diário de largura total**, sem largura alvo uniforme nem limite percentual de 1%. Apenas faixas que excluíam evidência próxima foram alargadas. Permanecem fixas até revisão manual. Os níveis pontuais e seus ciclos de rompimento/reteste continuam iguais. Uma troca de limites ou labels é manutenção de configuração, não evidência de movimento novo do preço.
 
 Sempre que o `relatorio.json` publicar explicitamente valores, faixas ou metadados atuais dentro de `niveis_manuais`, trate o relatório como **fonte de verdade**.
 
@@ -177,8 +177,8 @@ Na configuração atual do projeto, as referências conhecidas são:
 
 #### XMR/BTC
 
-- 0,00707–0,00712 — `faixa_0_00707_0_00712`;
-- 0,0066–0,00665 — `faixa_0_0066_0_00665`;
+- 0,00698–0,00712 — `faixa_0_00698_0_00712`;
+- 0,0066–0,00672 — `faixa_0_0066_0_00672`;
 - faixa `0,00602–0,006075` — `faixa_0_00602_0_006075`;
 - 0,00579–0,005845 — `regiao_suporte_0_00579_0_005845`;
 - faixa `0,005255–0,005305` — `faixa_0_005255_0_005305`, promovida do radar de manutenção em 2026-09-14;
@@ -190,7 +190,7 @@ A última é a mais nova e a mais distante do preço. Sua origem foi uma zona au
 #### XMR/USD
 
 - faixa `US$ 498–503`;
-- faixa `US$ 468–472`;
+- faixa `US$ 463–473`;
 - região de suporte `US$ 437–441`;
 - faixa `US$ 410–414`, **suporte profundo**, promovida pelo radar em 2026-09-14;
 - resistência pontual `US$ 550`, **acima de todas as faixas**: não há resistência bem testada acima do preço, então nenhuma faixa foi marcada lá;

@@ -69,7 +69,7 @@ const TIMEFRAMES = [
 // ------------------------------------------------------------
 // NIVEIS MANUAIS — o unico lugar a editar quando o preco andar.
 // As notas datadas abaixo registram revisoes anteriores. Os limites atuais
-// foram refinados em revisao-faixas-manuais-2026-09-25.json.
+// estao documentados em reajuste-faixas-manuais-2026-09-25.json.
 //
 // Tres consumidores leem daqui e so daqui: alertasTecnicos (faixas e
 // rompimento/perda intradiarios), niveisDoPar (maquina de estados de
@@ -111,10 +111,10 @@ const TIMEFRAMES = [
 //            passou a olhar o conjunto inteiro de zonas
 const NIVEIS_USD = {
   faixas: [
-    // Nucleos manuais em 2026-09-25: teto de 0,25 ATR diario e 1% do centro.
-    // Evidencia: revisao-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
+    // Faixas fixas revistas por pivos/reacoes em 2026-09-25; teto de 0,5 ATR na calibracao.
+    // Evidencia: reajuste-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
     [498, 503, "faixa_498_503"],
-    [468, 472, "faixa_468_472"],
+    [463, 473, "faixa_463_473"],
     [437, 441, "regiao_suporte_437_441"],
     [410, 414, "faixa_410_414"],
   ],
@@ -160,10 +160,10 @@ const NIVEIS_USD = {
 //     score 66 logo abaixo, e a de score 83 que ancora o suporte.
 const NIVEIS_BTC = {
   faixas: [
-    // Nucleos manuais em 2026-09-25: teto de 0,25 ATR diario e 1% do centro.
-    // Evidencia: revisao-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
-    [0.00707, 0.00712, "faixa_0_00707_0_00712"],
-    [0.0066, 0.00665, "faixa_0_0066_0_00665"],
+    // Faixas fixas revistas por pivos/reacoes em 2026-09-25; teto de 0,5 ATR na calibracao.
+    // Evidencia: reajuste-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
+    [0.00698, 0.00712, "faixa_0_00698_0_00712"],
+    [0.0066, 0.00672, "faixa_0_0066_0_00672"],
     [0.00602, 0.006075, "faixa_0_00602_0_006075"],
     [0.00579, 0.005845, "regiao_suporte_0_00579_0_005845"],
     [0.005255, 0.005305, "faixa_0_005255_0_005305"],
