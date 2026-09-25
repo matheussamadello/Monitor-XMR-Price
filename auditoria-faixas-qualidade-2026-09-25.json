@@ -1,0 +1,4740 @@
+{
+  "capturado_em": "2026-09-25T01:36:30.294Z",
+  "gerado_com_commit": "06129a3ad80345a49366c37de205cd3eed5e1576",
+  "metodo": "Faixas exatas. ATR historico somente na saida minima de 1 ATR e na reacao de ate 3 velas. Pesos/penalidades e role reversal do monitor, sem herdar episodios ou score da zona ampla. Antes/depois usam a mesma janela desde o primeiro pivo da faixa anterior. A coluna pos_confirmacao recalcula somente desde a confirmacao do primeiro pivo do nucleo atual (5 velas a direita), sem contar sua formacao. Auditoria retrospectiva, nao backtest ou validacao de rentabilidade.",
+  "faixas": [
+    {
+      "par": "XMR/USD",
+      "key": "usd",
+      "antes": [
+        494,
+        507,
+        "faixa_494_507"
+      ],
+      "depois": [
+        498,
+        503,
+        "faixa_498_503"
+      ],
+      "macro": false,
+      "inicio": "2025-12-20",
+      "inicio_pos_confirmacao": "2025-12-25",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 76,
+            "score_bruto": 90,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 5,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 3.65,
+            "score_sem_bonus_semanal": 65,
+            "episodios_concluidos": 5,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 7,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 2.2195579502215264,
+            "confirmacao_semanal": [
+              "usd|semanal|z14"
+            ],
+            "role_reversals": [
+              {
+                "em": 1789603200,
+                "idx": 712,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 441,
+                "inicio": 1766188800,
+                "fimIdx": 441,
+                "fim": 1766188800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.512454117230263,
+                "volume_relativo": 2.685433892594195,
+                "saidaIdx": 443
+              },
+              {
+                "inicioIdx": 463,
+                "inicio": 1768089600,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 9.038841531498548,
+                "volume_relativo": 3.6927538884665836,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 472,
+                "inicio": 1768867200,
+                "fimIdx": 483,
+                "fim": 1769817600,
+                "lado": "acima",
+                "velas": 7,
+                "rejeitado": false,
+                "excursaoAtr": 2.3762454375018427,
+                "volume_relativo": 2.055131698579476,
+                "saidaIdx": 484
+              },
+              {
+                "inicioIdx": 694,
+                "inicio": 1788048000,
+                "fimIdx": 699,
+                "fim": 1788480000,
+                "lado": "abaixo",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 1.475157670545786,
+                "volume_relativo": 2.2195579502215264,
+                "saidaIdx": 700
+              },
+              {
+                "inicioIdx": 703,
+                "inicio": 1788825600,
+                "fimIdx": 712,
+                "fim": 1789603200,
+                "lado": "acima",
+                "velas": 8,
+                "rejeitado": true,
+                "excursaoAtr": 2.8617976772533935,
+                "volume_relativo": 0.8779109657988924,
+                "saidaIdx": 713
+              }
+            ]
+          },
+          "depois": {
+            "score": 82,
+            "score_bruto": 97,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 6,
+            "numero_rejeicoes": 3,
+            "forca_reacao_atr": 3.37,
+            "score_sem_bonus_semanal": 71,
+            "episodios_concluidos": 6,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 7,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 2.2195579502215264,
+            "confirmacao_semanal": [
+              "usd|semanal|z14"
+            ],
+            "role_reversals": [
+              {
+                "em": 1789084800,
+                "idx": 706,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 441,
+                "inicio": 1766188800,
+                "fimIdx": 441,
+                "fim": 1766188800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.654762478444098,
+                "volume_relativo": 2.685433892594195,
+                "saidaIdx": 443
+              },
+              {
+                "inicioIdx": 463,
+                "inicio": 1768089600,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 9.162285029487535,
+                "volume_relativo": 3.6927538884665836,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 472,
+                "inicio": 1768867200,
+                "fimIdx": 483,
+                "fim": 1769817600,
+                "lado": "acima",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 2.4504973064965103,
+                "volume_relativo": 2.055131698579476,
+                "saidaIdx": 484
+              },
+              {
+                "inicioIdx": 694,
+                "inicio": 1788048000,
+                "fimIdx": 699,
+                "fim": 1788480000,
+                "lado": "abaixo",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 1.5886313375108465,
+                "volume_relativo": 2.2195579502215264,
+                "saidaIdx": 700
+              },
+              {
+                "inicioIdx": 703,
+                "inicio": 1788825600,
+                "fimIdx": 706,
+                "fim": 1789084800,
+                "lado": "acima",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.37735455728535,
+                "volume_relativo": 0.8779109657988924,
+                "saidaIdx": 707
+              },
+              {
+                "inicioIdx": 709,
+                "inicio": 1789344000,
+                "fimIdx": 712,
+                "fim": 1789603200,
+                "lado": "acima",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.9752260433752085,
+                "volume_relativo": 1.0890198061277534,
+                "saidaIdx": 713
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 76,
+            "score_bruto": 90,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 5,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 3.51,
+            "score_sem_bonus_semanal": 65,
+            "episodios_concluidos": 5,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 7,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 2.055131698579476,
+            "confirmacao_semanal": [
+              "usd|semanal|z14"
+            ],
+            "role_reversals": [
+              {
+                "em": 1789084800,
+                "idx": 706,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 463,
+                "inicio": 1768089600,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 9.162285029487535,
+                "volume_relativo": 3.6927538884665836,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 472,
+                "inicio": 1768867200,
+                "fimIdx": 483,
+                "fim": 1769817600,
+                "lado": "acima",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 2.4504973064965103,
+                "volume_relativo": 2.055131698579476,
+                "saidaIdx": 484
+              },
+              {
+                "inicioIdx": 694,
+                "inicio": 1788048000,
+                "fimIdx": 699,
+                "fim": 1788480000,
+                "lado": "abaixo",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 1.5886313375108465,
+                "volume_relativo": 2.2195579502215264,
+                "saidaIdx": 700
+              },
+              {
+                "inicioIdx": 703,
+                "inicio": 1788825600,
+                "fimIdx": 706,
+                "fim": 1789084800,
+                "lado": "acima",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.37735455728535,
+                "volume_relativo": 0.8779109657988924,
+                "saidaIdx": 707
+              },
+              {
+                "inicioIdx": 709,
+                "inicio": 1789344000,
+                "fimIdx": 712,
+                "fim": 1789603200,
+                "lado": "acima",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.9752260433752085,
+                "volume_relativo": 1.0890198061277534,
+                "saidaIdx": 713
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 54,
+            "score_bruto": 54,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 1.14,
+            "score_sem_bonus_semanal": 54,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 2.750486576515647,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 471,
+                "inicio": 1767830400,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.2890332841497982,
+                "volume_relativo": 2.750486576515647,
+                "saidaIdx": 475
+              },
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.311543762581986,
+                "aberto": true
+              }
+            ]
+          },
+          "depois": {
+            "score": 54,
+            "score_bruto": 54,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 1.17,
+            "score_sem_bonus_semanal": 54,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 2.750486576515647,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 471,
+                "inicio": 1767830400,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.331161438822657,
+                "volume_relativo": 2.750486576515647,
+                "saidaIdx": 475
+              },
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.311543762581986,
+                "aberto": true
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 54,
+            "score_bruto": 54,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 1.17,
+            "score_sem_bonus_semanal": 54,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 2.750486576515647,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 471,
+                "inicio": 1767830400,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.331161438822657,
+                "volume_relativo": 2.750486576515647,
+                "saidaIdx": 475
+              },
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.311543762581986,
+                "aberto": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/USD",
+      "key": "usd",
+      "antes": [
+        463,
+        477,
+        "faixa_463_477"
+      ],
+      "depois": [
+        468,
+        472,
+        "faixa_468_472"
+      ],
+      "macro": false,
+      "inicio": "2025-11-09",
+      "inicio_pos_confirmacao": "2025-11-14",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 72,
+            "score_bruto": 84,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 7,
+            "numero_rejeicoes": 4,
+            "forca_reacao_atr": 3.4,
+            "score_sem_bonus_semanal": 61,
+            "episodios_concluidos": 7,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 25,
+            "ultimo_toque": "2026-08-30",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.3786627164726755,
+            "confirmacao_semanal": [
+              "usd|semanal|z14"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 400,
+                "inicio": 1762646400,
+                "fimIdx": 400,
+                "fim": 1762646400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.5098878283485004,
+                "volume_relativo": 4.929783035456674,
+                "saidaIdx": 401
+              },
+              {
+                "inicioIdx": 441,
+                "inicio": 1766188800,
+                "fimIdx": 444,
+                "fim": 1766448000,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.3977099756013653,
+                "volume_relativo": 2.685433892594195,
+                "saidaIdx": 445
+              },
+              {
+                "inicioIdx": 449,
+                "inicio": 1766880000,
+                "fimIdx": 449,
+                "fim": 1766880000,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.1486176089177538,
+                "volume_relativo": 0.44129061632195643,
+                "saidaIdx": 452
+              },
+              {
+                "inicioIdx": 460,
+                "inicio": 1767830400,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 9.964667766415946,
+                "volume_relativo": 1.3786627164726755,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 477,
+                "inicio": 1769299200,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "acima",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 1.8290977982036905,
+                "volume_relativo": 0.8083890105118092,
+                "saidaIdx": 485
+              },
+              {
+                "inicioIdx": 686,
+                "inicio": 1787356800,
+                "fimIdx": 686,
+                "fim": 1787356800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.4102320207453127,
+                "volume_relativo": 2.4791465102033614,
+                "saidaIdx": 687
+              },
+              {
+                "inicioIdx": 691,
+                "inicio": 1787788800,
+                "fimIdx": 694,
+                "fim": 1788048000,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 2.541585520844354,
+                "volume_relativo": 1.1668801218719647,
+                "saidaIdx": 695
+              }
+            ]
+          },
+          "depois": {
+            "score": 66,
+            "score_bruto": 77,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 5,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 4,
+            "score_sem_bonus_semanal": 55,
+            "episodios_concluidos": 5,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 25,
+            "ultimo_toque": "2026-08-30",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.3786627164726755,
+            "confirmacao_semanal": [
+              "usd|semanal|z14"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 400,
+                "inicio": 1762646400,
+                "fimIdx": 400,
+                "fim": 1762646400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.680552412047251,
+                "volume_relativo": 4.929783035456674,
+                "saidaIdx": 401
+              },
+              {
+                "inicioIdx": 441,
+                "inicio": 1766188800,
+                "fimIdx": 443,
+                "fim": 1766361600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.5740994222951266,
+                "volume_relativo": 2.685433892594195,
+                "saidaIdx": 445
+              },
+              {
+                "inicioIdx": 460,
+                "inicio": 1767830400,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 10.118972138902178,
+                "volume_relativo": 1.3786627164726755,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 477,
+                "inicio": 1769299200,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "acima",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 1.923371470928342,
+                "volume_relativo": 0.8083890105118092,
+                "saidaIdx": 485
+              },
+              {
+                "inicioIdx": 691,
+                "inicio": 1787788800,
+                "fimIdx": 694,
+                "fim": 1788048000,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 2.7197173908222307,
+                "volume_relativo": 1.1668801218719647,
+                "saidaIdx": 695
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 60,
+            "score_bruto": 70,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 4,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 4.08,
+            "score_sem_bonus_semanal": 49,
+            "episodios_concluidos": 4,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 25,
+            "ultimo_toque": "2026-08-30",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.3786627164726755,
+            "confirmacao_semanal": [
+              "usd|semanal|z14"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 441,
+                "inicio": 1766188800,
+                "fimIdx": 443,
+                "fim": 1766361600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.5740994222951266,
+                "volume_relativo": 2.685433892594195,
+                "saidaIdx": 445
+              },
+              {
+                "inicioIdx": 460,
+                "inicio": 1767830400,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 10.118972138902178,
+                "volume_relativo": 1.3786627164726755,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 477,
+                "inicio": 1769299200,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "acima",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 1.923371470928342,
+                "volume_relativo": 0.8083890105118092,
+                "saidaIdx": 485
+              },
+              {
+                "inicioIdx": 691,
+                "inicio": 1787788800,
+                "fimIdx": 694,
+                "fim": 1788048000,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 2.7197173908222307,
+                "volume_relativo": 1.1668801218719647,
+                "saidaIdx": 695
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 56,
+            "score_bruto": 56,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 2.18,
+            "score_sem_bonus_semanal": 56,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2911403912072914,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 468,
+                "inicio": 1766016000,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 5,
+                "rejeitado": true,
+                "excursaoAtr": 1.9625400854351402,
+                "volume_relativo": 1.2911403912072914,
+                "saidaIdx": 475
+              },
+              {
+                "inicioIdx": 503,
+                "inicio": 1787184000,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 2.3991775245326434,
+                "volume_relativo": 1.0875941639910767,
+                "saidaIdx": 507
+              }
+            ]
+          },
+          "depois": {
+            "score": 56,
+            "score_bruto": 56,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 2.25,
+            "score_sem_bonus_semanal": 56,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.311543762581986,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 468,
+                "inicio": 1766016000,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.015200278776214,
+                "volume_relativo": 1.2911403912072914,
+                "saidaIdx": 475
+              },
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 2.4756331499160926,
+                "volume_relativo": 1.311543762581986,
+                "saidaIdx": 507
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 56,
+            "score_bruto": 56,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 2.25,
+            "score_sem_bonus_semanal": 56,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.311543762581986,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 468,
+                "inicio": 1766016000,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.015200278776214,
+                "volume_relativo": 1.2911403912072914,
+                "saidaIdx": 475
+              },
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 2.4756331499160926,
+                "volume_relativo": 1.311543762581986,
+                "saidaIdx": 507
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/USD",
+      "key": "usd",
+      "antes": [
+        423,
+        445,
+        "regiao_suporte_423_445"
+      ],
+      "depois": [
+        437,
+        441,
+        "regiao_suporte_437_441"
+      ],
+      "macro": false,
+      "inicio": "2025-11-15",
+      "inicio_pos_confirmacao": "2025-11-20",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 71,
+            "score_bruto": 84,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 7,
+            "numero_rejeicoes": 4,
+            "forca_reacao_atr": 3.55,
+            "score_sem_bonus_semanal": 60,
+            "episodios_concluidos": 7,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 28,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2300082695193413,
+            "confirmacao_semanal": [
+              "usd|semanal|z13"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 406,
+                "inicio": 1763164800,
+                "fimIdx": 407,
+                "fim": 1763251200,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 3.1678774556652156,
+                "volume_relativo": 1.6668802610728637,
+                "saidaIdx": 410
+              },
+              {
+                "inicioIdx": 421,
+                "inicio": 1764460800,
+                "fimIdx": 422,
+                "fim": 1764547200,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.3393033738163607,
+                "volume_relativo": 0.4467704618646983,
+                "saidaIdx": 427
+              },
+              {
+                "inicioIdx": 437,
+                "inicio": 1765843200,
+                "fimIdx": 460,
+                "fim": 1767830400,
+                "lado": "abaixo",
+                "velas": 22,
+                "rejeitado": false,
+                "excursaoAtr": 8.41650304196867,
+                "volume_relativo": 1.7920222299926107,
+                "saidaIdx": 462
+              },
+              {
+                "inicioIdx": 477,
+                "inicio": 1769299200,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "acima",
+                "velas": 5,
+                "rejeitado": false,
+                "excursaoAtr": 2.8002378762470266,
+                "volume_relativo": 0.8083890105118092,
+                "saidaIdx": 488
+              },
+              {
+                "inicioIdx": 577,
+                "inicio": 1777939200,
+                "fimIdx": 578,
+                "fim": 1778025600,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.8742927446817113,
+                "volume_relativo": 1.1405702153086368,
+                "saidaIdx": 579
+              },
+              {
+                "inicioIdx": 615,
+                "inicio": 1781222400,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.6899633620995202,
+                "volume_relativo": 2.376303568124851,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 683,
+                "inicio": 1787097600,
+                "fimIdx": 691,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 3.556259312624983,
+                "volume_relativo": 1.2300082695193413,
+                "saidaIdx": 692
+              }
+            ]
+          },
+          "depois": {
+            "score": 77,
+            "score_bruto": 91,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 7,
+            "numero_rejeicoes": 4,
+            "forca_reacao_atr": 3.48,
+            "score_sem_bonus_semanal": 66,
+            "episodios_concluidos": 7,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 28,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.6668802610728637,
+            "confirmacao_semanal": [
+              "usd|semanal|z13"
+            ],
+            "role_reversals": [
+              {
+                "em": 1767830400,
+                "idx": 460,
+                "ladoNovo": "acima"
+              },
+              {
+                "em": 1778025600,
+                "idx": 578,
+                "ladoNovo": "abaixo"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 406,
+                "inicio": 1763164800,
+                "fimIdx": 406,
+                "fim": 1763164800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.326400079029597,
+                "volume_relativo": 1.6668802610728637,
+                "saidaIdx": 409
+              },
+              {
+                "inicioIdx": 421,
+                "inicio": 1764460800,
+                "fimIdx": 421,
+                "fim": 1764460800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.6676996743069283,
+                "volume_relativo": 0.4467704618646983,
+                "saidaIdx": 422
+              },
+              {
+                "inicioIdx": 438,
+                "inicio": 1765929600,
+                "fimIdx": 441,
+                "fim": 1766188800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 1.5481262439384056,
+                "volume_relativo": 1.6780763469340976,
+                "saidaIdx": 442
+              },
+              {
+                "inicioIdx": 444,
+                "inicio": 1766448000,
+                "fimIdx": 460,
+                "fim": 1767830400,
+                "lado": "acima",
+                "velas": 13,
+                "rejeitado": true,
+                "excursaoAtr": 8.58769195770077,
+                "volume_relativo": 1.427367596182248,
+                "saidaIdx": 462
+              },
+              {
+                "inicioIdx": 481,
+                "inicio": 1769644800,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "acima",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 2.8680055203998105,
+                "volume_relativo": 0.6222691459335404,
+                "saidaIdx": 486
+              },
+              {
+                "inicioIdx": 578,
+                "inicio": 1778025600,
+                "fimIdx": 578,
+                "fim": 1778025600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.607666093634869,
+                "volume_relativo": 2.244087339112145,
+                "saidaIdx": 579
+              },
+              {
+                "inicioIdx": 686,
+                "inicio": 1787356800,
+                "fimIdx": 691,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 3.729103021622552,
+                "volume_relativo": 2.4791465102033614,
+                "saidaIdx": 692
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 77,
+            "score_bruto": 91,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 6,
+            "numero_rejeicoes": 3,
+            "forca_reacao_atr": 3.5,
+            "score_sem_bonus_semanal": 66,
+            "episodios_concluidos": 6,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 28,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.6780763469340976,
+            "confirmacao_semanal": [
+              "usd|semanal|z13"
+            ],
+            "role_reversals": [
+              {
+                "em": 1767830400,
+                "idx": 460,
+                "ladoNovo": "acima"
+              },
+              {
+                "em": 1778025600,
+                "idx": 578,
+                "ladoNovo": "abaixo"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 421,
+                "inicio": 1764460800,
+                "fimIdx": 421,
+                "fim": 1764460800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.6676996743069283,
+                "volume_relativo": 0.4467704618646983,
+                "saidaIdx": 422
+              },
+              {
+                "inicioIdx": 438,
+                "inicio": 1765929600,
+                "fimIdx": 441,
+                "fim": 1766188800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 1.5481262439384056,
+                "volume_relativo": 1.6780763469340976,
+                "saidaIdx": 442
+              },
+              {
+                "inicioIdx": 444,
+                "inicio": 1766448000,
+                "fimIdx": 460,
+                "fim": 1767830400,
+                "lado": "acima",
+                "velas": 13,
+                "rejeitado": true,
+                "excursaoAtr": 8.58769195770077,
+                "volume_relativo": 1.427367596182248,
+                "saidaIdx": 462
+              },
+              {
+                "inicioIdx": 481,
+                "inicio": 1769644800,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "acima",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 2.8680055203998105,
+                "volume_relativo": 0.6222691459335404,
+                "saidaIdx": 486
+              },
+              {
+                "inicioIdx": 578,
+                "inicio": 1778025600,
+                "fimIdx": 578,
+                "fim": 1778025600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.607666093634869,
+                "volume_relativo": 2.244087339112145,
+                "saidaIdx": 579
+              },
+              {
+                "inicioIdx": 686,
+                "inicio": 1787356800,
+                "fimIdx": 691,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 3.729103021622552,
+                "volume_relativo": 2.4791465102033614,
+                "saidaIdx": 692
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 82,
+            "score_bruto": 82,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 4,
+            "numero_rejeicoes": 3,
+            "forca_reacao_atr": 2.1,
+            "score_sem_bonus_semanal": 82,
+            "episodios_concluidos": 4,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 4,
+            "rejeicoes_ultimas_90_velas": 3,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.7755826478694046,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 465,
+                "inicio": 1764201600,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": true,
+                "excursaoAtr": 1.3128640716343285,
+                "volume_relativo": 0.7755826478694046,
+                "saidaIdx": 476
+              },
+              {
+                "inicioIdx": 487,
+                "inicio": 1777507200,
+                "fimIdx": 487,
+                "fim": 1777507200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.000322016639081,
+                "volume_relativo": 0.7116330141112845,
+                "saidaIdx": 492
+              },
+              {
+                "inicioIdx": 493,
+                "inicio": 1781136000,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.9033762064797894,
+                "volume_relativo": 1.8100922005540632,
+                "saidaIdx": 494
+              },
+              {
+                "inicioIdx": 502,
+                "inicio": 1786579200,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 3.1942841927109,
+                "volume_relativo": 0.6551917362713088,
+                "saidaIdx": 505
+              }
+            ]
+          },
+          "depois": {
+            "score": 67,
+            "score_bruto": 67,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 3,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 2.34,
+            "score_sem_bonus_semanal": 67,
+            "episodios_concluidos": 3,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.7755826478694046,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 465,
+                "inicio": 1764201600,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 7,
+                "rejeitado": true,
+                "excursaoAtr": 1.46484106024753,
+                "volume_relativo": 0.7755826478694046,
+                "saidaIdx": 476
+              },
+              {
+                "inicioIdx": 487,
+                "inicio": 1777507200,
+                "fimIdx": 487,
+                "fim": 1777507200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.287559231060209,
+                "volume_relativo": 0.7116330141112845,
+                "saidaIdx": 491
+              },
+              {
+                "inicioIdx": 503,
+                "inicio": 1787184000,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 3.2619238791632217,
+                "volume_relativo": 1.0875941639910767,
+                "saidaIdx": 505
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 67,
+            "score_bruto": 67,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 3,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 2.34,
+            "score_sem_bonus_semanal": 67,
+            "episodios_concluidos": 3,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.7755826478694046,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 465,
+                "inicio": 1764201600,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 7,
+                "rejeitado": true,
+                "excursaoAtr": 1.46484106024753,
+                "volume_relativo": 0.7755826478694046,
+                "saidaIdx": 476
+              },
+              {
+                "inicioIdx": 487,
+                "inicio": 1777507200,
+                "fimIdx": 487,
+                "fim": 1777507200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.287559231060209,
+                "volume_relativo": 0.7116330141112845,
+                "saidaIdx": 491
+              },
+              {
+                "inicioIdx": 503,
+                "inicio": 1787184000,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 3.2619238791632217,
+                "volume_relativo": 1.0875941639910767,
+                "saidaIdx": 505
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/USD",
+      "key": "usd",
+      "antes": [
+        399,
+        423,
+        "faixa_399_423"
+      ],
+      "depois": [
+        410,
+        414,
+        "faixa_410_414"
+      ],
+      "macro": false,
+      "inicio": "2025-05-26",
+      "inicio_pos_confirmacao": "2026-01-07",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 77,
+            "score_bruto": 90,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 13,
+            "numero_rejeicoes": 9,
+            "forca_reacao_atr": 2.31,
+            "score_sem_bonus_semanal": 66,
+            "episodios_concluidos": 13,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 31,
+            "ultimo_toque": "2026-08-24",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2616650487647032,
+            "confirmacao_semanal": [
+              "usd|semanal|z13"
+            ],
+            "role_reversals": [
+              {
+                "em": 1767571200,
+                "idx": 457,
+                "ladoNovo": "acima"
+              },
+              {
+                "em": 1777161600,
+                "idx": 568,
+                "ladoNovo": "abaixo"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 233,
+                "inicio": 1748217600,
+                "fimIdx": 234,
+                "fim": 1748304000,
+                "lado": "dentro",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 3.2635081281444176,
+                "volume_relativo": 1.3177629080329747,
+                "saidaIdx": 235
+              },
+              {
+                "inicioIdx": 400,
+                "inicio": 1762646400,
+                "fimIdx": 401,
+                "fim": 1762732800,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.305291493470252,
+                "volume_relativo": 4.929783035456674,
+                "saidaIdx": 402
+              },
+              {
+                "inicioIdx": 404,
+                "inicio": 1762992000,
+                "fimIdx": 410,
+                "fim": 1763510400,
+                "lado": "abaixo",
+                "velas": 7,
+                "rejeitado": true,
+                "excursaoAtr": 2.384196020619296,
+                "volume_relativo": 1.0197237897483737,
+                "saidaIdx": 411
+              },
+              {
+                "inicioIdx": 414,
+                "inicio": 1763856000,
+                "fimIdx": 427,
+                "fim": 1764979200,
+                "lado": "abaixo",
+                "velas": 13,
+                "rejeitado": true,
+                "excursaoAtr": 1.4182802312266338,
+                "volume_relativo": 1.0352003938201104,
+                "saidaIdx": 428
+              },
+              {
+                "inicioIdx": 431,
+                "inicio": 1765324800,
+                "fimIdx": 440,
+                "fim": 1766102400,
+                "lado": "abaixo",
+                "velas": 10,
+                "rejeitado": false,
+                "excursaoAtr": 2.722422929391254,
+                "volume_relativo": 1.428905588217951,
+                "saidaIdx": 441
+              },
+              {
+                "inicioIdx": 453,
+                "inicio": 1767225600,
+                "fimIdx": 457,
+                "fim": 1767571200,
+                "lado": "acima",
+                "velas": 5,
+                "rejeitado": true,
+                "excursaoAtr": 2.1265639970850505,
+                "volume_relativo": 0.6518295352813799,
+                "saidaIdx": 460
+              },
+              {
+                "inicioIdx": 482,
+                "inicio": 1769731200,
+                "fimIdx": 485,
+                "fim": 1769990400,
+                "lado": "acima",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 2.3409942721064727,
+                "volume_relativo": 0.8283836573541713,
+                "saidaIdx": 488
+              },
+              {
+                "inicioIdx": 568,
+                "inicio": 1777161600,
+                "fimIdx": 568,
+                "fim": 1777161600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.6749867530929283,
+                "volume_relativo": 1.5676026060861241,
+                "saidaIdx": 569
+              },
+              {
+                "inicioIdx": 575,
+                "inicio": 1777766400,
+                "fimIdx": 597,
+                "fim": 1779667200,
+                "lado": "abaixo",
+                "velas": 17,
+                "rejeitado": true,
+                "excursaoAtr": 2.8425654445939967,
+                "volume_relativo": 0.6304790077981426,
+                "saidaIdx": 598
+              },
+              {
+                "inicioIdx": 599,
+                "inicio": 1779840000,
+                "fimIdx": 599,
+                "fim": 1779840000,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.4876051149212812,
+                "volume_relativo": 1.2608000535280781,
+                "saidaIdx": 600
+              },
+              {
+                "inicioIdx": 602,
+                "inicio": 1780099200,
+                "fimIdx": 602,
+                "fim": 1780099200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.1264702760454885,
+                "volume_relativo": 2.9256459919611717,
+                "saidaIdx": 603
+              },
+              {
+                "inicioIdx": 615,
+                "inicio": 1781222400,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.9820782668101726,
+                "volume_relativo": 2.376303568124851,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 673,
+                "inicio": 1786233600,
+                "fimIdx": 688,
+                "fim": 1787529600,
+                "lado": "abaixo",
+                "velas": 16,
+                "rejeitado": false,
+                "excursaoAtr": 2.4154208926884824,
+                "volume_relativo": 1.2616650487647032,
+                "saidaIdx": 691
+              }
+            ]
+          },
+          "depois": {
+            "score": 76,
+            "score_bruto": 90,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 13,
+            "numero_rejeicoes": 9,
+            "forca_reacao_atr": 2.49,
+            "score_sem_bonus_semanal": 65,
+            "episodios_concluidos": 13,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 32,
+            "ultimo_toque": "2026-08-23",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2616650487647032,
+            "confirmacao_semanal": [
+              "usd|semanal|z13"
+            ],
+            "role_reversals": [
+              {
+                "em": 1762732800,
+                "idx": 401,
+                "ladoNovo": "abaixo"
+              },
+              {
+                "em": 1767312000,
+                "idx": 454,
+                "ladoNovo": "acima"
+              },
+              {
+                "em": 1778630400,
+                "idx": 585,
+                "ladoNovo": "abaixo"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 233,
+                "inicio": 1748217600,
+                "fimIdx": 233,
+                "fim": 1748217600,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 4.080132133194152,
+                "volume_relativo": 1.3177629080329747,
+                "saidaIdx": 234
+              },
+              {
+                "inicioIdx": 400,
+                "inicio": 1762646400,
+                "fimIdx": 401,
+                "fim": 1762732800,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.6750624547932698,
+                "volume_relativo": 4.929783035456674,
+                "saidaIdx": 402
+              },
+              {
+                "inicioIdx": 406,
+                "inicio": 1763164800,
+                "fimIdx": 409,
+                "fim": 1763424000,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 2.773787437257103,
+                "volume_relativo": 1.6668802610728637,
+                "saidaIdx": 410
+              },
+              {
+                "inicioIdx": 418,
+                "inicio": 1764201600,
+                "fimIdx": 425,
+                "fim": 1764806400,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": true,
+                "excursaoAtr": 1.8205773571547663,
+                "volume_relativo": 0.19953144036813855,
+                "saidaIdx": 428
+              },
+              {
+                "inicioIdx": 432,
+                "inicio": 1765411200,
+                "fimIdx": 440,
+                "fim": 1766102400,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 3.0406282068525696,
+                "volume_relativo": 1.4360424879000657,
+                "saidaIdx": 441
+              },
+              {
+                "inicioIdx": 454,
+                "inicio": 1767312000,
+                "fimIdx": 454,
+                "fim": 1767312000,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.690594295947626,
+                "volume_relativo": 0.6250417292958481,
+                "saidaIdx": 458
+              },
+              {
+                "inicioIdx": 484,
+                "inicio": 1769904000,
+                "fimIdx": 485,
+                "fim": 1769990400,
+                "lado": "acima",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 2.551480924004226,
+                "volume_relativo": 0.8032552264444587,
+                "saidaIdx": 488
+              },
+              {
+                "inicioIdx": 577,
+                "inicio": 1777939200,
+                "fimIdx": 585,
+                "fim": 1778630400,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": true,
+                "excursaoAtr": 1.705326830955447,
+                "volume_relativo": 1.1405702153086368,
+                "saidaIdx": 587
+              },
+              {
+                "inicioIdx": 593,
+                "inicio": 1779321600,
+                "fimIdx": 593,
+                "fim": 1779321600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.9835259473785252,
+                "volume_relativo": 1.0374247480899201,
+                "saidaIdx": 594
+              },
+              {
+                "inicioIdx": 602,
+                "inicio": 1780099200,
+                "fimIdx": 602,
+                "fim": 1780099200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.567778796980948,
+                "volume_relativo": 2.9256459919611717,
+                "saidaIdx": 603
+              },
+              {
+                "inicioIdx": 615,
+                "inicio": 1781222400,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.3065256021511233,
+                "volume_relativo": 2.376303568124851,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 673,
+                "inicio": 1786233600,
+                "fimIdx": 673,
+                "fim": 1786233600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.3491879259341704,
+                "volume_relativo": 1.2616650487647032,
+                "saidaIdx": 675
+              },
+              {
+                "inicioIdx": 679,
+                "inicio": 1786752000,
+                "fimIdx": 687,
+                "fim": 1787443200,
+                "lado": "abaixo",
+                "velas": 9,
+                "rejeitado": false,
+                "excursaoAtr": 1.8384185353413451,
+                "volume_relativo": 0.6406537931737046,
+                "saidaIdx": 688
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 73,
+            "score_bruto": 86,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 7,
+            "numero_rejeicoes": 5,
+            "forca_reacao_atr": 2.33,
+            "score_sem_bonus_semanal": 62,
+            "episodios_concluidos": 7,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 32,
+            "ultimo_toque": "2026-08-23",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.1405702153086368,
+            "confirmacao_semanal": [
+              "usd|semanal|z13"
+            ],
+            "role_reversals": [
+              {
+                "em": 1778630400,
+                "idx": 585,
+                "ladoNovo": "abaixo"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 484,
+                "inicio": 1769904000,
+                "fimIdx": 485,
+                "fim": 1769990400,
+                "lado": "acima",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 2.551480924004226,
+                "volume_relativo": 0.8032552264444587,
+                "saidaIdx": 488
+              },
+              {
+                "inicioIdx": 577,
+                "inicio": 1777939200,
+                "fimIdx": 585,
+                "fim": 1778630400,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": true,
+                "excursaoAtr": 1.705326830955447,
+                "volume_relativo": 1.1405702153086368,
+                "saidaIdx": 587
+              },
+              {
+                "inicioIdx": 593,
+                "inicio": 1779321600,
+                "fimIdx": 593,
+                "fim": 1779321600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.9835259473785252,
+                "volume_relativo": 1.0374247480899201,
+                "saidaIdx": 594
+              },
+              {
+                "inicioIdx": 602,
+                "inicio": 1780099200,
+                "fimIdx": 602,
+                "fim": 1780099200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.567778796980948,
+                "volume_relativo": 2.9256459919611717,
+                "saidaIdx": 603
+              },
+              {
+                "inicioIdx": 615,
+                "inicio": 1781222400,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.3065256021511233,
+                "volume_relativo": 2.376303568124851,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 673,
+                "inicio": 1786233600,
+                "fimIdx": 673,
+                "fim": 1786233600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.3491879259341704,
+                "volume_relativo": 1.2616650487647032,
+                "saidaIdx": 675
+              },
+              {
+                "inicioIdx": 679,
+                "inicio": 1786752000,
+                "fimIdx": 687,
+                "fim": 1787443200,
+                "lado": "abaixo",
+                "velas": 9,
+                "rejeitado": false,
+                "excursaoAtr": 1.8384185353413451,
+                "volume_relativo": 0.6406537931737046,
+                "saidaIdx": 688
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 59,
+            "score_bruto": 69,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 4,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 2.54,
+            "score_sem_bonus_semanal": 59,
+            "episodios_concluidos": 4,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 4,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 4,
+            "ultimo_toque": "2026-08-20",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.7277201311370236,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 462,
+                "inicio": 1762387200,
+                "fimIdx": 470,
+                "fim": 1767225600,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 4.902909689570692,
+                "volume_relativo": 2.21760872857215,
+                "saidaIdx": 471
+              },
+              {
+                "inicioIdx": 474,
+                "inicio": 1769644800,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 1.222737051027129,
+                "volume_relativo": 1.7277201311370236,
+                "saidaIdx": 483
+              },
+              {
+                "inicioIdx": 486,
+                "inicio": 1776902400,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 7,
+                "rejeitado": true,
+                "excursaoAtr": 1.53512929833376,
+                "volume_relativo": 0.7431689535808167,
+                "saidaIdx": 494
+              },
+              {
+                "inicioIdx": 501,
+                "inicio": 1785974400,
+                "fimIdx": 503,
+                "fim": 1787184000,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 2.4934357816841546,
+                "volume_relativo": 0.8318339715495382,
+                "saidaIdx": 504
+              }
+            ]
+          },
+          "depois": {
+            "score": 66,
+            "score_bruto": 78,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 5,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 2.5,
+            "score_sem_bonus_semanal": 66,
+            "episodios_concluidos": 5,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 5,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 4,
+            "ultimo_toque": "2026-08-20",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.7277201311370236,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 462,
+                "inicio": 1762387200,
+                "fimIdx": 470,
+                "fim": 1767225600,
+                "lado": "abaixo",
+                "velas": 7,
+                "rejeitado": false,
+                "excursaoAtr": 5.019989440177332,
+                "volume_relativo": 2.21760872857215,
+                "saidaIdx": 471
+              },
+              {
+                "inicioIdx": 474,
+                "inicio": 1769644800,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 1.3437508068676567,
+                "volume_relativo": 1.7277201311370236,
+                "saidaIdx": 482
+              },
+              {
+                "inicioIdx": 487,
+                "inicio": 1777507200,
+                "fimIdx": 491,
+                "fim": 1779926400,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.8018167783466528,
+                "volume_relativo": 0.7116330141112845,
+                "saidaIdx": 492
+              },
+              {
+                "inicioIdx": 493,
+                "inicio": 1781136000,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.7039091312340235,
+                "volume_relativo": 1.8100922005540632,
+                "saidaIdx": 494
+              },
+              {
+                "inicioIdx": 501,
+                "inicio": 1785974400,
+                "fimIdx": 503,
+                "fim": 1787184000,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 2.6506291274053466,
+                "volume_relativo": 0.8318339715495382,
+                "saidaIdx": 504
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 72,
+            "score_bruto": 84,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 4,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 1.88,
+            "score_sem_bonus_semanal": 72,
+            "episodios_concluidos": 4,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 4,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 4,
+            "ultimo_toque": "2026-08-20",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.7277201311370236,
+            "confirmacao_semanal": [],
+            "role_reversals": [
+              {
+                "em": 1779926400,
+                "idx": 491,
+                "ladoNovo": "abaixo"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 474,
+                "inicio": 1769644800,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 1.3437508068676567,
+                "volume_relativo": 1.7277201311370236,
+                "saidaIdx": 482
+              },
+              {
+                "inicioIdx": 487,
+                "inicio": 1777507200,
+                "fimIdx": 491,
+                "fim": 1779926400,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.8018167783466528,
+                "volume_relativo": 0.7116330141112845,
+                "saidaIdx": 492
+              },
+              {
+                "inicioIdx": 493,
+                "inicio": 1781136000,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.7039091312340235,
+                "volume_relativo": 1.8100922005540632,
+                "saidaIdx": 494
+              },
+              {
+                "inicioIdx": 501,
+                "inicio": 1785974400,
+                "fimIdx": 503,
+                "fim": 1787184000,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 2.6506291274053466,
+                "volume_relativo": 0.8318339715495382,
+                "saidaIdx": 504
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/USD macro",
+      "key": "usd",
+      "antes": [
+        788,
+        811,
+        "resistencia_macro_788_811"
+      ],
+      "depois": [
+        797,
+        803,
+        "resistencia_macro_788_811"
+      ],
+      "macro": true,
+      "inicio": "2026-01-14",
+      "inicio_pos_confirmacao": "2026-01-19",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 26,
+            "score_bruto": 32,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 4.37,
+            "score_sem_bonus_semanal": 26,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 0,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 253,
+            "ultimo_toque": "2026-01-14",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 3.1252271525198854,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 466,
+                "inicio": 1768348800,
+                "fimIdx": 466,
+                "fim": 1768348800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 4.366426087743752,
+                "volume_relativo": 3.1252271525198854,
+                "saidaIdx": 467
+              }
+            ]
+          },
+          "depois": {
+            "score": 26,
+            "score_bruto": 32,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 4.56,
+            "score_sem_bonus_semanal": 26,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 0,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 253,
+            "ultimo_toque": "2026-01-14",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 3.1252271525198854,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 466,
+                "inicio": 1768348800,
+                "fimIdx": 466,
+                "fim": 1768348800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 4.556739588589768,
+                "volume_relativo": 3.1252271525198854,
+                "saidaIdx": 467
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 0,
+            "score_bruto": 0,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 0,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 0,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 0,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": null,
+            "ultimo_toque": null,
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": null,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": []
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 0,
+            "score_bruto": 0,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 0,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 0,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 0,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": null,
+            "ultimo_toque": null,
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": null,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": []
+          },
+          "depois": {
+            "score": 0,
+            "score_bruto": 0,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 0,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 0,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 0,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": null,
+            "ultimo_toque": null,
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": null,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": []
+          },
+          "pos_confirmacao": {
+            "score": 0,
+            "score_bruto": 0,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 0,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 0,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 0,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": null,
+            "ultimo_toque": null,
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": null,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": []
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/BTC",
+      "key": "btc",
+      "antes": [
+        0.00694072,
+        0.00715328,
+        "faixa_000694072_000715328"
+      ],
+      "depois": [
+        0.00707,
+        0.00712,
+        "faixa_0_00707_0_00712"
+      ],
+      "macro": false,
+      "inicio": "2026-09-02",
+      "inicio_pos_confirmacao": "2026-09-17",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 86,
+            "score_bruto": 86,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 4,
+            "numero_rejeicoes": 3,
+            "forca_reacao_atr": 1.24,
+            "score_sem_bonus_semanal": 73,
+            "episodios_concluidos": 3,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 4,
+            "rejeicoes_ultimas_90_velas": 3,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-09-21",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.4446958236408336,
+            "confirmacao_semanal": [
+              "btc|semanal|z21",
+              "btc|semanal|z22"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 697,
+                "inicio": 1788307200,
+                "fimIdx": 697,
+                "fim": 1788307200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.8840707073475274,
+                "volume_relativo": 2.4426780367134753,
+                "saidaIdx": 698
+              },
+              {
+                "inicioIdx": 699,
+                "inicio": 1788480000,
+                "fimIdx": 701,
+                "fim": 1788652800,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.6876218152050897,
+                "volume_relativo": 1.2959023567642194,
+                "saidaIdx": 703
+              },
+              {
+                "inicioIdx": 707,
+                "inicio": 1789171200,
+                "fimIdx": 708,
+                "fim": 1789257600,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.404731136354354,
+                "volume_relativo": 0.9124661612921072,
+                "saidaIdx": 711
+              },
+              {
+                "inicioIdx": 713,
+                "inicio": 1789689600,
+                "fimIdx": 716,
+                "fim": 1789948800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.4446958236408336,
+                "aberto": true
+              }
+            ]
+          },
+          "depois": {
+            "score": 68,
+            "score_bruto": 68,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 1.5,
+            "score_sem_bonus_semanal": 55,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-09-21",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.4446958236408336,
+            "confirmacao_semanal": [
+              "btc|semanal|z21",
+              "btc|semanal|z22"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 707,
+                "inicio": 1789171200,
+                "fimIdx": 708,
+                "fim": 1789257600,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.7086938280270203,
+                "volume_relativo": 0.9124661612921072,
+                "saidaIdx": 709
+              },
+              {
+                "inicioIdx": 713,
+                "inicio": 1789689600,
+                "fimIdx": 716,
+                "fim": 1789948800,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.2930887483911846,
+                "volume_relativo": 1.4446958236408336,
+                "saidaIdx": 718
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 43,
+            "score_bruto": 53,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 1.29,
+            "score_sem_bonus_semanal": 32,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-09-21",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.4446958236408336,
+            "confirmacao_semanal": [
+              "btc|semanal|z21",
+              "btc|semanal|z22"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 713,
+                "inicio": 1789689600,
+                "fimIdx": 716,
+                "fim": 1789948800,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.2930887483911846,
+                "volume_relativo": 1.4446958236408336,
+                "saidaIdx": 718
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 20,
+            "score_bruto": 24,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 20,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.6795857374638681,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 505,
+                "inicio": 1788393600,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.6795857374638681,
+                "aberto": true
+              }
+            ]
+          },
+          "depois": {
+            "score": 20,
+            "score_bruto": 24,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 20,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.41723124827376323,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 506,
+                "inicio": 1788998400,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.41723124827376323,
+                "aberto": true
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 15,
+            "score_bruto": 24,
+            "fator_penalidade": 0.6,
+            "penalidades": [
+              "episodio_unico",
+              "wick_isolado_sem_rejeicao"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 15,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.5599510929322803,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 507,
+                "inicio": 1789603200,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.5599510929322803,
+                "aberto": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/BTC",
+      "key": "btc",
+      "antes": [
+        0.00657122,
+        0.00675278,
+        "faixa_000657122_000675278"
+      ],
+      "depois": [
+        0.0066,
+        0.00665,
+        "faixa_0_0066_0_00665"
+      ],
+      "macro": false,
+      "inicio": "2026-06-12",
+      "inicio_pos_confirmacao": "2026-08-22",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 80,
+            "score_bruto": 80,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 3,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 2.93,
+            "score_sem_bonus_semanal": 67,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-24",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2329908566616072,
+            "confirmacao_semanal": [
+              "btc|semanal|z21"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 615,
+                "inicio": 1781222400,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.3075722868411743,
+                "volume_relativo": 1.2329908566616072,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 680,
+                "inicio": 1786838400,
+                "fimIdx": 681,
+                "fim": 1786924800,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 5.469380089803493,
+                "volume_relativo": 1.1751944892781647,
+                "saidaIdx": 683
+              },
+              {
+                "inicioIdx": 694,
+                "inicio": 1788048000,
+                "fimIdx": 719,
+                "fim": 1790208000,
+                "lado": "abaixo",
+                "velas": 24,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.8355803709733522,
+                "aberto": true
+              }
+            ]
+          },
+          "depois": {
+            "score": 80,
+            "score_bruto": 80,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 3,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 2.99,
+            "score_sem_bonus_semanal": 67,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-24",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2329908566616072,
+            "confirmacao_semanal": [
+              "btc|semanal|z21"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 615,
+                "inicio": 1781222400,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.3703961212779485,
+                "volume_relativo": 1.2329908566616072,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 680,
+                "inicio": 1786838400,
+                "fimIdx": 681,
+                "fim": 1786924800,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 5.585615826230768,
+                "volume_relativo": 1.1751944892781647,
+                "saidaIdx": 683
+              },
+              {
+                "inicioIdx": 694,
+                "inicio": 1788048000,
+                "fimIdx": 719,
+                "fim": 1790208000,
+                "lado": "abaixo",
+                "velas": 23,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.8355803709733522,
+                "aberto": true
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 31,
+            "score_bruto": 38,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 20,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-24",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.8355803709733522,
+            "confirmacao_semanal": [
+              "btc|semanal|z21"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 694,
+                "inicio": 1788048000,
+                "fimIdx": 719,
+                "fim": 1790208000,
+                "lado": "abaixo",
+                "velas": 23,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.8355803709733522,
+                "aberto": true
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 49,
+            "score_bruto": 49,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 1.05,
+            "score_sem_bonus_semanal": 49,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.0632572249541707,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 502,
+                "inicio": 1786579200,
+                "fimIdx": 502,
+                "fim": 1786579200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.092050747061824,
+                "volume_relativo": 0.47825100620887956,
+                "saidaIdx": 503
+              },
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.0632572249541707,
+                "aberto": true
+              }
+            ]
+          },
+          "depois": {
+            "score": 49,
+            "score_bruto": 49,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 1.07,
+            "score_sem_bonus_semanal": 49,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.0632572249541707,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 502,
+                "inicio": 1786579200,
+                "fimIdx": 502,
+                "fim": 1786579200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.135484848792025,
+                "volume_relativo": 0.47825100620887956,
+                "saidaIdx": 503
+              },
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.0632572249541707,
+                "aberto": true
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 20,
+            "score_bruto": 24,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 20,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 0,
+            "ultimo_toque": "2026-09-17",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.0632572249541707,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 504,
+                "inicio": 1787788800,
+                "fimIdx": 507,
+                "fim": 1789603200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.0632572249541707,
+                "aberto": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/BTC",
+      "key": "btc",
+      "antes": [
+        0.00602,
+        0.00639,
+        "faixa_000602_000639"
+      ],
+      "depois": [
+        0.00602,
+        0.006075,
+        "faixa_0_00602_0_006075"
+      ],
+      "macro": false,
+      "inicio": "2026-01-31",
+      "inicio_pos_confirmacao": "2026-02-05",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 90,
+            "score_bruto": 90,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 6,
+            "numero_rejeicoes": 5,
+            "forca_reacao_atr": 2.31,
+            "score_sem_bonus_semanal": 77,
+            "episodios_concluidos": 6,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 15,
+            "ultimo_toque": "2026-09-09",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.1033328447186344,
+            "confirmacao_semanal": [
+              "btc|semanal|z19"
+            ],
+            "role_reversals": [
+              {
+                "em": 1788912000,
+                "idx": 704,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 483,
+                "inicio": 1769817600,
+                "fimIdx": 483,
+                "fim": 1769817600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.5683824059401124,
+                "volume_relativo": 0.9916320283869409,
+                "saidaIdx": 484
+              },
+              {
+                "inicioIdx": 607,
+                "inicio": 1780531200,
+                "fimIdx": 607,
+                "fim": 1780531200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.095685732276274,
+                "volume_relativo": 1.1033328447186344,
+                "saidaIdx": 608
+              },
+              {
+                "inicioIdx": 614,
+                "inicio": 1781136000,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.10431467675644,
+                "volume_relativo": 1.3032778708693256,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 673,
+                "inicio": 1786233600,
+                "fimIdx": 684,
+                "fim": 1787184000,
+                "lado": "abaixo",
+                "velas": 11,
+                "rejeitado": true,
+                "excursaoAtr": 2.9050465821905296,
+                "volume_relativo": 1.3505372851251338,
+                "saidaIdx": 685
+              },
+              {
+                "inicioIdx": 692,
+                "inicio": 1787875200,
+                "fimIdx": 699,
+                "fim": 1788480000,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 1.4033204371694137,
+                "volume_relativo": 0.7416053397377496,
+                "saidaIdx": 700
+              },
+              {
+                "inicioIdx": 703,
+                "inicio": 1788825600,
+                "fimIdx": 704,
+                "fim": 1788912000,
+                "lado": "acima",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.7982461539521322,
+                "volume_relativo": 0.3578062126304643,
+                "saidaIdx": 707
+              }
+            ]
+          },
+          "depois": {
+            "score": 72,
+            "score_bruto": 84,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 6,
+            "numero_rejeicoes": 3,
+            "forca_reacao_atr": 2.56,
+            "score_sem_bonus_semanal": 61,
+            "episodios_concluidos": 6,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 25,
+            "ultimo_toque": "2026-08-30",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.3032778708693256,
+            "confirmacao_semanal": [
+              "btc|semanal|z19"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 483,
+                "inicio": 1769817600,
+                "fimIdx": 483,
+                "fim": 1769817600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.5683824059401124,
+                "volume_relativo": 0.9916320283869409,
+                "saidaIdx": 484
+              },
+              {
+                "inicioIdx": 607,
+                "inicio": 1780531200,
+                "fimIdx": 607,
+                "fim": 1780531200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.095685732276274,
+                "volume_relativo": 1.1033328447186344,
+                "saidaIdx": 608
+              },
+              {
+                "inicioIdx": 614,
+                "inicio": 1781136000,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.10431467675644,
+                "volume_relativo": 1.3032778708693256,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 673,
+                "inicio": 1786233600,
+                "fimIdx": 676,
+                "fim": 1786492800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 2.2256667677444266,
+                "volume_relativo": 1.3505372851251338,
+                "saidaIdx": 678
+              },
+              {
+                "inicioIdx": 683,
+                "inicio": 1787097600,
+                "fimIdx": 684,
+                "fim": 1787184000,
+                "lado": "acima",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 2.9050465821905296,
+                "volume_relativo": 2.4381607583382015,
+                "saidaIdx": 685
+              },
+              {
+                "inicioIdx": 692,
+                "inicio": 1787875200,
+                "fimIdx": 694,
+                "fim": 1788048000,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 2.4864982932520943,
+                "volume_relativo": 0.7416053397377496,
+                "saidaIdx": 695
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 66,
+            "score_bruto": 77,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 5,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 2.56,
+            "score_sem_bonus_semanal": 55,
+            "episodios_concluidos": 5,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 25,
+            "ultimo_toque": "2026-08-30",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.3032778708693256,
+            "confirmacao_semanal": [
+              "btc|semanal|z19"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 607,
+                "inicio": 1780531200,
+                "fimIdx": 607,
+                "fim": 1780531200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 3.095685732276274,
+                "volume_relativo": 1.1033328447186344,
+                "saidaIdx": 608
+              },
+              {
+                "inicioIdx": 614,
+                "inicio": 1781136000,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.10431467675644,
+                "volume_relativo": 1.3032778708693256,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 673,
+                "inicio": 1786233600,
+                "fimIdx": 676,
+                "fim": 1786492800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 2.2256667677444266,
+                "volume_relativo": 1.3505372851251338,
+                "saidaIdx": 678
+              },
+              {
+                "inicioIdx": 683,
+                "inicio": 1787097600,
+                "fimIdx": 684,
+                "fim": 1787184000,
+                "lado": "acima",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 2.9050465821905296,
+                "volume_relativo": 2.4381607583382015,
+                "saidaIdx": 685
+              },
+              {
+                "inicioIdx": 692,
+                "inicio": 1787875200,
+                "fimIdx": 694,
+                "fim": 1788048000,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 2.4864982932520943,
+                "volume_relativo": 0.7416053397377496,
+                "saidaIdx": 695
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 48,
+            "score_bruto": 48,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 0.8,
+            "score_sem_bonus_semanal": 48,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 2,
+            "ultimo_toque": "2026-09-03",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.5778248175266834,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 492,
+                "inicio": 1780531200,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.607371731766877,
+                "volume_relativo": 1.5778248175266834,
+                "saidaIdx": 494
+              },
+              {
+                "inicioIdx": 501,
+                "inicio": 1785974400,
+                "fimIdx": 505,
+                "fim": 1788393600,
+                "lado": "abaixo",
+                "velas": 5,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.2970811265780786,
+                "aberto": true
+              }
+            ]
+          },
+          "depois": {
+            "score": 46,
+            "score_bruto": 46,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 0.8,
+            "score_sem_bonus_semanal": 46,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.5778248175266834,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 492,
+                "inicio": 1780531200,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.607371731766877,
+                "volume_relativo": 1.5778248175266834,
+                "saidaIdx": 494
+              },
+              {
+                "inicioIdx": 501,
+                "inicio": 1785974400,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.2970811265780786,
+                "aberto": true
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 46,
+            "score_bruto": 46,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 0.8,
+            "score_sem_bonus_semanal": 46,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.5778248175266834,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 492,
+                "inicio": 1780531200,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.607371731766877,
+                "volume_relativo": 1.5778248175266834,
+                "saidaIdx": 494
+              },
+              {
+                "inicioIdx": 501,
+                "inicio": 1785974400,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.2970811265780786,
+                "aberto": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/BTC",
+      "key": "btc",
+      "antes": [
+        0.00561647,
+        0.00586953,
+        "regiao_suporte_000561647_000586953"
+      ],
+      "depois": [
+        0.00579,
+        0.005845,
+        "regiao_suporte_0_00579_0_005845"
+      ],
+      "macro": false,
+      "inicio": "2025-12-20",
+      "inicio_pos_confirmacao": "2026-07-30",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 77,
+            "score_bruto": 91,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 9,
+            "numero_rejeicoes": 6,
+            "forca_reacao_atr": 2.77,
+            "score_sem_bonus_semanal": 66,
+            "episodios_concluidos": 9,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 27,
+            "ultimo_toque": "2026-08-28",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.525747082031724,
+            "confirmacao_semanal": [
+              "btc|semanal|z6",
+              "btc|semanal|z29"
+            ],
+            "role_reversals": [
+              {
+                "em": 1787875200,
+                "idx": 692,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 441,
+                "inicio": 1766188800,
+                "fimIdx": 441,
+                "fim": 1766188800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.382841622111627,
+                "volume_relativo": 1.2951393568846292,
+                "saidaIdx": 442
+              },
+              {
+                "inicioIdx": 463,
+                "inicio": 1768089600,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 6.870411840830774,
+                "volume_relativo": 2.526538918028664,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 470,
+                "inicio": 1768694400,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "acima",
+                "velas": 10,
+                "rejeitado": false,
+                "excursaoAtr": 1.7649950127340086,
+                "volume_relativo": 0.8422093772073567,
+                "saidaIdx": 485
+              },
+              {
+                "inicioIdx": 602,
+                "inicio": 1780099200,
+                "fimIdx": 602,
+                "fim": 1780099200,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.952058847697352,
+                "volume_relativo": 1.9333759641562738,
+                "saidaIdx": 603
+              },
+              {
+                "inicioIdx": 606,
+                "inicio": 1780444800,
+                "fimIdx": 608,
+                "fim": 1780617600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 2.1550154318238026,
+                "volume_relativo": 1.5828450927306674,
+                "saidaIdx": 609
+              },
+              {
+                "inicioIdx": 614,
+                "inicio": 1781136000,
+                "fimIdx": 618,
+                "fim": 1781481600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.920792228242678,
+                "volume_relativo": 1.3032778708693256,
+                "saidaIdx": 621
+              },
+              {
+                "inicioIdx": 657,
+                "inicio": 1784851200,
+                "fimIdx": 659,
+                "fim": 1785024000,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.720873810187797,
+                "volume_relativo": 1.525747082031724,
+                "saidaIdx": 661
+              },
+              {
+                "inicioIdx": 663,
+                "inicio": 1785369600,
+                "fimIdx": 673,
+                "fim": 1786233600,
+                "lado": "abaixo",
+                "velas": 11,
+                "rejeitado": false,
+                "excursaoAtr": 1.8786534487626383,
+                "volume_relativo": 0.19780060178659076,
+                "saidaIdx": 674
+              },
+              {
+                "inicioIdx": 684,
+                "inicio": 1787184000,
+                "fimIdx": 692,
+                "fim": 1787875200,
+                "lado": "acima",
+                "velas": 9,
+                "rejeitado": true,
+                "excursaoAtr": 3.2630647968038375,
+                "volume_relativo": 3.267878936509002,
+                "saidaIdx": 694
+              }
+            ]
+          },
+          "depois": {
+            "score": 68,
+            "score_bruto": 80,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 11,
+            "numero_rejeicoes": 6,
+            "forca_reacao_atr": 2.52,
+            "score_sem_bonus_semanal": 57,
+            "episodios_concluidos": 11,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 6,
+            "rejeicoes_ultimas_90_velas": 3,
+            "velas_desde_ultimo_toque": 27,
+            "ultimo_toque": "2026-08-28",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.1033328447186344,
+            "confirmacao_semanal": [
+              "btc|semanal|z6"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 463,
+                "inicio": 1768089600,
+                "fimIdx": 463,
+                "fim": 1768089600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 6.941839408231749,
+                "volume_relativo": 2.526538918028664,
+                "saidaIdx": 464
+              },
+              {
+                "inicioIdx": 470,
+                "inicio": 1768694400,
+                "fimIdx": 476,
+                "fim": 1769212800,
+                "lado": "acima",
+                "velas": 7,
+                "rejeitado": false,
+                "excursaoAtr": 1.1981709330053862,
+                "volume_relativo": 0.8422093772073567,
+                "saidaIdx": 477
+              },
+              {
+                "inicioIdx": 483,
+                "inicio": 1769817600,
+                "fimIdx": 484,
+                "fim": 1769904000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.1013922411542008,
+                "volume_relativo": 0.9916320283869409,
+                "saidaIdx": 485
+              },
+              {
+                "inicioIdx": 607,
+                "inicio": 1780531200,
+                "fimIdx": 608,
+                "fim": 1780617600,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.592666640039871,
+                "volume_relativo": 1.1033328447186344,
+                "saidaIdx": 609
+              },
+              {
+                "inicioIdx": 614,
+                "inicio": 1781136000,
+                "fimIdx": 615,
+                "fim": 1781222400,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.602247897032393,
+                "volume_relativo": 1.3032778708693256,
+                "saidaIdx": 616
+              },
+              {
+                "inicioIdx": 658,
+                "inicio": 1784937600,
+                "fimIdx": 658,
+                "fim": 1784937600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.489136071631248,
+                "volume_relativo": 0.3791683458811155,
+                "saidaIdx": 659
+              },
+              {
+                "inicioIdx": 665,
+                "inicio": 1785542400,
+                "fimIdx": 667,
+                "fim": 1785715200,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.7821306505044865,
+                "volume_relativo": 0.23509333474030975,
+                "saidaIdx": 668
+              },
+              {
+                "inicioIdx": 671,
+                "inicio": 1786060800,
+                "fimIdx": 673,
+                "fim": 1786233600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 1.9872202947073403,
+                "volume_relativo": 0.43803118905413657,
+                "saidaIdx": 674
+              },
+              {
+                "inicioIdx": 684,
+                "inicio": 1787184000,
+                "fimIdx": 684,
+                "fim": 1787184000,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 2.1048541104494247,
+                "volume_relativo": 3.267878936509002,
+                "saidaIdx": 685
+              },
+              {
+                "inicioIdx": 686,
+                "inicio": 1787356800,
+                "fimIdx": 686,
+                "fim": 1787356800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.5943920267033198,
+                "volume_relativo": 4.183524369363419,
+                "saidaIdx": 687
+              },
+              {
+                "inicioIdx": 691,
+                "inicio": 1787788800,
+                "fimIdx": 692,
+                "fim": 1787875200,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 3.3352751222665007,
+                "volume_relativo": 1.4367948433645372,
+                "saidaIdx": 694
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 65,
+            "score_bruto": 77,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 5,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 2.16,
+            "score_sem_bonus_semanal": 54,
+            "episodios_concluidos": 5,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 5,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 27,
+            "ultimo_toque": "2026-08-28",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.4367948433645372,
+            "confirmacao_semanal": [
+              "btc|semanal|z6"
+            ],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 665,
+                "inicio": 1785542400,
+                "fimIdx": 667,
+                "fim": 1785715200,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.7821306505044865,
+                "volume_relativo": 0.23509333474030975,
+                "saidaIdx": 668
+              },
+              {
+                "inicioIdx": 671,
+                "inicio": 1786060800,
+                "fimIdx": 673,
+                "fim": 1786233600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": false,
+                "excursaoAtr": 1.9872202947073403,
+                "volume_relativo": 0.43803118905413657,
+                "saidaIdx": 674
+              },
+              {
+                "inicioIdx": 684,
+                "inicio": 1787184000,
+                "fimIdx": 684,
+                "fim": 1787184000,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 2.1048541104494247,
+                "volume_relativo": 3.267878936509002,
+                "saidaIdx": 685
+              },
+              {
+                "inicioIdx": 686,
+                "inicio": 1787356800,
+                "fimIdx": 686,
+                "fim": 1787356800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.5943920267033198,
+                "volume_relativo": 4.183524369363419,
+                "saidaIdx": 687
+              },
+              {
+                "inicioIdx": 691,
+                "inicio": 1787788800,
+                "fimIdx": 692,
+                "fim": 1787875200,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": false,
+                "excursaoAtr": 3.3352751222665007,
+                "volume_relativo": 1.4367948433645372,
+                "saidaIdx": 694
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 45,
+            "score_bruto": 45,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 0.72,
+            "score_sem_bonus_semanal": 45,
+            "episodios_concluidos": 1,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.9656998579307012,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 471,
+                "inicio": 1767830400,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.430861517136664,
+                "volume_relativo": 1.9656998579307012,
+                "saidaIdx": 481
+              },
+              {
+                "inicioIdx": 491,
+                "inicio": 1779926400,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 1.9241346399684853,
+                "aberto": true
+              }
+            ]
+          },
+          "depois": {
+            "score": 61,
+            "score_bruto": 61,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 3,
+            "numero_rejeicoes": 2,
+            "forca_reacao_atr": 0.81,
+            "score_sem_bonus_semanal": 61,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 3,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.5778248175266834,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 471,
+                "inicio": 1767830400,
+                "fimIdx": 474,
+                "fim": 1769644800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.133345104019541,
+                "volume_relativo": 1.9656998579307012,
+                "saidaIdx": 478
+              },
+              {
+                "inicioIdx": 492,
+                "inicio": 1780531200,
+                "fimIdx": 493,
+                "fim": 1781136000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.290921187942528,
+                "volume_relativo": 1.5778248175266834,
+                "saidaIdx": 497
+              },
+              {
+                "inicioIdx": 499,
+                "inicio": 1784764800,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 5,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.2976964517105126,
+                "aberto": true
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 16,
+            "score_bruto": 19,
+            "fator_penalidade": 0.8,
+            "penalidades": [
+              "episodio_unico"
+            ],
+            "numero_toques": 1,
+            "numero_rejeicoes": 0,
+            "forca_reacao_atr": 0,
+            "score_sem_bonus_semanal": 16,
+            "episodios_concluidos": 0,
+            "episodios_abertos": 1,
+            "toques_ultimas_90_velas": 1,
+            "rejeicoes_ultimas_90_velas": 0,
+            "velas_desde_ultimo_toque": 3,
+            "ultimo_toque": "2026-08-27",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.14200037979865274,
+            "confirmacao_semanal": [],
+            "role_reversals": [],
+            "episodios": [
+              {
+                "inicioIdx": 500,
+                "inicio": 1785369600,
+                "fimIdx": 504,
+                "fim": 1787788800,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": false,
+                "excursaoAtr": 0,
+                "volume_relativo": 0.14200037979865274,
+                "aberto": true
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "par": "XMR/BTC",
+      "key": "btc",
+      "antes": [
+        0.00524,
+        0.00544,
+        "faixa_000524_000544"
+      ],
+      "depois": [
+        0.005255,
+        0.005305,
+        "faixa_0_005255_0_005305"
+      ],
+      "macro": false,
+      "inicio": "2026-02-13",
+      "inicio_pos_confirmacao": "2026-02-18",
+      "timeframes": {
+        "diario": {
+          "antes": {
+            "score": 85,
+            "score_bruto": 85,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 13,
+            "numero_rejeicoes": 12,
+            "forca_reacao_atr": 1.82,
+            "score_sem_bonus_semanal": 72,
+            "episodios_concluidos": 13,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 5,
+            "rejeicoes_ultimas_90_velas": 4,
+            "velas_desde_ultimo_toque": 30,
+            "ultimo_toque": "2026-08-25",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.9649243662162199,
+            "confirmacao_semanal": [
+              "btc|semanal|z6",
+              "btc|semanal|z29"
+            ],
+            "role_reversals": [
+              {
+                "em": 1785283200,
+                "idx": 662,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 496,
+                "inicio": 1770940800,
+                "fimIdx": 497,
+                "fim": 1771027200,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.5152820974036587,
+                "volume_relativo": 0.1982138698292408,
+                "saidaIdx": 498
+              },
+              {
+                "inicioIdx": 510,
+                "inicio": 1772150400,
+                "fimIdx": 513,
+                "fim": 1772409600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.3294753813758018,
+                "volume_relativo": 0.9649243662162199,
+                "saidaIdx": 515
+              },
+              {
+                "inicioIdx": 516,
+                "inicio": 1772668800,
+                "fimIdx": 516,
+                "fim": 1772668800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.3834841926799293,
+                "volume_relativo": 1.4633668145729013,
+                "saidaIdx": 523
+              },
+              {
+                "inicioIdx": 533,
+                "inicio": 1774137600,
+                "fimIdx": 534,
+                "fim": 1774224000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.2962300382068026,
+                "volume_relativo": 1.291297202999299,
+                "saidaIdx": 535
+              },
+              {
+                "inicioIdx": 578,
+                "inicio": 1778025600,
+                "fimIdx": 578,
+                "fim": 1778025600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.611322848578744,
+                "volume_relativo": 1.783849838571566,
+                "saidaIdx": 579
+              },
+              {
+                "inicioIdx": 592,
+                "inicio": 1779235200,
+                "fimIdx": 593,
+                "fim": 1779321600,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.5669835044813596,
+                "volume_relativo": 0.6665403410497602,
+                "saidaIdx": 597
+              },
+              {
+                "inicioIdx": 599,
+                "inicio": 1779840000,
+                "fimIdx": 602,
+                "fim": 1780099200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.632669930588599,
+                "volume_relativo": 0.7006350695269065,
+                "saidaIdx": 604
+              },
+              {
+                "inicioIdx": 606,
+                "inicio": 1780444800,
+                "fimIdx": 608,
+                "fim": 1780617600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.2273182493822892,
+                "volume_relativo": 1.5828450927306674,
+                "saidaIdx": 610
+              },
+              {
+                "inicioIdx": 613,
+                "inicio": 1781049600,
+                "fimIdx": 641,
+                "fim": 1783468800,
+                "lado": "abaixo",
+                "velas": 23,
+                "rejeitado": true,
+                "excursaoAtr": 1.2339683543489062,
+                "volume_relativo": 0.8003590966382461,
+                "saidaIdx": 642
+              },
+              {
+                "inicioIdx": 646,
+                "inicio": 1783900800,
+                "fimIdx": 657,
+                "fim": 1784851200,
+                "lado": "abaixo",
+                "velas": 8,
+                "rejeitado": false,
+                "excursaoAtr": 1.7995945252088403,
+                "volume_relativo": 1.2491352941230143,
+                "saidaIdx": 658
+              },
+              {
+                "inicioIdx": 659,
+                "inicio": 1785024000,
+                "fimIdx": 662,
+                "fim": 1785283200,
+                "lado": "acima",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.8951015336794195,
+                "volume_relativo": 0.227123328702804,
+                "saidaIdx": 664
+              },
+              {
+                "inicioIdx": 669,
+                "inicio": 1785888000,
+                "fimIdx": 669,
+                "fim": 1785888000,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.3598186521662234,
+                "volume_relativo": 0.44216737376221715,
+                "saidaIdx": 670
+              },
+              {
+                "inicioIdx": 685,
+                "inicio": 1787270400,
+                "fimIdx": 689,
+                "fim": 1787616000,
+                "lado": "acima",
+                "velas": 5,
+                "rejeitado": true,
+                "excursaoAtr": 3.8057519066529593,
+                "volume_relativo": 2.1751642130231206,
+                "saidaIdx": 692
+              }
+            ]
+          },
+          "depois": {
+            "score": 76,
+            "score_bruto": 90,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 14,
+            "numero_rejeicoes": 9,
+            "forca_reacao_atr": 1.92,
+            "score_sem_bonus_semanal": 65,
+            "episodios_concluidos": 14,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 4,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 31,
+            "ultimo_toque": "2026-08-24",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2491352941230143,
+            "confirmacao_semanal": [
+              "btc|semanal|z6",
+              "btc|semanal|z29"
+            ],
+            "role_reversals": [
+              {
+                "em": 1785196800,
+                "idx": 661,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 496,
+                "inicio": 1770940800,
+                "fimIdx": 497,
+                "fim": 1771027200,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 1.5514176005213938,
+                "volume_relativo": 0.1982138698292408,
+                "saidaIdx": 498
+              },
+              {
+                "inicioIdx": 510,
+                "inicio": 1772150400,
+                "fimIdx": 513,
+                "fim": 1772409600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.3788370910803496,
+                "volume_relativo": 0.9649243662162199,
+                "saidaIdx": 515
+              },
+              {
+                "inicioIdx": 516,
+                "inicio": 1772668800,
+                "fimIdx": 516,
+                "fim": 1772668800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.4404959039167404,
+                "volume_relativo": 1.4633668145729013,
+                "saidaIdx": 523
+              },
+              {
+                "inicioIdx": 533,
+                "inicio": 1774137600,
+                "fimIdx": 534,
+                "fim": 1774224000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.3567633432561923,
+                "volume_relativo": 1.291297202999299,
+                "saidaIdx": 535
+              },
+              {
+                "inicioIdx": 578,
+                "inicio": 1778025600,
+                "fimIdx": 578,
+                "fim": 1778025600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.6794069126031992,
+                "volume_relativo": 1.783849838571566,
+                "saidaIdx": 579
+              },
+              {
+                "inicioIdx": 593,
+                "inicio": 1779321600,
+                "fimIdx": 593,
+                "fim": 1779321600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.8977621712139712,
+                "volume_relativo": 0.8935624685613036,
+                "saidaIdx": 594
+              },
+              {
+                "inicioIdx": 599,
+                "inicio": 1779840000,
+                "fimIdx": 602,
+                "fim": 1780099200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.683269205296924,
+                "volume_relativo": 0.7006350695269065,
+                "saidaIdx": 604
+              },
+              {
+                "inicioIdx": 606,
+                "inicio": 1780444800,
+                "fimIdx": 606,
+                "fim": 1780444800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 2.1166334255046038,
+                "volume_relativo": 1.5828450927306674,
+                "saidaIdx": 607
+              },
+              {
+                "inicioIdx": 608,
+                "inicio": 1780617600,
+                "fimIdx": 608,
+                "fim": 1780617600,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 1.26583242038801,
+                "volume_relativo": 2.45285949588531,
+                "saidaIdx": 610
+              },
+              {
+                "inicioIdx": 613,
+                "inicio": 1781049600,
+                "fimIdx": 613,
+                "fim": 1781049600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 3.4314170196874936,
+                "volume_relativo": 0.8003590966382461,
+                "saidaIdx": 614
+              },
+              {
+                "inicioIdx": 616,
+                "inicio": 1781308800,
+                "fimIdx": 641,
+                "fim": 1783468800,
+                "lado": "acima",
+                "velas": 18,
+                "rejeitado": false,
+                "excursaoAtr": 1.2929158871999697,
+                "volume_relativo": 0.39843327082849694,
+                "saidaIdx": 642
+              },
+              {
+                "inicioIdx": 646,
+                "inicio": 1783900800,
+                "fimIdx": 656,
+                "fim": 1784764800,
+                "lado": "abaixo",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 2.4449615350192313,
+                "volume_relativo": 1.2491352941230143,
+                "saidaIdx": 657
+              },
+              {
+                "inicioIdx": 661,
+                "inicio": 1785196800,
+                "fimIdx": 661,
+                "fim": 1785196800,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.9478104347496663,
+                "volume_relativo": 0.21000152501926456,
+                "saidaIdx": 662
+              },
+              {
+                "inicioIdx": 685,
+                "inicio": 1787270400,
+                "fimIdx": 688,
+                "fim": 1787529600,
+                "lado": "acima",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 2.383582086119083,
+                "volume_relativo": 2.1751642130231206,
+                "saidaIdx": 691
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 76,
+            "score_bruto": 90,
+            "fator_penalidade": 0.85,
+            "penalidades": [
+              "rompida_2x_sem_reacao"
+            ],
+            "numero_toques": 13,
+            "numero_rejeicoes": 8,
+            "forca_reacao_atr": 1.95,
+            "score_sem_bonus_semanal": 65,
+            "episodios_concluidos": 13,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 4,
+            "rejeicoes_ultimas_90_velas": 2,
+            "velas_desde_ultimo_toque": 31,
+            "ultimo_toque": "2026-08-24",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 1.2491352941230143,
+            "confirmacao_semanal": [
+              "btc|semanal|z6",
+              "btc|semanal|z29"
+            ],
+            "role_reversals": [
+              {
+                "em": 1785196800,
+                "idx": 661,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 510,
+                "inicio": 1772150400,
+                "fimIdx": 513,
+                "fim": 1772409600,
+                "lado": "abaixo",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 1.3788370910803496,
+                "volume_relativo": 0.9649243662162199,
+                "saidaIdx": 515
+              },
+              {
+                "inicioIdx": 516,
+                "inicio": 1772668800,
+                "fimIdx": 516,
+                "fim": 1772668800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.4404959039167404,
+                "volume_relativo": 1.4633668145729013,
+                "saidaIdx": 523
+              },
+              {
+                "inicioIdx": 533,
+                "inicio": 1774137600,
+                "fimIdx": 534,
+                "fim": 1774224000,
+                "lado": "abaixo",
+                "velas": 2,
+                "rejeitado": true,
+                "excursaoAtr": 2.3567633432561923,
+                "volume_relativo": 1.291297202999299,
+                "saidaIdx": 535
+              },
+              {
+                "inicioIdx": 578,
+                "inicio": 1778025600,
+                "fimIdx": 578,
+                "fim": 1778025600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.6794069126031992,
+                "volume_relativo": 1.783849838571566,
+                "saidaIdx": 579
+              },
+              {
+                "inicioIdx": 593,
+                "inicio": 1779321600,
+                "fimIdx": 593,
+                "fim": 1779321600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.8977621712139712,
+                "volume_relativo": 0.8935624685613036,
+                "saidaIdx": 594
+              },
+              {
+                "inicioIdx": 599,
+                "inicio": 1779840000,
+                "fimIdx": 602,
+                "fim": 1780099200,
+                "lado": "abaixo",
+                "velas": 4,
+                "rejeitado": true,
+                "excursaoAtr": 1.683269205296924,
+                "volume_relativo": 0.7006350695269065,
+                "saidaIdx": 604
+              },
+              {
+                "inicioIdx": 606,
+                "inicio": 1780444800,
+                "fimIdx": 606,
+                "fim": 1780444800,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 2.1166334255046038,
+                "volume_relativo": 1.5828450927306674,
+                "saidaIdx": 607
+              },
+              {
+                "inicioIdx": 608,
+                "inicio": 1780617600,
+                "fimIdx": 608,
+                "fim": 1780617600,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 1.26583242038801,
+                "volume_relativo": 2.45285949588531,
+                "saidaIdx": 610
+              },
+              {
+                "inicioIdx": 613,
+                "inicio": 1781049600,
+                "fimIdx": 613,
+                "fim": 1781049600,
+                "lado": "abaixo",
+                "velas": 1,
+                "rejeitado": false,
+                "excursaoAtr": 3.4314170196874936,
+                "volume_relativo": 0.8003590966382461,
+                "saidaIdx": 614
+              },
+              {
+                "inicioIdx": 616,
+                "inicio": 1781308800,
+                "fimIdx": 641,
+                "fim": 1783468800,
+                "lado": "acima",
+                "velas": 18,
+                "rejeitado": false,
+                "excursaoAtr": 1.2929158871999697,
+                "volume_relativo": 0.39843327082849694,
+                "saidaIdx": 642
+              },
+              {
+                "inicioIdx": 646,
+                "inicio": 1783900800,
+                "fimIdx": 656,
+                "fim": 1784764800,
+                "lado": "abaixo",
+                "velas": 6,
+                "rejeitado": false,
+                "excursaoAtr": 2.4449615350192313,
+                "volume_relativo": 1.2491352941230143,
+                "saidaIdx": 657
+              },
+              {
+                "inicioIdx": 661,
+                "inicio": 1785196800,
+                "fimIdx": 661,
+                "fim": 1785196800,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 1.9478104347496663,
+                "volume_relativo": 0.21000152501926456,
+                "saidaIdx": 662
+              },
+              {
+                "inicioIdx": 685,
+                "inicio": 1787270400,
+                "fimIdx": 688,
+                "fim": 1787529600,
+                "lado": "acima",
+                "velas": 3,
+                "rejeitado": true,
+                "excursaoAtr": 2.383582086119083,
+                "volume_relativo": 2.1751642130231206,
+                "saidaIdx": 691
+              }
+            ]
+          }
+        },
+        "semanal": {
+          "antes": {
+            "score": 59,
+            "score_bruto": 59,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 2.08,
+            "score_sem_bonus_semanal": 59,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 4,
+            "ultimo_toque": "2026-08-20",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.9889581257528121,
+            "confirmacao_semanal": [],
+            "role_reversals": [
+              {
+                "em": 1787184000,
+                "idx": 503,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 478,
+                "inicio": 1772064000,
+                "fimIdx": 500,
+                "fim": 1785369600,
+                "lado": "abaixo",
+                "velas": 16,
+                "rejeitado": false,
+                "excursaoAtr": 1.8636613480912778,
+                "volume_relativo": 0.826618362875434,
+                "saidaIdx": 501
+              },
+              {
+                "inicioIdx": 503,
+                "inicio": 1787184000,
+                "fimIdx": 503,
+                "fim": 1787184000,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.2938158907449457,
+                "volume_relativo": 0.9889581257528121,
+                "saidaIdx": 504
+              }
+            ]
+          },
+          "depois": {
+            "score": 59,
+            "score_bruto": 59,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 2.28,
+            "score_sem_bonus_semanal": 59,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 4,
+            "ultimo_toque": "2026-08-20",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.9889581257528121,
+            "confirmacao_semanal": [],
+            "role_reversals": [
+              {
+                "em": 1787184000,
+                "idx": 503,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 478,
+                "inicio": 1772064000,
+                "fimIdx": 499,
+                "fim": 1784764800,
+                "lado": "abaixo",
+                "velas": 14,
+                "rejeitado": false,
+                "excursaoAtr": 2.0761565186929025,
+                "volume_relativo": 0.826618362875434,
+                "saidaIdx": 501
+              },
+              {
+                "inicioIdx": 503,
+                "inicio": 1787184000,
+                "fimIdx": 503,
+                "fim": 1787184000,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.481037864898857,
+                "volume_relativo": 0.9889581257528121,
+                "saidaIdx": 504
+              }
+            ]
+          },
+          "pos_confirmacao": {
+            "score": 59,
+            "score_bruto": 59,
+            "fator_penalidade": 1,
+            "penalidades": [],
+            "numero_toques": 2,
+            "numero_rejeicoes": 1,
+            "forca_reacao_atr": 2.28,
+            "score_sem_bonus_semanal": 59,
+            "episodios_concluidos": 2,
+            "episodios_abertos": 0,
+            "toques_ultimas_90_velas": 2,
+            "rejeicoes_ultimas_90_velas": 1,
+            "velas_desde_ultimo_toque": 4,
+            "ultimo_toque": "2026-08-20",
+            "volume_aplicavel": true,
+            "volume_relativo_mediano": 0.9889581257528121,
+            "confirmacao_semanal": [],
+            "role_reversals": [
+              {
+                "em": 1787184000,
+                "idx": 503,
+                "ladoNovo": "acima"
+              }
+            ],
+            "episodios": [
+              {
+                "inicioIdx": 478,
+                "inicio": 1772064000,
+                "fimIdx": 499,
+                "fim": 1784764800,
+                "lado": "abaixo",
+                "velas": 14,
+                "rejeitado": false,
+                "excursaoAtr": 2.0761565186929025,
+                "volume_relativo": 0.826618362875434,
+                "saidaIdx": 501
+              },
+              {
+                "inicioIdx": 503,
+                "inicio": 1787184000,
+                "fimIdx": 503,
+                "fim": 1787184000,
+                "lado": "acima",
+                "velas": 1,
+                "rejeitado": true,
+                "excursaoAtr": 2.481037864898857,
+                "volume_relativo": 0.9889581257528121,
+                "saidaIdx": 504
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
