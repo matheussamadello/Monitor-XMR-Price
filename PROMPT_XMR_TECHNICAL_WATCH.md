@@ -167,7 +167,7 @@ Todo alerta de mercado deve ser rotulado por horizonte — ver `Formato obrigat�
 
 ### Fonte de verdade dos níveis manuais
 
-Faixas revisadas em 2026-09-25 com teto de 0,8 ATR diário na calibração. As que já cabiam foram mantidas. Continuam fixas até revisão manual, e não acompanham o ATR automaticamente. Uma troca de limites ou labels é manutenção de configuração, não evidência de movimento novo do preço.
+Faixas refinadas em 2026-09-25 com teto total de **0,25 ATR diário e 1% do preço central**, usando o menor dos dois limites na calibração. São referências fixas ancoradas em pivôs confirmados. Não acompanham o ATR automaticamente. Os níveis pontuais e seus ciclos de rompimento/reteste permanecem iguais. Uma troca de limites ou labels é manutenção de configuração, não evidência de movimento novo do preço.
 
 Sempre que o `relatorio.json` publicar explicitamente valores, faixas ou metadados atuais dentro de `niveis_manuais`, trate o relatório como **fonte de verdade**.
 
@@ -177,27 +177,27 @@ Na configuração atual do projeto, as referências conhecidas são:
 
 #### XMR/BTC
 
-- 0,00694072–0,00715328 — `faixa_000694072_000715328`;
-- 0,00657122–0,00675278 — `faixa_000657122_000675278`;
-- faixa `0,00602–0,00639` — `faixa_000602_000639`;
-- 0,00561647–0,00586953 — `regiao_suporte_000561647_000586953`;
-- faixa `0,00524–0,00544` — `faixa_000524_000544`, promovida do radar de manutenção em 2026-09-14;
+- 0,00707–0,00712 — `faixa_0_00707_0_00712`;
+- 0,0066–0,00665 — `faixa_0_0066_0_00665`;
+- faixa `0,00602–0,006075` — `faixa_0_00602_0_006075`;
+- 0,00579–0,005845 — `regiao_suporte_0_00579_0_005845`;
+- faixa `0,005255–0,005305` — `faixa_0_005255_0_005305`, promovida do radar de manutenção em 2026-09-14;
 - resistência pontual principal `0,00700`;
 - suporte pontual principal `0,00584`.
 
-A última é a mais nova e a mais distante do preço. Ela veio de uma zona automática de score 92 sem penalidade, com 11 toques e 10 rejeições, confirmada no diário e no semanal. Promover não cria ciclo de rompimento/reteste — isso continua valendo só para os níveis pontuais. O que a promoção faz é preservar a região como referência depois que a zona automática expirar.
+A última é a mais nova e a mais distante do preço. Sua origem foi uma zona automática de score 92, com 11 toques e 10 rejeições. Essas contagens são históricas da zona ampla de origem e não representam testes independentes do núcleo refinado atual. Promover não cria ciclo de rompimento/reteste — isso continua valendo só para os níveis pontuais. O que a promoção faz é preservar a região como referência depois que a zona automática expirar.
 
 #### XMR/USD
 
-- faixa `US$ 494–507`;
-- faixa `US$ 463–477`;
-- região de suporte `US$ 423–445`;
-- faixa `US$ 399–423`, **suporte profundo**, promovida pelo radar em 2026-09-14;
+- faixa `US$ 498–503`;
+- faixa `US$ 468–472`;
+- região de suporte `US$ 437–441`;
+- faixa `US$ 410–414`, **suporte profundo**, promovida pelo radar em 2026-09-14;
 - resistência pontual `US$ 550`, **acima de todas as faixas**: não há resistência bem testada acima do preço, então nenhuma faixa foi marcada lá;
 - suporte pontual `US$ 500`;
-- resistência macro manual `US$ 788–811`.
+- resistência macro manual `US$ 797–803`.
 
-A faixa de 399–423 encosta na região de 423–445, sem sobrepor: no ponto de encontro vale a de cima. Ela é a região mais tocada deste par (14 toques, 10 rejeições) e fica a cerca de 24% abaixo do preço atual. Trate-a como **contexto de queda profunda**, não como nível de trabalho: ela só passa a importar se o preço de fato descer para lá. Não a use para antecipar alvo de queda nem para sugerir espera.
+A faixa de 410–414 concentra os pivôs confirmados de 410,25, 411,52 e 413,57. Ela foi refinada dentro da antiga faixa promovida de 399–423. As contagens históricas daquela zona ampla não devem ser atribuídas automaticamente a este núcleo. Trate-a como **contexto de queda profunda**, não como nível de trabalho: ela só passa a importar se o preço de fato descer para lá. Não a use para antecipar alvo de queda nem para sugerir espera.
 
 A resistência macro é contextual e propositalmente diferente da máquina de estados dos níveis pontuais.
 
@@ -937,7 +937,7 @@ Nunca envie duas mensagens para dizer que as duas portas estão abertas.
 
 ## Resistência macro manual
 
-Trate a faixa publicada em `niveis_manuais` como resistência macro/contextual manual de longo prazo. Na configuração de 2026-09-05 ela é **US$ 788–811**.
+Trate a faixa publicada em `niveis_manuais` como resistência macro/contextual manual de longo prazo. Na calibração de 2026-09-25 ela é **US$ 797–803**. O identificador legado `resistencia_macro_788_811` foi mantido por compatibilidade. Leia os limites numéricos publicados, sem inferi-los do nome do campo.
 
 Se o JSON publicar outra configuração para essa resistência macro, prevalece o JSON.
 
@@ -1155,7 +1155,7 @@ Uma aproximação, uma perfuração intradiária ou uma vela isolada **nunca** v
 
 A perda da região de suporte manual principal do XMR/USD pode evoluir para este alerta quando houver confirmação por fechamento **e** deterioração estrutural relevante — não pela perda sozinha.
 
-Leia os níveis sempre de `niveis_manuais` no JSON. Nenhum valor citado neste prompt é eterno: nem os US$ 550, nem a faixa macro US$ 788–811, nem qualquer suporte. Quando `niveis_manuais_situacao` disser `obsoleto`, a âncora desta regra envelheceu e o caminho é a revisão dos níveis, não forçar o alerta.
+Leia os níveis sempre de `niveis_manuais` no JSON. Nenhum valor citado neste prompt é eterno: nem os US$ 550, nem a faixa macro US$ 797–803, nem qualquer suporte. Quando `niveis_manuais_situacao` disser `obsoleto`, a âncora desta regra envelheceu e o caminho é a revisão dos níveis, não forçar o alerta.
 
 ### Horizonte desta hierarquia
 

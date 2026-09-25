@@ -68,6 +68,8 @@ const TIMEFRAMES = [
 
 // ------------------------------------------------------------
 // NIVEIS MANUAIS — o unico lugar a editar quando o preco andar.
+// As notas datadas abaixo registram revisoes anteriores. Os limites atuais
+// foram refinados em revisao-faixas-manuais-2026-09-25.json.
 //
 // Tres consumidores leem daqui e so daqui: alertasTecnicos (faixas e
 // rompimento/perda intradiarios), niveisDoPar (maquina de estados de
@@ -109,25 +111,12 @@ const TIMEFRAMES = [
 //            passou a olhar o conjunto inteiro de zonas
 const NIVEIS_USD = {
   faixas: [
-    [494, 507, "faixa_494_507"],
-    [463, 477, "faixa_463_477"],
-    [423, 445, "regiao_suporte_423_445"],
-    // Promovida do radar de manutencao em 2026-09-14. A zona automatica
-    // usd|diario|z15 vinha com score 79 (bruto 93, penalizada em
-    // rompida_2x_sem_reacao), 14 toques e 10 rejeicoes -- a mais tocada
-    // deste par --, forca de reacao media de 2,39 ATR, volume acima da
-    // media na epoca, confirmada no diario E no semanal, com role
-    // reversal e sem confluencia com faixa manual nenhuma. Primeiro
-    // toque em 2025-05-26, ultimo em 2026-08-22.
-    //
-    // Os limites ESTRUTURais eram 399,02 e 426,32. O teto ficou em 423,
-    // nao em 426: de 423 para cima a regiao_suporte_423_445 ja cobre, e
-    // duas faixas sobrepostas fariam o preco disparar as duas ao mesmo
-    // tempo nesse pedaco. Encostadas, nao sobrepostas -- mesmo criterio
-    // da promocao de 74-76k no BTC. Nada de cobertura se perde, so a
-    // ambiguidade: a sobreposicao com a zona ainda da 0,999, porque o
-    // pedaco cortado ja tem dona.
-    [399, 423, "faixa_399_423"],
+    // Nucleos manuais em 2026-09-25: teto de 0,25 ATR diario e 1% do centro.
+    // Evidencia: revisao-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
+    [498, 503, "faixa_498_503"],
+    [468, 472, "faixa_468_472"],
+    [437, 441, "regiao_suporte_437_441"],
+    [410, 414, "faixa_410_414"],
   ],
   // NAO corroborada por zona nenhuma, e mantida de proposito: e' a marca
   // do proximo nivel a vencer acima do preco. Descer a resistencia para
@@ -148,8 +137,9 @@ const NIVEIS_USD = {
   // justamente porque o preco esteve la poucas vezes -- e' isso que faz
   // dela uma referencia macro, e nao um nivel operacional.
   resistenciaMacro: {
-    inferior: 788,
-    superior: 811,
+    inferior: 797,
+    superior: 803,
+    // ID legado: preserva os nomes dos campos consumidos externamente.
     label: "resistencia_macro_788_811",
     tipo: "resistencia_macro_manual",
   },
@@ -170,12 +160,13 @@ const NIVEIS_USD = {
 //     score 66 logo abaixo, e a de score 83 que ancora o suporte.
 const NIVEIS_BTC = {
   faixas: [
-    // Recalibracao de largura em 2026-09-25: ver REVISAO_ZONAS_2026-09-25.md.
-    [0.00694072, 0.00715328, "faixa_000694072_000715328"],
-    [0.00657122, 0.00675278, "faixa_000657122_000675278"],
-    [0.00602, 0.00639, "faixa_000602_000639"],
-    [0.00561647, 0.00586953, "regiao_suporte_000561647_000586953"],
-    [0.00524, 0.00544, "faixa_000524_000544"],
+    // Nucleos manuais em 2026-09-25: teto de 0,25 ATR diario e 1% do centro.
+    // Evidencia: revisao-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
+    [0.00707, 0.00712, "faixa_0_00707_0_00712"],
+    [0.0066, 0.00665, "faixa_0_0066_0_00665"],
+    [0.00602, 0.006075, "faixa_0_00602_0_006075"],
+    [0.00579, 0.005845, "regiao_suporte_0_00579_0_005845"],
+    [0.005255, 0.005305, "faixa_0_005255_0_005305"],
   ],
   resistencia: 0.00700,
   resistenciaLabel: "000700",

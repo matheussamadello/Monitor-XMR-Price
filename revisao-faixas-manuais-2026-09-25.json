@@ -1,0 +1,526 @@
+{
+  "capturado_em": "2026-09-25T01:36:30.294Z",
+  "base_commit": "9722d974a1ecfe294d90bfa2de0878579fc2589d",
+  "criterio": "Faixas manuais fixas, ancoradas em nucleos de pivos confirmados dentro da regiao anterior. Teto total de 0,25 ATR diario e 1% do centro na calibracao. Uma faixa por regiao anterior, sem novas microzonas. Ancora isolada nao equivale a multiplos testes.",
+  "teto_atr_diario": 0.25,
+  "teto_fracao_preco": 0.01,
+  "faixas_manuais": [
+    {
+      "key": "usd",
+      "par": "XMR/USD",
+      "atr_diario_referencia": 39.943371051453944,
+      "ultima_vela_diaria": 1790208000,
+      "suporte_pontual": 500,
+      "resistencia_pontual": 550,
+      "antes": [
+        [
+          494,
+          507,
+          "faixa_494_507"
+        ],
+        [
+          463,
+          477,
+          "faixa_463_477"
+        ],
+        [
+          423,
+          445,
+          "regiao_suporte_423_445"
+        ],
+        [
+          399,
+          423,
+          "faixa_399_423"
+        ]
+      ],
+      "depois": [
+        [
+          498,
+          503,
+          "faixa_498_503"
+        ],
+        [
+          468,
+          472,
+          "faixa_468_472"
+        ],
+        [
+          437,
+          441,
+          "regiao_suporte_437_441"
+        ],
+        [
+          410,
+          414,
+          "faixa_410_414"
+        ]
+      ],
+      "ancoras": [
+        {
+          "label": "faixa_498_503",
+          "tipo": "concentracao_de_pivos",
+          "pivos": [
+            {
+              "preco": 500,
+              "time": 1766188800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 500.87,
+              "time": 1769817600,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 500,
+              "time": 1766188800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 500.87,
+              "time": 1769817600,
+              "tipo": "topo"
+            }
+          ]
+        },
+        {
+          "label": "faixa_468_472",
+          "tipo": "pivo_isolado_manual",
+          "pivos": [
+            {
+              "preco": 470,
+              "time": 1762646400,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 470,
+              "time": 1762646400,
+              "tipo": "topo"
+            }
+          ]
+        },
+        {
+          "label": "regiao_suporte_437_441",
+          "tipo": "concentracao_de_pivos",
+          "pivos": [
+            {
+              "preco": 437.58,
+              "time": 1778025600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 438.49,
+              "time": 1764460800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 440,
+              "time": 1763164800,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 426.32,
+              "time": 1781222400,
+              "tipo": "topo"
+            },
+            {
+              "preco": 437.58,
+              "time": 1778025600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 438.49,
+              "time": 1764460800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 440,
+              "time": 1763164800,
+              "tipo": "topo"
+            }
+          ]
+        },
+        {
+          "label": "faixa_410_414",
+          "tipo": "concentracao_de_pivos",
+          "pivos": [
+            {
+              "preco": 410.25,
+              "time": 1779321600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 411.52,
+              "time": 1767312000,
+              "tipo": "fundo"
+            },
+            {
+              "preco": 413.57,
+              "time": 1786233600,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 399.02,
+              "time": 1787356800,
+              "tipo": "fundo"
+            },
+            {
+              "preco": 406.91,
+              "time": 1777161600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 410.25,
+              "time": 1779321600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 411.52,
+              "time": 1767312000,
+              "tipo": "fundo"
+            },
+            {
+              "preco": 413.57,
+              "time": 1786233600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 420,
+              "time": 1748217600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 421.4,
+              "time": 1780099200,
+              "tipo": "topo"
+            }
+          ]
+        }
+      ],
+      "macro_antes": {
+        "inferior": 788,
+        "superior": 811,
+        "label": "resistencia_macro_788_811",
+        "tipo": "resistencia_macro_manual"
+      },
+      "macro_depois": {
+        "inferior": 797,
+        "superior": 803,
+        "label": "resistencia_macro_788_811",
+        "tipo": "resistencia_macro_manual"
+      },
+      "pivos_macro": [
+        {
+          "preco": 799.89,
+          "time": 1768348800,
+          "tipo": "topo"
+        }
+      ]
+    },
+    {
+      "key": "btc",
+      "par": "XMR/BTC",
+      "atr_diario_referencia": 0.00047299837011129017,
+      "ultima_vela_diaria": 1790208000,
+      "suporte_pontual": 0.00584,
+      "resistencia_pontual": 0.007,
+      "antes": [
+        [
+          0.00694072,
+          0.00715328,
+          "faixa_000694072_000715328"
+        ],
+        [
+          0.00657122,
+          0.00675278,
+          "faixa_000657122_000675278"
+        ],
+        [
+          0.00602,
+          0.00639,
+          "faixa_000602_000639"
+        ],
+        [
+          0.00561647,
+          0.00586953,
+          "regiao_suporte_000561647_000586953"
+        ],
+        [
+          0.00524,
+          0.00544,
+          "faixa_000524_000544"
+        ]
+      ],
+      "depois": [
+        [
+          0.00707,
+          0.00712,
+          "faixa_0_00707_0_00712"
+        ],
+        [
+          0.0066,
+          0.00665,
+          "faixa_0_0066_0_00665"
+        ],
+        [
+          0.00602,
+          0.006075,
+          "faixa_0_00602_0_006075"
+        ],
+        [
+          0.00579,
+          0.005845,
+          "regiao_suporte_0_00579_0_005845"
+        ],
+        [
+          0.005255,
+          0.005305,
+          "faixa_0_005255_0_005305"
+        ]
+      ],
+      "ancoras": [
+        {
+          "label": "faixa_0_00707_0_00712",
+          "tipo": "pivo_isolado_manual",
+          "pivos": [
+            {
+              "preco": 0.007094,
+              "time": 1789171200,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 0.007,
+              "time": 1788307200,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.007094,
+              "time": 1789171200,
+              "tipo": "topo"
+            }
+          ]
+        },
+        {
+          "label": "faixa_0_0066_0_00665",
+          "tipo": "pivo_isolado_manual",
+          "pivos": [
+            {
+              "preco": 0.006624,
+              "time": 1786924800,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 0.006624,
+              "time": 1786924800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.0067,
+              "time": 1781222400,
+              "tipo": "topo"
+            }
+          ]
+        },
+        {
+          "label": "faixa_0_00602_0_006075",
+          "tipo": "concentracao_de_pivos",
+          "pivos": [
+            {
+              "preco": 0.006034,
+              "time": 1769817600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.006063,
+              "time": 1780531200,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 0.006034,
+              "time": 1769817600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.006063,
+              "time": 1780531200,
+              "tipo": "topo"
+            }
+          ]
+        },
+        {
+          "label": "regiao_suporte_0_00579_0_005845",
+          "tipo": "concentracao_de_pivos",
+          "pivos": [
+            {
+              "preco": 0.005805,
+              "time": 1784937600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.005835,
+              "time": 1785542400,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 0.005651,
+              "time": 1766188800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.005805,
+              "time": 1784937600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.005835,
+              "time": 1785542400,
+              "tipo": "topo"
+            }
+          ]
+        },
+        {
+          "label": "faixa_0_005255_0_005305",
+          "tipo": "concentracao_de_pivos",
+          "pivos": [
+            {
+              "preco": 0.005262,
+              "time": 1785196800,
+              "tipo": "fundo"
+            },
+            {
+              "preco": 0.005279,
+              "time": 1770940800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.005283,
+              "time": 1779321600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.0053,
+              "time": 1778025600,
+              "tipo": "topo"
+            }
+          ],
+          "candidatos_na_faixa_anterior": [
+            {
+              "preco": 0.005262,
+              "time": 1785196800,
+              "tipo": "fundo"
+            },
+            {
+              "preco": 0.005279,
+              "time": 1770940800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.005283,
+              "time": 1779321600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.0053,
+              "time": 1778025600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.00535,
+              "time": 1774137600,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.005364,
+              "time": 1772236800,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.005399,
+              "time": 1782432000,
+              "tipo": "topo"
+            },
+            {
+              "preco": 0.00542,
+              "time": 1785888000,
+              "tipo": "fundo"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "comparacao": {
+    "gatilhos_antes": [
+      {
+        "id": "usd_rompe_550",
+        "msg": "XMR/USD fechou o diario acima de 550 com corpo confirmando (fech 565.57, abert 553.48)"
+      },
+      {
+        "id": "btc_faixa_000657122_000675278",
+        "msg": "XMR/BTC entrou na regiao 0.00657122-0.00675278 (agora 0.00674900)"
+      }
+    ],
+    "gatilhos_depois": [
+      {
+        "id": "usd_rompe_550",
+        "msg": "XMR/USD fechou o diario acima de 550 com corpo confirmando (fech 565.57, abert 553.48)"
+      }
+    ],
+    "campos_alterados": {
+      "usd|diario": [
+        "niveis_manuais_faixa_mais_proxima",
+        "niveis_manuais_distancia_atr",
+        "resistencia_macro_788_811_inferior",
+        "resistencia_macro_788_811_superior",
+        "resistencia_macro_788_811_distancia_pct",
+        "niveis_manuais"
+      ],
+      "btc|diario": [
+        "niveis_manuais_faixa_mais_proxima",
+        "niveis_manuais_distancia_atr",
+        "alertas_tecnicos",
+        "zona_auto_4",
+        "niveis_manuais",
+        "zonas_automaticas"
+      ],
+      "usd|semanal": [
+        "niveis_manuais_faixa_mais_proxima",
+        "niveis_manuais_distancia_atr",
+        "resistencia_macro_788_811_inferior",
+        "resistencia_macro_788_811_superior",
+        "resistencia_macro_788_811_distancia_pct",
+        "niveis_manuais"
+      ],
+      "btc|semanal": [
+        "niveis_manuais_faixa_mais_proxima",
+        "niveis_manuais_distancia_atr",
+        "niveis_manuais_alinhamento",
+        "niveis_manuais_faixas_corroboradas",
+        "alertas_tecnicos",
+        "zona_auto_1",
+        "zona_auto_4",
+        "zona_auto_6",
+        "niveis_manuais",
+        "zonas_automaticas"
+      ]
+    },
+    "estrutura_indicadores_niveis_pontuais_inalterados": true,
+    "geometria_score_toques_rejeicoes_automaticas_inalterados": true
+  }
+}
