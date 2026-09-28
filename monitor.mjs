@@ -122,6 +122,16 @@ const NIVEIS_USD = {
     // 6 e 3. A zona automatica ainda e' fraca (score 45, 2 toques) porque
     // as minimas recentes nao viraram pivos confirmados. 8 de largura =
     // 0,22 ATR diario (36,46), dentro do teto de 0,5.
+    // Tambem de 2026-09-28: a resistencia mais relevante acima de 550.
+    // Maximas de 558,88 (09-05), 559 (09-06), 560,91 (09-26), 562,95
+    // (09-27), 565,76 (09-04, pivo confirmado) e 568,61 (09-20); depois do
+    // rompimento, minima de 560,82 (09-22). Foi o teto dos repiques de 26
+    // e 27/09. Zona diaria usd|diario|z58 (564,02-567,50, score 46).
+    // Acima de 550 o XMR so negociou em jan/2026 e set/2026, por isso os
+    // toques sao poucos. 575-580 (maximas de 23 a 25/09) ficou de fora:
+    // a 7 de distancia, seria a mesma regiao partida em duas. 10 de
+    // largura = 0,27 ATR diario.
+    [558, 568, "faixa_558_568"],
     [540, 548, "faixa_540_548"],
     // Tambem de 2026-09-28, revisao manual. Regiao onde o XMR/USD mais
     // negociou desde agosto, testada dos dois lados: maximas de 518,53

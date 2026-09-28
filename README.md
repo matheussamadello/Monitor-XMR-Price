@@ -351,6 +351,7 @@ As faixas não mudam automaticamente com o ATR. A revisão preservou o número d
 
 | Faixa atual | Label | Pivôs confirmados incluídos |
 | --- | --- | --- |
+| 558–568 | `faixa_558_568` | 565,76 |
 | 540–548 | `faixa_540_548` | 547,66 |
 | 517–520 | `faixa_517_520` | 517,6 (semanal, 2021) |
 | 498–503 | `faixa_498_503` | 500, 500,87 |
@@ -362,9 +363,11 @@ Resistência pontual: **550**. Suporte pontual: **500**.
 
 **Faixa 540–548, acrescentada em 2026-09-28 por revisão manual.** A linha de 550 nasceu em 2026-09-05 do topo de 31/08, mas o preço nunca reagiu exatamente nela: reagiu logo abaixo, dos dois lados. Como teto, com topos de 541,80, 544,15, 544,83, 547,66 e 548,34 entre 31/08 e 13/09. Como piso, depois do rompimento de 18/09, com mínimas de 543,79, 542,00, 545,52, 545,41 e 540,00 entre 23/09 e 27/09. Desde agosto, 545 foi respeitado em 10 velas diárias e cruzado em 3; 550, em 6 e 3. A zona automática ainda é fraca (score 45, 2 toques) porque as mínimas recentes ainda não viraram pivôs confirmados — só o topo de 547,66 é pivô, por isso a tabela lista só ele. A linha de 550 foi **mantida**: trocar o número zeraria a história dela (rompida em 20/09, reteste confirmado em 24/09) no meio do reteste, e a tolerância de reteste, de cerca de 9, já cobre 541–559. A faixa acrescenta o que a linha não faz: aviso de preço dentro da região e alinhamento com as zonas. A linha deve ser revista quando o reteste se resolver.
 
+**Faixa 558–568, também de 2026-09-28: a resistência acima de 550.** Acima de 550 o XMR só negociou duas vezes na história — a disparada de janeiro de 2026, de 471 a 799,89 em quatro dias e de volta a 501, e setembro de 2026 —, então as resistências de lá têm poucos toques. A mais relevante e mais próxima é 558–568: máximas de 558,88, 559, 560,91, 562,95, 565,76 (topo de 04/09, pivô confirmado) e 568,61, a mínima de 560,82 depois do rompimento, e o teto dos repiques de 26 e 27/09. Coincide com a zona diária `usd|diario|z58` (564,02–567,50, score 46). Ficaram de fora 575–580 (máximas de 23 a 25/09, a só 7 de distância: seria a mesma região partida em duas), 590–592 (fraca) e o topo de 633,90 de 21/09 (um toque).
+
 **Faixa 517–520, também de 2026-09-28.** É a região onde o XMR/USD mais negociou desde agosto, testada dos dois lados: máximas de 518,53, 518,75, 518,86 e 519,87, mínimas de 517,14, 518,44 e 519,92, e fechamentos de 516,88 a 520,83, entre 31/08 e 20/09. Coincide com a zona semanal `usd|semanal|z31` (514,64–520,56, score 77, 3 toques) e com o topo semanal de 517,60 de maio de 2021. No diário não há pivô confirmado nela, por isso não existe zona diária. Fica entre a faixa 540–548 e a 498–503, e é o primeiro apoio se a região de 540 for perdida.
 
-Cada uma das duas faixas novas é corroborada por zona automática em um timeframe só — 540–548 no diário, 517–520 no semanal —, e por isso o alinhamento do XMR/USD saiu `parcial` nos dois a partir de 2026-09-28: diário 5 de 6 (era 5 de 5 com a primeira faixa, 4 de 4 antes), semanal 4 de 6 (já era `parcial`, 3 de 4, pela faixa 410–414). É consequência esperada da escolha, registrada também no prompt para não virar alerta de revisão.
+Cada faixa nova de 2026-09-28 é corroborada por zona automática em um timeframe só — 558–568 e 540–548 no diário, 517–520 no semanal —, e por isso o alinhamento do XMR/USD saiu `parcial` nos dois a partir de 2026-09-28 (o semanal já era `parcial`, 3 de 4, pela faixa 410–414). É consequência esperada da escolha, registrada também no prompt para não virar alerta de revisão.
 
 Resistência macro contextual: **797–803**, sem alteração. O identificador legado `resistencia_macro_788_811` permanece por compatibilidade. Continua pouco testada e não gera gatilhos.
 
