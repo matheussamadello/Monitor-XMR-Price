@@ -179,11 +179,12 @@ Na configuração atual do projeto, as referências conhecidas são:
 
 - 0,00698–0,00712 — `faixa_0_00698_0_00712`;
 - 0,0066–0,00672 — `faixa_0_0066_0_00672`;
+- 0,00637–0,00647 — `faixa_0_00637_0_00647`, acrescentada em 2026-09-28 por revisão manual: o piso onde o preço se apoiou desde 14/09 (mínimas de 0,006394 a 0,006467), sobre zona semanal de score 80;
 - faixa `0,00602–0,006075` — `faixa_0_00602_0_006075`;
 - 0,00579–0,005845 — `regiao_suporte_0_00579_0_005845`;
 - faixa `0,005255–0,005305` — `faixa_0_005255_0_005305`, promovida do radar de manutenção em 2026-09-14;
 - resistência pontual principal `0,00700`;
-- suporte pontual principal `0,00584`.
+- suporte pontual principal `0,0064`, dentro da faixa 0,00637–0,00647. Era `0,00584` até 2026-09-28; foi movido porque ficava 10% abaixo do preço e nunca tinha aberto registro. Por ser uma linha nova, ela começa como `sem_registro`: não há rompimento anterior a considerar.
 
 A última é a mais nova e a mais distante do preço. Sua origem foi uma zona automática de score 92, com 11 toques e 10 rejeições. Essas contagens são históricas da zona ampla de origem e não representam testes independentes do núcleo refinado atual. Promover não cria ciclo de rompimento/reteste — isso continua valendo só para os níveis pontuais. O que a promoção faz é preservar a região como referência depois que a zona automática expirar.
 

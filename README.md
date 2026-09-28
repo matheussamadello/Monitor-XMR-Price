@@ -374,11 +374,14 @@ Resistência macro contextual: **797–803**, sem alteração. O identificador l
 | --- | --- | --- |
 | 0,00698–0,00712 | `faixa_0_00698_0_00712` | 0,007, 0,007094 |
 | 0,0066–0,00672 | `faixa_0_0066_0_00672` | 0,006624, 0,0067 |
+| 0,00637–0,00647 | `faixa_0_00637_0_00647` | 0,006411 |
 | 0,00602–0,006075 | `faixa_0_00602_0_006075` | 0,006034, 0,006063 |
 | 0,00579–0,005845 | `regiao_suporte_0_00579_0_005845` | 0,005805, 0,005835 |
 | 0,005255–0,005305 | `faixa_0_005255_0_005305` | 0,005262, 0,005279, 0,005283, 0,0053 |
 
-Resistência pontual: **0,007**. Suporte pontual: **0,00584**.
+Resistência pontual: **0,007**. Suporte pontual: **0,0064** (era 0,00584 até 2026-09-28).
+
+**Revisão de 2026-09-28.** Faltava o piso onde o preço se apoiou desde 14/09: as mínimas diárias pararam 8 vezes entre 0,006394 e 0,006467, sobre a zona semanal `btc|semanal|z61` (0,006372–0,006448, score 80, 11 toques) e o fundo semanal de 0,00641 de novembro de 2020. Nenhum nível manual cobria a região, e o cartão mostrava como suporte a faixa 0,00602–0,006075, a 6% do preço, com o piso real a 1%. Entrou a faixa **0,00637–0,00647**, e a linha de suporte subiu de 0,00584 para **0,0064**, dentro dela. A linha antiga ficava 10% abaixo do preço e nunca tinha aberto registro, então a troca não apagou história nenhuma; a faixa 0,00579–0,005845 continua como suporte profundo. O teto (0,00698–0,00712 e a linha de 0,007) e as demais faixas foram reavaliados e ficaram como estavam.
 
 Os [resultados do reajuste](REAJUSTE_FAIXAS_2026-09-25.md) e a [evidência com pivôs, janelas e medidas](reajuste-faixas-manuais-2026-09-25.json) documentam os limites atuais. A [auditoria anterior](AUDITORIA_FAIXAS_2026-09-25.md) e a [calibração mais estreita](revisao-faixas-manuais-2026-09-25.json) permanecem como registros históricos.
 
@@ -1120,14 +1123,15 @@ const NIVEIS_BTC = {
   faixas: [
     [0.00698, 0.00712, "faixa_0_00698_0_00712"],
     [0.0066, 0.00672, "faixa_0_0066_0_00672"],
+    [0.00637, 0.00647, "faixa_0_00637_0_00647"],
     [0.00602, 0.006075, "faixa_0_00602_0_006075"],
     [0.00579, 0.005845, "regiao_suporte_0_00579_0_005845"],
     [0.005255, 0.005305, "faixa_0_005255_0_005305"],
   ],
   resistencia: 0.00700,
   resistenciaLabel: "000700",
-  suporte: 0.00584,
-  suporteLabel: "000584",
+  suporte: 0.00640,
+  suporteLabel: "000640",
 };
 
 const PAIRS = [

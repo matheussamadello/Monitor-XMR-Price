@@ -173,7 +173,8 @@ const NIVEIS_USD = {
 // De onde saem os novos:
 //   resistencia 0.00700 — centro da zona diaria acima do preco e pivo de
 //     topo de 2026-09-02, o mesmo numero pelas duas leituras.
-//   suporte 0.00584 — zona diaria de score 83 com centro em 0.0058425,
+//   suporte 0.00584 (movido para 0.00640 em 2026-09-28, ver abaixo) —
+//     zona diaria de score 83 com centro em 0.0058425,
 //     por dentro da zona semanal de score 83. Passa a existir: antes o
 //     suporte era null.
 //   faixas — a zona em que o preco esta agora (0.00656-0.00705), a de
@@ -184,14 +185,28 @@ const NIVEIS_BTC = {
     // Evidencia: reajuste-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
     [0.00698, 0.00712, "faixa_0_00698_0_00712"],
     [0.0066, 0.00672, "faixa_0_0066_0_00672"],
+    // Acrescentada em 2026-09-28 por revisao manual: o piso onde o preco
+    // se apoiou desde 09-14, com minimas diarias de 0.006394 (09-27),
+    // 0.006411 (09-16, pivo confirmado), 0.006431, 0.006432, 0.006437,
+    // 0.006441, 0.006453 e 0.006467. Cobre a zona SEMANAL btc|semanal|z61
+    // (0.006372-0.006448, score 80, 11 toques) e o fundo semanal de
+    // 0.00641 de 2020-11-19. Nenhum nivel manual cobria a regiao, e o
+    // cartao apontava como suporte uma faixa 6% abaixo com o piso real a
+    // 1%. Largura 0.0001 = 0,23 ATR diario (0.000431).
+    [0.00637, 0.00647, "faixa_0_00637_0_00647"],
     [0.00602, 0.006075, "faixa_0_00602_0_006075"],
     [0.00579, 0.005845, "regiao_suporte_0_00579_0_005845"],
     [0.005255, 0.005305, "faixa_0_005255_0_005305"],
   ],
   resistencia: 0.00700,
   resistenciaLabel: "000700",
-  suporte: 0.00584,
-  suporteLabel: "000584",
+  // Movido de 0.00584 para 0.00640 em 2026-09-28, dentro da faixa
+  // 0.00637-0.00647. A linha de 0.00584 ficava 10% abaixo do preco e
+  // nunca abriu registro (sem_registro), entao a troca nao apaga
+  // historia nenhuma. Em 0.00640 a maquina passa a vigiar a perda do piso
+  // atual. A faixa 0.00579-0.005845 continua como suporte profundo.
+  suporte: 0.00640,
+  suporteLabel: "000640",
 };
 
 const PAIRS = [
