@@ -189,11 +189,12 @@ A última é a mais nova e a mais distante do preço. Sua origem foi uma zona au
 
 #### XMR/USD
 
+- faixa `US$ 540–548`, acrescentada em 2026-09-28 por revisão manual: é onde o preço virou teto (topos de 541,80 a 548,34) e depois piso (mínimas de 540,00 a 545,52) em volta da linha de 550;
 - faixa `US$ 498–503`;
 - faixa `US$ 463–473`;
 - região de suporte `US$ 437–441`;
 - faixa `US$ 410–414`, **suporte profundo**, promovida pelo radar em 2026-09-14;
-- resistência pontual `US$ 550`, **acima de todas as faixas**: não há resistência bem testada acima do preço, então nenhuma faixa foi marcada lá;
+- resistência pontual `US$ 550`, rompida para cima em 2026-09-20 e em reteste desde então. Fica logo acima da faixa 540–548, que é a região real de reação; a linha foi mantida em 550 para não zerar a história do rompimento no meio do reteste. Não trate a faixa e a linha como dois níveis independentes: são a mesma região, e um fechamento diário abaixo de 540 é a perda das duas;
 - suporte pontual `US$ 500`;
 - resistência macro manual `US$ 797–803`.
 

@@ -113,16 +113,27 @@ const NIVEIS_USD = {
   faixas: [
     // Faixas fixas revistas por pivos/reacoes em 2026-09-25; teto de 0,5 ATR na calibracao.
     // Evidencia: reajuste-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
+    // Acrescentada em 2026-09-28 por revisao manual. E' onde o preco de
+    // fato virou teto e depois piso em volta da linha de 550: topos de
+    // 541,80 (09-02), 544,15 (09-07), 544,83 (09-13), 547,66 (09-12,
+    // pivo confirmado) e 548,34 (08-31); depois do rompimento de 09-18,
+    // minimas de 543,79, 542,00, 545,52, 545,41 e 540,00 (09-23 a 09-27).
+    // Desde agosto, 545 foi respeitado em 10 velas e cruzado em 3; 550, em
+    // 6 e 3. A zona automatica ainda e' fraca (score 45, 2 toques) porque
+    // as minimas recentes nao viraram pivos confirmados. 8 de largura =
+    // 0,22 ATR diario (36,46), dentro do teto de 0,5.
+    [540, 548, "faixa_540_548"],
     [498, 503, "faixa_498_503"],
     [463, 473, "faixa_463_473"],
     [437, 441, "regiao_suporte_437_441"],
     [410, 414, "faixa_410_414"],
   ],
-  // NAO corroborada por zona nenhuma, e mantida de proposito: e' a marca
-  // do proximo nivel a vencer acima do preco. Descer a resistencia para
-  // dentro da regiao ja testada faria o monitor anunciar como rompimento
-  // NOVO uma passagem que ja aconteceu. Quando o preco construir
-  // estrutura la em cima, este numero deve ser revisto.
+  // Rompida para cima em 2026-09-20 e em reteste desde entao. A regiao
+  // real de reacao fica logo abaixo (faixa 540-548); a linha foi MANTIDA
+  // em 550 em 2026-09-28 porque trocar o numero zeraria a historia da
+  // maquina (rompido, reteste confirmado) no meio do reteste. A
+  // tolerancia de reteste (0,25 ATR, ~9) ja cobre 541-559. Rever quando
+  // o reteste se resolver.
   resistencia: 550,
   resistenciaLabel: "550",
   suporte: 500,
