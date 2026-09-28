@@ -123,6 +123,15 @@ const NIVEIS_USD = {
     // as minimas recentes nao viraram pivos confirmados. 8 de largura =
     // 0,22 ATR diario (36,46), dentro do teto de 0,5.
     [540, 548, "faixa_540_548"],
+    // Tambem de 2026-09-28, revisao manual. Regiao onde o XMR/USD mais
+    // negociou desde agosto, testada dos dois lados: maximas de 518,53
+    // (09-10), 518,75 (09-17), 518,86 (09-09) e 519,87 (09-15); minimas
+    // de 517,14 (09-13), 518,44 (09-05) e 519,92 (09-06); fechamentos de
+    // 516,88 a 520,83. Coincide com a zona SEMANAL usd|semanal|z31
+    // (514,64-520,56, score 77, 3 toques) e com o topo semanal de 517,60
+    // de 2021-05-06. No diario nao ha pivo confirmado, por isso nao ha
+    // zona diaria. 3 de largura = 0,08 ATR diario.
+    [517, 520, "faixa_517_520"],
     [498, 503, "faixa_498_503"],
     [463, 473, "faixa_463_473"],
     [437, 441, "regiao_suporte_437_441"],

@@ -352,6 +352,7 @@ As faixas não mudam automaticamente com o ATR. A revisão preservou o número d
 | Faixa atual | Label | Pivôs confirmados incluídos |
 | --- | --- | --- |
 | 540–548 | `faixa_540_548` | 547,66 |
+| 517–520 | `faixa_517_520` | 517,6 (semanal, 2021) |
 | 498–503 | `faixa_498_503` | 500, 500,87 |
 | 463–473 | `faixa_463_473` | 470 |
 | 437–441 | `regiao_suporte_437_441` | 437,58, 438,49, 440 |
@@ -360,6 +361,8 @@ As faixas não mudam automaticamente com o ATR. A revisão preservou o número d
 Resistência pontual: **550**. Suporte pontual: **500**.
 
 **Faixa 540–548, acrescentada em 2026-09-28 por revisão manual.** A linha de 550 nasceu em 2026-09-05 do topo de 31/08, mas o preço nunca reagiu exatamente nela: reagiu logo abaixo, dos dois lados. Como teto, com topos de 541,80, 544,15, 544,83, 547,66 e 548,34 entre 31/08 e 13/09. Como piso, depois do rompimento de 18/09, com mínimas de 543,79, 542,00, 545,52, 545,41 e 540,00 entre 23/09 e 27/09. Desde agosto, 545 foi respeitado em 10 velas diárias e cruzado em 3; 550, em 6 e 3. A zona automática ainda é fraca (score 45, 2 toques) porque as mínimas recentes ainda não viraram pivôs confirmados — só o topo de 547,66 é pivô, por isso a tabela lista só ele. A linha de 550 foi **mantida**: trocar o número zeraria a história dela (rompida em 20/09, reteste confirmado em 24/09) no meio do reteste, e a tolerância de reteste, de cerca de 9, já cobre 541–559. A faixa acrescenta o que a linha não faz: aviso de preço dentro da região e alinhamento com as zonas. A linha deve ser revista quando o reteste se resolver.
+
+**Faixa 517–520, também de 2026-09-28.** É a região onde o XMR/USD mais negociou desde agosto, testada dos dois lados: máximas de 518,53, 518,75, 518,86 e 519,87, mínimas de 517,14, 518,44 e 519,92, e fechamentos de 516,88 a 520,83, entre 31/08 e 20/09. Coincide com a zona semanal `usd|semanal|z31` (514,64–520,56, score 77, 3 toques) e com o topo semanal de 517,60 de maio de 2021. No diário não há pivô confirmado nela, por isso não existe zona diária. Fica entre a faixa 540–548 e a 498–503, e é o primeiro apoio se a região de 540 for perdida.
 
 Resistência macro contextual: **797–803**, sem alteração. O identificador legado `resistencia_macro_788_811` permanece por compatibilidade. Continua pouco testada e não gera gatilhos.
 
