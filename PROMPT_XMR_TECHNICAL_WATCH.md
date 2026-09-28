@@ -191,6 +191,7 @@ A última é a mais nova e a mais distante do preço. Sua origem foi uma zona au
 
 - faixa `US$ 540–548`, acrescentada em 2026-09-28 por revisão manual: é onde o preço virou teto (topos de 541,80 a 548,34) e depois piso (mínimas de 540,00 a 545,52) em volta da linha de 550;
 - faixa `US$ 517–520`, acrescentada em 2026-09-28 por revisão manual: região mais negociada desde agosto, testada dos dois lados, sobre a zona semanal de score 77 e o topo semanal de 517,60 de 2021. É o primeiro apoio abaixo da faixa 540–548;
+- as duas faixas de 2026-09-28 são corroboradas por zona automática em **um timeframe só**, por construção: 540–548 no diário (a zona semanal não existe lá) e 517–520 no semanal (no diário não há pivô confirmado nela). Por isso o alinhamento do XMR/USD passou a `parcial` nos dois timeframes a partir de 2026-09-28 (diário 5 de 6, semanal 4 de 6; o semanal já era `parcial`, 3 de 4, pela faixa 410–414). Isso é esperado e **não** é motivo de revisão dos níveis manuais;
 - faixa `US$ 498–503`;
 - faixa `US$ 463–473`;
 - região de suporte `US$ 437–441`;

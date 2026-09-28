@@ -364,6 +364,8 @@ Resistência pontual: **550**. Suporte pontual: **500**.
 
 **Faixa 517–520, também de 2026-09-28.** É a região onde o XMR/USD mais negociou desde agosto, testada dos dois lados: máximas de 518,53, 518,75, 518,86 e 519,87, mínimas de 517,14, 518,44 e 519,92, e fechamentos de 516,88 a 520,83, entre 31/08 e 20/09. Coincide com a zona semanal `usd|semanal|z31` (514,64–520,56, score 77, 3 toques) e com o topo semanal de 517,60 de maio de 2021. No diário não há pivô confirmado nela, por isso não existe zona diária. Fica entre a faixa 540–548 e a 498–503, e é o primeiro apoio se a região de 540 for perdida.
 
+Cada uma das duas faixas novas é corroborada por zona automática em um timeframe só — 540–548 no diário, 517–520 no semanal —, e por isso o alinhamento do XMR/USD saiu `parcial` nos dois a partir de 2026-09-28: diário 5 de 6 (era 5 de 5 com a primeira faixa, 4 de 4 antes), semanal 4 de 6 (já era `parcial`, 3 de 4, pela faixa 410–414). É consequência esperada da escolha, registrada também no prompt para não virar alerta de revisão.
+
 Resistência macro contextual: **797–803**, sem alteração. O identificador legado `resistencia_macro_788_811` permanece por compatibilidade. Continua pouco testada e não gera gatilhos.
 
 ### XMR/BTC
