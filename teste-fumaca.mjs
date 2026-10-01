@@ -1487,6 +1487,7 @@ console.log("\n== calibragem deste par ==");
 // depois dele. Ele sai do processo com codigo 1 por conta propria se o
 // relatorio tiver mudado, e ai a contagem abaixo nem chega a imprimir.
 await import("./teste-estrutura-visual.mjs");
+await import("./teste-qualidade-dados.mjs");
 
 console.log("\n== retrato do relatorio ==");
 await import("./teste-retrato.mjs");
