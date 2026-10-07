@@ -2485,6 +2485,13 @@ export function reconciliarAnteriores(anteriores, zonasCalculadas, tfKey, ultima
       orfa.status = "enfraquecida";
       orfa.velasEnfraquecida = 0;
     } else if (orfa.status === "enfraquecida") {
+      // A carencia conta velas como ORFA. Zona desenhada pelos pivos nao
+      // expira enquanto e' desenhada, e o contador dela segue somando: com
+      // ele herdado, a zona que perdia o casamento por UMA vela (dois
+      // desenhos disputando a mesma ficha num reagrupamento) saia na hora
+      // e voltava na vela seguinte com id novo. Achado pelo teste de
+      // propriedade: 19 a 61 renascimentos por semente.
+      if (!ant.orfa) orfa.velasEnfraquecida = 0;
       if (!Number.isFinite(ant.ultimaVelaAvaliada) || ultimaVelaFechada > ant.ultimaVelaAvaliada) {
         orfa.velasEnfraquecida = (orfa.velasEnfraquecida || 0) + 1;
       }

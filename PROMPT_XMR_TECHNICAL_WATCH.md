@@ -1406,7 +1406,7 @@ Dois campos diferentes medem coisas diferentes, e é fácil confundi-los:
 
 Uma faixa pode estar `atual` e `desalinhado` ao mesmo tempo: perto do preço, mas deslocada da região que o mercado respeita. É justamente o caso que mais merece revisão, e o único dos dois campos que enxerga isso é o alinhamento.
 
-Zona `enfraquecida` conta para o alinhamento enquanto os pivôs dela continuarem desenhando a região: ela não expira pela carência nem troca de id. Por isso a contagem de `niveis_manuais_faixas_corroboradas` não oscila sozinha. Se ela cair de uma vela para outra, alguma zona realmente mudou (saiu do desenho, perdeu score ou deixou de se sobrepor à faixa), e vale ver qual antes de sugerir revisão.
+Zona `enfraquecida` conta para o alinhamento enquanto os pivôs dela continuarem desenhando a região: ela não expira pela carência nem troca de id. Quando os pivôs deixam de desenhá-la, ela vira órfã e só sai depois de 15 velas como órfã no diário (4 no semanal). Por isso a contagem de `niveis_manuais_faixas_corroboradas` não oscila sozinha. Se ela cair de uma vela para outra, alguma zona realmente mudou (saiu do desenho, perdeu score ou deixou de se sobrepor à faixa), e vale ver qual antes de sugerir revisão.
 
 Existe também um radar de promoção. `zonas_candidatas_a_faixa` lista, **só no bloco diário**, regiões que amadureceram e que nenhuma faixa manual já representa: zona com score 70 ou mais, pelo menos 5 toques e situação `ativa`, que nenhuma faixa cobre e que não está **colada** em faixa nenhuma. O lado entre parênteses (`acima do fechamento`, `abaixo do fechamento`, `no fechamento`) é medido contra o último fechamento diário, não contra `preco_atual`.
 
