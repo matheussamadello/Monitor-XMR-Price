@@ -2469,7 +2469,7 @@ export function fundirZonasOpostas(zonas, tfKey = "diario", atrAtual = null) {
 // Agora a ficha coberta fica DORMENTE: continua no estado, para poder
 // ser reencontrada, mas nao e' publicada nem conta como confluencia
 // semanal. A duplicata que o descarte evitava continua nao existindo.
-export function reconciliarAnteriores(anteriores, zonasCalculadas, tfKey, ultimaVelaFechada, atrAtual = null) {
+export function reconciliarAnteriores(anteriores, zonasCalculadas, tfKey, ultimaVelaFechada, atrAtual = null, contexto = {}) {
   const par = PARAMS_TF[tfKey] || PARAMS_TF.diario;
   const calculadas = zonasCalculadas || [];
   const idsCalculados = new Set(calculadas.map((z) => z.id));
@@ -2492,6 +2492,19 @@ export function reconciliarAnteriores(anteriores, zonasCalculadas, tfKey, ultima
     }
     orfa.ultimaVelaAvaliada = ultimaVelaFechada;
     orfa.orfa = true;
+    const { precoAtual, times = [] } = contexto;
+    if (Number.isFinite(precoAtual) && orfa.centro > 0) {
+      orfa.limites_operacionais = limitesOperacionais(orfa.centro, atrAtual);
+      orfa.distancia_preco_atual_pct = ((precoAtual - orfa.centro) / orfa.centro) * 100;
+      orfa.estado_atual = precoAtual < orfa.limites_operacionais.inferior ? "abaixo"
+        : precoAtual > orfa.limites_operacionais.superior ? "acima" : "em_teste";
+    }
+    const toque = times.indexOf(orfa.ultimo_toque);
+    const avaliada = times.indexOf(ant.ultimaVelaAvaliada);
+    const idade = ant.velasDesdeUltimoToque ?? ant.velas_desde_ultimo_toque;
+    orfa.velasDesdeUltimoToque = toque >= 0 ? times.length - 1 - toque
+      : Number.isFinite(idade) && avaliada >= 0 ? idade + times.length - 1 - avaliada
+      : idade ?? null;
     // Ficha legada larga demais fica dormente durante a carencia:
     // mantem memoria, mas nao recoloca a zona gigante na tela ou no score.
     const largaDemais = atrAtual > 0 &&
@@ -2619,11 +2632,9 @@ export function calcularZonas(cfg, tf, d, ctx) {
   const ultimaVelaFechada = times[times.length - 1];
 
   const pv = pivosComAtr(highs, lows, closes, times, ctx.pivos, atr);
-  if (!pv.topos.length && !pv.fundos.length) {
-    // Sem pivos nesta consulta: nao ha o que recalcular, mas as zonas
-    // ja conhecidas nao podem ser apagadas por isso.
-    return { zonas: [], zonasEstado: anteriores, proximoId: ctx.proximoId };
-  }
+  // Sem pivos, o pipeline continua com zero zonas novas. As fichas
+  // anteriores passam por reconciliarAnteriores: mantem a identidade,
+  // atualizam contexto e envelhecem pela mesma carencia das demais orfas.
 
   const montar = (clusters, origem) =>
     clusters
@@ -2835,7 +2846,7 @@ export function calcularZonas(cfg, tf, d, ctx) {
 
   // Fichas sem dona nesta execucao: dormem, nao sao rasgadas.
   zonas.push(
-    ...reconciliarAnteriores(anteriores, [...zonas], tf.key, ultimaVelaFechada, atrAtual)
+    ...reconciliarAnteriores(anteriores, [...zonas], tf.key, ultimaVelaFechada, atrAtual, { precoAtual, times })
   );
 
   // ---- duas colecoes distintas ----
@@ -2892,6 +2903,7 @@ export function calcularZonas(cfg, tf, d, ctx) {
 function limparZona(z) {
   return {
     id: z.id,
+    ...(z.orfa ? { orfa: true } : {}),
     tipo: z.tipo,
     tipo_confirmado: z.tipo_confirmado || z.tipo,
     ultimo_role_reversal_em: z.ultimo_role_reversal_em ?? null,
@@ -2909,7 +2921,7 @@ function limparZona(z) {
     forca_reacao_atr: z.forca_reacao_atr,
     primeiro_toque: z.primeiro_toque,
     ultimo_toque: z.ultimo_toque,
-    velas_desde_ultimo_toque: z.velasDesdeUltimoToque,
+    velas_desde_ultimo_toque: z.velasDesdeUltimoToque ?? z.velas_desde_ultimo_toque ?? null,
     timeframes_confirmando: z.timeframes_confirmando || [],
     role_reversal: !!z.role_reversal,
     cruzamento_confirmado: !!z.cruzamento_confirmado,
@@ -2985,6 +2997,28 @@ function detalheDiv(x, times, dec, timeViva) {
 // a maquina de estado. Testar so a maquina nao alcanca esses numeros --
 // era por isso que mudar RETEST_TOLERANCIA_ATR de 0,25 para 0,40 nao
 // quebrava nenhum teste.
+// A hora de geracao nao prova que a fonte avancou. Esta verificacao
+// roda na entrada dos dados; readPair continua utilizavel em replays.
+export function validarIdadeSerie(cfg, tf, d, agora = Date.now() / 1000) {
+  const time = d.live?.time;
+  if (!Number.isFinite(time)) throw new Error("serie sem data da ultima barra");
+  const cambio = cfg.par?.endsWith("=X");
+  let limite = time + tf.segundos;
+  if (cambio) {
+    // Sem calendario oficial de feriados, tolera tres dias uteis apos
+    // o periodo. Nao confunde fim de semana/feriado curto com fonte parada.
+    // E' um teto conservador de saude da fonte, nao horario de fechamento.
+    if (tf.key === "semanal") limite = time + 5 * 86400;
+    let uteis = 0;
+    while (uteis < 3) {
+      limite += 86400;
+      if (![0, 6].includes(new Date(limite * 1000).getUTCDay())) uteis++;
+    }
+  }
+  if (agora > limite + 90 * 60)
+    throw new Error(`serie sem atualizacao: ultima barra ${fmtDia(time)} excedeu o prazo da fonte`);
+}
+
 // Uma resposta atrasada nao pode recalcular indicadores e zonas de uma
 // vela anterior nem alimentar gatilhos como se fosse uma leitura nova.
 // As memorias especificas cobrem tambem estados antigos sem o carimbo.
@@ -3796,6 +3830,7 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const parsed = parseKraken(await res.json());
+        validarIdadeSerie(cfg, tf, parsed);
         const chaveZ = `${cfg.key}|${tf.key}`;
         validarAtualidadeSerie(cfg, tf, parsed, {
           ultimaVelaProcessada: ultimaVelaProcessada[chaveZ],
@@ -3836,8 +3871,8 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
         const chaveZ = `${cfg.key}|${tf.key}`;
         if (zonasAnt[chaveZ]) {
           zonasNovas[chaveZ] = zonasAnt[chaveZ];
-          // confluencia continua usando o estado preservado
-          if (tf.key === "semanal") zonasSemanaisPorPar[cfg.key] = zonasAnt[chaveZ];
+          // Memoria serve a retomada, nao a confirmacao atual. Se o
+          // semanal falhou, o diario nao recebe seu bonus de confluencia.
         }
         // Nada e' publicado numa execucao que falhou: o bloco ja informa
         // FALHA, e exibir zonas antigas as apresentaria como se

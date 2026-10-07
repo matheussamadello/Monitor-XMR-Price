@@ -54,6 +54,14 @@ O semanal funciona principalmente como contexto e filtro estrutural. Ele ajuda a
 
 O relatório calcula os principais indicadores nos dois timeframes e diferencia os valores da vela fechada dos valores provisórios da vela ainda em formação.
 
+## Qualidade dos dados e continuidade
+
+A coleta rejeita uma série congelada mesmo quando o relatório ganhou um timestamp novo: em cripto, a última barra deve estar dentro de seu período mais 90 minutos de tolerância. O bloco publica `falha` e preserva a memória de níveis, zonas e EMA89 até a fonte voltar.
+
+Zonas mantidas temporariamente sem novos pivôs (`orfa: true`) atualizam distância, posição em relação ao preço e limites operacionais com a cotação e o ATR atuais. A idade desde o último toque continua em número de velas e sobrevive à gravação e retomada do estado.
+
+Na revisão de 2026-10-07, o diário deixou de usar zonas semanais de um bloco com `falha` como confirmação e bônus de score. A memória semanal fica preservada para retomada. Uma série válida sem pivôs também passa pela reconciliação: as fichas antigas atualizam o contexto e cumprem a carência de órfãs, em vez de permanecerem ativas indefinidamente.
+
 ## Indicadores e leituras calculadas
 
 ### RSI
