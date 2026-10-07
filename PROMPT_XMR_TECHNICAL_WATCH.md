@@ -56,7 +56,7 @@ Monitore o relatório técnico de XMR a cada execução usando como fonte princi
 
 Só processe um `timestamp` **estritamente mais novo** que o maior timestamp já processado. Um timestamp novo sozinho **NÃO gera alerta**. Considere o maior timestamp já processado como baseline; somente mudanças posteriores realmente novas podem gerar alerta.
 
-Um timestamp recente não garante dados de mercado válidos. Se um bloco publicar `falha`, não use sua memória preservada para confirmar eventos novos; aplique o tratamento de indisponibilidade já definido abaixo. Os demais blocos válidos continuam utilizáveis.
+Um timestamp recente não garante dados de mercado válidos. Se um bloco publicar `falha`, não use sua memória preservada para confirmar eventos novos; aplique o tratamento de indisponibilidade já definido abaixo. Os demais blocos válidos continuam utilizáveis. Quando o semanal falhar, as zonas do diário não recebem confirmação semanal da memória preservada.
 
 Se JSON e HTML falharem totalmente por **4 execuções consecutivas**, envie um único alerta curto de indisponibilidade. Não repita esse alerta a cada nova falha. Zere a contagem assim que alguma fonte voltar a funcionar. Se um alerta operacional do fallback já estiver ativo para a mesma indisponibilidade, não envie um segundo alerta redundante.
 

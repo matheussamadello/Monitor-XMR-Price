@@ -60,6 +60,8 @@ A coleta rejeita uma série congelada mesmo quando o relatório ganhou um timest
 
 Zonas mantidas temporariamente sem novos pivôs (`orfa: true`) atualizam distância, posição em relação ao preço e limites operacionais com a cotação e o ATR atuais. A idade desde o último toque continua em número de velas e sobrevive à gravação e retomada do estado.
 
+Na revisão de 2026-10-07, o diário deixou de usar zonas semanais de um bloco com `falha` como confirmação e bônus de score. A memória semanal fica preservada para retomada. Uma série válida sem pivôs também passa pela reconciliação: as fichas antigas atualizam o contexto e cumprem a carência de órfãs, em vez de permanecerem ativas indefinidamente.
+
 ## Indicadores e leituras calculadas
 
 ### RSI

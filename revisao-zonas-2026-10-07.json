@@ -1,0 +1,94 @@
+{
+  "revisado_em": "2026-10-07T09:48:03.724Z",
+  "relatorio_main": "2026-10-07 07:53 UTC",
+  "fontes": [
+    {
+      "url": "https://api.kraken.com/0/public/OHLC?pair=XMRUSD&interval=1440&assetVersion=1",
+      "status": 200,
+      "sha256": "b549ddb296aaf433c1ad357a43554da160900ed21eac0bb32927bd57ca3c27ee"
+    },
+    {
+      "url": "https://api.kraken.com/0/public/OHLC?pair=XMRBTC&interval=1440&assetVersion=1",
+      "status": 200,
+      "sha256": "ca2a9ff56ef790269f9b2cc699c7f2b6e8726e650d4b1a0a7783298d6569da48"
+    },
+    {
+      "url": "https://api.kraken.com/0/public/OHLC?pair=XMRUSD&interval=10080&assetVersion=1",
+      "status": 200,
+      "sha256": "136ce357d12802180a1a43870340cbeae16a88b91c8664ed534d227887f49a48"
+    },
+    {
+      "url": "https://api.kraken.com/0/public/OHLC?pair=XMRBTC&interval=10080&assetVersion=1",
+      "status": 200,
+      "sha256": "c165d2017c3299a572f3d6371454ce938aa524ce536b60f2cc0c3fafcc95f4b7"
+    }
+  ],
+  "criterios": "Somente diario, ativa, score >=70, pelo menos 5 episodios, sem faixa equivalente/colada (<0,2 ATR). Pivo unico (largura <=0,12 ATR) exige score >=80; nao fragmentar entre faixas vizinhas a menos de 1 ATR. Limites estruturais fixos; teto de calibracao 0,5 ATR.",
+  "correcoes_novas": [
+    "Bloco semanal com falha preserva memoria, mas nao confirma nem pontua zonas diarias.",
+    "Sem pivos na serie valida, as fichas antigas passam pela reconciliacao e pela carencia de orfas."
+  ],
+  "correcoes_pendentes_da_revisao_anterior": [
+    "Idade maxima da fonte em relacao ao relogio.",
+    "Contexto atual e idade em velas das zonas orfas."
+  ],
+  "pares": [
+    {
+      "par": "XMR/USD",
+      "preco_na_coleta": 557.45,
+      "atr_diario": 28.27,
+      "radar_antes": "nenhuma",
+      "candidatos": [],
+      "novas_regioes_sem_maturidade": [
+        {
+          "id": "usd|diario|z42",
+          "limites_estruturais": {
+            "inferior": 482.7865265164093,
+            "superior": 492.1534734835907
+          },
+          "tipo": "suporte",
+          "status": "ativa",
+          "score": 49,
+          "toques": 2,
+          "rejeicoes": 2,
+          "decisao": "nao promover: criterios de maturidade nao atendidos"
+        },
+        {
+          "id": "usd|diario|z60",
+          "limites_estruturais": {
+            "inferior": 632.4865265164093,
+            "superior": 635.3134734835907
+          },
+          "tipo": "resistencia",
+          "status": "candidata",
+          "score": 33,
+          "toques": 1,
+          "rejeicoes": 1,
+          "decisao": "nao promover: criterios de maturidade nao atendidos"
+        }
+      ]
+    },
+    {
+      "par": "XMR/BTC",
+      "preco_na_coleta": 0.006673,
+      "atr_diario": 0.00032931,
+      "radar_antes": "nenhuma",
+      "candidatos": [],
+      "novas_regioes_sem_maturidade": [
+        {
+          "id": "btc|diario|z65",
+          "limites_estruturais": {
+            "inferior": 0.007747534680703656,
+            "superior": 0.007780465319296344
+          },
+          "tipo": "resistencia",
+          "status": "ativa",
+          "score": 43,
+          "toques": 1,
+          "rejeicoes": 1,
+          "decisao": "nao promover: criterios de maturidade nao atendidos"
+        }
+      ]
+    }
+  ]
+}

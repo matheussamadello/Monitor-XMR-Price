@@ -2632,11 +2632,9 @@ export function calcularZonas(cfg, tf, d, ctx) {
   const ultimaVelaFechada = times[times.length - 1];
 
   const pv = pivosComAtr(highs, lows, closes, times, ctx.pivos, atr);
-  if (!pv.topos.length && !pv.fundos.length) {
-    // Sem pivos nesta consulta: nao ha o que recalcular, mas as zonas
-    // ja conhecidas nao podem ser apagadas por isso.
-    return { zonas: [], zonasEstado: anteriores, proximoId: ctx.proximoId };
-  }
+  // Sem pivos, o pipeline continua com zero zonas novas. As fichas
+  // anteriores passam por reconciliarAnteriores: mantem a identidade,
+  // atualizam contexto e envelhecem pela mesma carencia das demais orfas.
 
   const montar = (clusters, origem) =>
     clusters
@@ -3873,8 +3871,8 @@ export async function build(fetchImpl = fetch, estadoAnterior = {}) {
         const chaveZ = `${cfg.key}|${tf.key}`;
         if (zonasAnt[chaveZ]) {
           zonasNovas[chaveZ] = zonasAnt[chaveZ];
-          // confluencia continua usando o estado preservado
-          if (tf.key === "semanal") zonasSemanaisPorPar[cfg.key] = zonasAnt[chaveZ];
+          // Memoria serve a retomada, nao a confirmacao atual. Se o
+          // semanal falhou, o diario nao recebe seu bonus de confluencia.
         }
         // Nada e' publicado numa execucao que falhou: o bloco ja informa
         // FALHA, e exibir zonas antigas as apresentaria como se
