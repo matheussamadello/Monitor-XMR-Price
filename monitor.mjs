@@ -4598,7 +4598,17 @@ export function zonasCandidatas(zonas, niveis, precoRef, tfKey, atr = null) {
           : null,
     });
   }
-  return out.sort((a, b) => b.score - a.score).slice(0, 3);
+  // Duas candidatas na MESMA regiao contam uma vez so, pelo mesmo criterio
+  // de "ja representada" usado contra as faixas: sobrepostas ou coladas.
+  // Em 14/11/2026 o painel do USDT/BRL recomendava 5,5971-5,6339 e
+  // 5,5848-5,6142 como duas regioes, com 58% de sobreposicao: promover as
+  // duas criaria duas faixas para um mesmo nivel.
+  const escolhidas = [];
+  for (const c of out.sort((a, b) => b.score - a.score)) {
+    if (escolhidas.some((e) => zonaJaRepresentadaPorFaixaParaRadar(c, [e.inferior, e.superior], atr))) continue;
+    escolhidas.push(c);
+  }
+  return escolhidas.slice(0, 3);
 }
 
 // Casas decimais suficientes para o valor, sem zeros a toa: 76000 sai
@@ -4860,25 +4870,37 @@ export function leituraCurta(dia, cfg) {
   }
 
   // Qual nivel manual esta no estado mais decisivo. A ordem de
-  // ESTADOS_CURTO e' a ordem de relevancia para quem decide entrada.
+  // ESTADOS_CURTO e' a ordem de relevancia para quem decide entrada, mas
+  // so DEPOIS do que e' atual: primeiro o nivel que mudou NESTA vela,
+  // depois os que o preco ainda nao deixou para tras (afastado), e so entao
+  // o resto. Pela ordem de estado pura, em 14/11/2026 o BTC mostrava
+  // "rompimento falhou -- resistencia de 80.000", de 29/10 e com o preco
+  // 15% abaixo, no dia em que o suporte de 73.000 foi rompido.
+  const mudancas = dia.niveis_mudancas_nesta_vela || [];
+  const mudouAgora = (nv) => mudancas.some((x) => x.endsWith(`_${nv.label}`));
+  const perto = (nv) => dia[`nivel_${nv.label}_afastado`] !== "sim";
   let achado = null;
-  for (const [estado, texto] of ESTADOS_CURTO) {
-    for (const nv of niveisDoPar(cfg)) {
-      const evento = (dia.niveis_mudancas_nesta_vela || []).includes(`${estado}_${nv.label}`);
-      if (dia[`nivel_${nv.label}_estado`] !== estado && !evento) continue;
-      // O papel vem da POSICAO do fechamento, como na faixa de suporte e
-      // resistencia do cartao. Pelo nome da configuracao, o painel dizia
-      // "resistencia de 550" na leitura e "Suporte 550" logo abaixo, com o
-      // XMR fechando acima da linha que ele mesmo tinha rompido.
-      const papel = typeof fech === "number"
-        ? (fech >= nv.nivel ? "suporte" : "resistência")
-        : (nv.direcao === "alta" ? "resistência" : "suporte");
-      achado = {
-        chave: estado,
-        rotulo: texto,
-        alvo: `${papel} de ${pgValor(nv.nivel, dec)}`,
-      };
-      break;
+  for (const filtro of [mudouAgora, perto, () => true]) {
+    for (const [estado, texto] of ESTADOS_CURTO) {
+      for (const nv of niveisDoPar(cfg)) {
+        if (!filtro(nv)) continue;
+        const evento = mudancas.includes(`${estado}_${nv.label}`);
+        if (dia[`nivel_${nv.label}_estado`] !== estado && !evento) continue;
+        // O papel vem da POSICAO do fechamento, como na faixa de suporte e
+        // resistencia do cartao. Pelo nome da configuracao, o painel dizia
+        // "resistencia de 550" na leitura e "Suporte 550" logo abaixo, com o
+        // XMR fechando acima da linha que ele mesmo tinha rompido.
+        const papel = typeof fech === "number"
+          ? (fech >= nv.nivel ? "suporte" : "resistência")
+          : (nv.direcao === "alta" ? "resistência" : "suporte");
+        achado = {
+          chave: estado,
+          rotulo: texto,
+          alvo: `${papel} de ${pgValor(nv.nivel, dec)}`,
+        };
+        break;
+      }
+      if (achado) break;
     }
     if (achado) break;
   }
