@@ -179,16 +179,20 @@ Na configuração atual do projeto, as referências conhecidas são:
 
 #### XMR/BTC
 
+- 0,00819–0,00829 — `faixa_0_00819_0_00829`, acrescentada em 2026-11-14 por revisão manual: o teto das máximas de 29/10 a 08/11 (0,008188 a 0,008289) e do topo de janeiro de 2026;
+- 0,00729–0,0074 — `faixa_0_00729_0_0074`, acrescentada em 2026-11-14 por revisão manual: o piso das mínimas de 25/10 a 13/11 (0,007292 a 0,007356), sobre zona semanal de score 81;
 - 0,00698–0,00712 — `faixa_0_00698_0_00712`;
 - 0,0066–0,00672 — `faixa_0_0066_0_00672`;
 - 0,00637–0,00647 — `faixa_0_00637_0_00647`, acrescentada em 2026-09-28 por revisão manual: o piso onde o preço se apoiou desde 14/09 (mínimas de 0,006394 a 0,006467), sobre zona semanal de score 80;
 - faixa `0,00602–0,006075` — `faixa_0_00602_0_006075`;
 - 0,00579–0,005845 — `regiao_suporte_0_00579_0_005845`;
 - faixa `0,005255–0,005305` — `faixa_0_005255_0_005305`, promovida do radar de manutenção em 2026-09-14;
-- resistência pontual principal `0,00700`;
-- suporte pontual principal `0,0064`, dentro da faixa 0,00637–0,00647. Era `0,00584` até 2026-09-28; foi movido porque ficava 10% abaixo do preço e nunca tinha aberto registro. Por ser uma linha nova, ela começa como `sem_registro`: não há rompimento anterior a considerar.
+- resistência pontual principal `0,00825`, dentro da faixa 0,00819–0,00829. Era `0,00700` até 2026-11-14, quando já tinha cumprido o ciclo (rompida em 18/10, reteste confirmado em 21/10) e ficado 10% abaixo do preço;
+- suporte pontual principal `0,0073`, dentro da faixa 0,00729–0,0074. Era `0,0064` até 2026-11-14 (arquivado com o preço longe) e `0,00584` até 2026-09-28.
 
-A última é a mais nova e a mais distante do preço. Sua origem foi uma zona automática de score 92, com 11 toques e 10 rejeições. Essas contagens são históricas da zona ampla de origem e não representam testes independentes do núcleo refinado atual. Promover não cria ciclo de rompimento/reteste — isso continua valendo só para os níveis pontuais. O que a promoção faz é preservar a região como referência depois que a zona automática expirar.
+As duas faixas novas e as duas linhas atuais são da revisão manual de 2026-11-14, depois da alta de outubro que deixou o preço acima de todas as faixas. É manutenção de configuração, não sinal de mercado: não alerte pela mudança. As linhas novas começam como `sem_registro`; o reteste confirmado de 0,007 não aparece mais nos campos de nível, e a faixa 0,00698–0,00712 continua como referência dele. Até o fundo de 10/11 se confirmar como pivô, a faixa 0,00729–0,0074 não tem zona automática diária e o alinhamento diário do XMR/BTC sai `parcial`: isso é esperado e não é motivo de revisão dos níveis.
+
+A faixa 0,005255–0,005305 é a mais distante do preço e a única que veio do radar. Sua origem foi uma zona automática de score 92, com 11 toques e 10 rejeições. Essas contagens são históricas da zona ampla de origem e não representam testes independentes do núcleo refinado atual. Promover não cria ciclo de rompimento/reteste — isso continua valendo só para os níveis pontuais. O que a promoção faz é preservar a região como referência depois que a zona automática expirar.
 
 #### XMR/USD
 
@@ -567,7 +571,7 @@ Explique que é um sinal intermediário: superior à janela agressiva e inferior
 
 Use a resistência manual principal publicada em `niveis_manuais` como âncora enquanto ela continuar estruturalmente relevante.
 
-Na configuração de 2026-09-05 essa âncora é **0,00700 BTC por XMR**. Se o JSON passar a publicar outra configuração, prevalece o JSON.
+Na configuração de 2026-11-14 essa âncora é **0,00825 BTC por XMR** (era 0,00700 de 2026-09-05 a 2026-11-14). Se o JSON passar a publicar outra configuração, prevalece o JSON.
 
 Não trate a âncora como uma linha mágica. Considere também faixas e zonas automáticas próximas para avaliar a região efetivamente relevante.
 

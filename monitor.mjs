@@ -181,9 +181,11 @@ const NIVEIS_USD = {
 // suporte configurado -- metade da maquina de estados ficava inerte.
 //
 // De onde saem os novos:
-//   resistencia 0.00700 — centro da zona diaria acima do preco e pivo de
-//     topo de 2026-09-02, o mesmo numero pelas duas leituras.
-//   suporte 0.00584 (movido para 0.00640 em 2026-09-28, ver abaixo) —
+//   resistencia 0.00700 (movida para 0.00825 em 2026-11-14, ver abaixo) —
+//     centro da zona diaria acima do preco e pivo de topo de 2026-09-02,
+//     o mesmo numero pelas duas leituras.
+//   suporte 0.00584 (movido para 0.00640 em 2026-09-28 e para 0.00730 em
+//     2026-11-14, ver abaixo) —
 //     zona diaria de score 83 com centro em 0.0058425,
 //     por dentro da zona semanal de score 83. Passa a existir: antes o
 //     suporte era null.
@@ -193,6 +195,20 @@ const NIVEIS_BTC = {
   faixas: [
     // Faixas fixas revistas por pivos/reacoes em 2026-09-25; teto de 0,5 ATR na calibracao.
     // Evidencia: reajuste-faixas-manuais-2026-09-25.json. Pontos de rompimento intactos.
+    // Acrescentadas em 2026-11-14 por revisao manual. A alta de outubro
+    // (0,0064 -> 0,0083 em 04/11) deixou o preco acima de todas as faixas;
+    // nas tres ultimas semanas ele oscila entre 0,0073 e 0,0083.
+    //   0.00819-0.00829  o teto: maximas de 0,008188 a 0,008289 de 29/10 a
+    //     08/11 e o topo de jan/2026 (0,008229), mais topos semanais de
+    //     2020 (0,008161 e 0,00827). Zona diaria de score 84 e semanal de
+    //     74; rejeitou 5 de 5. Largura 0,25 ATR diario (0,000398).
+    //   0.00729-0.0074  o piso: minimas de 0,007292 (26/10), 0,007293,
+    //     0,007295 (10/11), 0,007304, 0,007334, 0,007353 e 0,007356 (13/11).
+    //     Zona SEMANAL btc|semanal|z32 (0,00737-0,00754, score 81, 10
+    //     toques) e topo semanal de 0,00741 de 2022. Ainda sem zona diaria:
+    //     o fundo de 10/11 nao tinha os 5 pivos a direita. Largura 0,28 ATR.
+    [0.00819, 0.00829, "faixa_0_00819_0_00829"],
+    [0.00729, 0.0074, "faixa_0_00729_0_0074"],
     [0.00698, 0.00712, "faixa_0_00698_0_00712"],
     [0.0066, 0.00672, "faixa_0_0066_0_00672"],
     // Acrescentada em 2026-09-28 por revisao manual: o piso onde o preco
@@ -208,15 +224,17 @@ const NIVEIS_BTC = {
     [0.00579, 0.005845, "regiao_suporte_0_00579_0_005845"],
     [0.005255, 0.005305, "faixa_0_005255_0_005305"],
   ],
-  resistencia: 0.00700,
-  resistenciaLabel: "000700",
-  // Movido de 0.00584 para 0.00640 em 2026-09-28, dentro da faixa
-  // 0.00637-0.00647. A linha de 0.00584 ficava 10% abaixo do preco e
-  // nunca abriu registro (sem_registro), entao a troca nao apaga
-  // historia nenhuma. Em 0.00640 a maquina passa a vigiar a perda do piso
-  // atual. A faixa 0.00579-0.005845 continua como suporte profundo.
-  suporte: 0.00640,
-  suporteLabel: "000640",
+  // Movidas em 2026-11-14. A resistencia de 0.00700 cumpriu o ciclo
+  // (rompida em 18/10, reteste confirmado em 21/10) e ficou 10% abaixo do
+  // preco; o suporte de 0.00640 foi arquivado com o preco longe. As novas
+  // vigiam as duas decisoes de agora: romper o teto de 0.00819-0.00829 ou
+  // perder o piso de 0.00729-0.0074. A faixa 0.00698-0.00712 continua
+  // como referencia do rompimento de outubro.
+  // Historico: suporte 0.00584 -> 0.00640 (2026-09-28) -> 0.00730.
+  resistencia: 0.00825,
+  resistenciaLabel: "000825",
+  suporte: 0.00730,
+  suporteLabel: "000730",
 };
 
 const PAIRS = [

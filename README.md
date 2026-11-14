@@ -383,6 +383,8 @@ Resistência macro contextual: **797–803**, sem alteração. O identificador l
 
 | Faixa atual | Label | Pivôs confirmados incluídos |
 | --- | --- | --- |
+| 0,00819–0,00829 | `faixa_0_00819_0_00829` | 0,008229 (jan/2026), 0,008289 (04/11); semanais 0,008161 e 0,00827 de 2020 (revisão de 2026-11-14) |
+| 0,00729–0,0074 | `faixa_0_00729_0_0074` | mínimas de 0,007292 a 0,007356 de 25/10 a 13/11, ainda sem pivô diário confirmado; semanal 0,00741 de 2022 (revisão de 2026-11-14) |
 | 0,00698–0,00712 | `faixa_0_00698_0_00712` | 0,007, 0,007094 |
 | 0,0066–0,00672 | `faixa_0_0066_0_00672` | 0,006624, 0,0067 |
 | 0,00637–0,00647 | `faixa_0_00637_0_00647` | 0,006411 |
@@ -390,7 +392,14 @@ Resistência macro contextual: **797–803**, sem alteração. O identificador l
 | 0,00579–0,005845 | `regiao_suporte_0_00579_0_005845` | 0,005805, 0,005835 |
 | 0,005255–0,005305 | `faixa_0_005255_0_005305` | 0,005262, 0,005279, 0,005283, 0,0053 |
 
-Resistência pontual: **0,007**. Suporte pontual: **0,0064** (era 0,00584 até 2026-09-28).
+Resistência pontual: **0,00825** (era 0,007 até 2026-11-14). Suporte pontual: **0,0073** (era 0,0064 até 2026-11-14 e 0,00584 até 2026-09-28).
+
+**Revisão de 2026-11-14.** Em outubro o XMR/BTC subiu de 0,0064 para 0,0083 (04/11) e ficou acima de todas as faixas, sem resistência manual no cartão. Nas três semanas seguintes ele oscilou entre 0,0073 e 0,0083, e as duas pontas viraram faixa:
+
+- **0,00819–0,00829**, o teto: as máximas de 29/10 a 08/11 pararam entre 0,008188 e 0,008289, junto do topo de janeiro de 2026 (0,008229) e de topos semanais de 2020 (0,008161 e 0,00827). Zona diária de score 84 e semanal de 74; rejeitou o preço nas 5 vezes em que ele chegou ali. Largura 0,25 ATR diário (0,000398).
+- **0,00729–0,0074**, o piso: sete mínimas diárias pararam ali desde 25/10 (0,007292, 0,007293, 0,007295, 0,007304, 0,007334, 0,007353 e 0,007356), sobre a zona semanal `btc|semanal|z32` (0,00737–0,00754, score 81, 10 toques) e o topo semanal de 0,00741 de 2022. Largura 0,28 ATR. No dia da revisão ainda não havia zona diária ali, porque o fundo de 10/11 não tinha os cinco candles à direita que confirmam um pivô; até isso acontecer, o alinhamento diário sai `parcial`.
+
+As duas linhas foram para dentro delas. A resistência de 0,007 cumpriu o ciclo inteiro (rompida em 18/10, reteste confirmado em 21/10) e ficou 10% abaixo do preço; passou para **0,00825**, e romper exige fechar acima de cerca de 0,00835, o fechamento mais alto desde o começo de 2023. O custo é que o reteste confirmado de 0,007, ainda recente no semanal, sai da leitura semanal. O suporte de 0,0064 tinha sido arquivado com o preço longe; passou para **0,0073**. A faixa 0,00698–0,00712 continua como referência do rompimento de outubro. Não entrou faixa em 0,00774–0,0078, o meio da oscilação, onde o preço passa o tempo todo.
 
 **Revisão de 2026-09-28.** Faltava o piso onde o preço se apoiou desde 14/09: as mínimas diárias pararam 8 vezes entre 0,006394 e 0,006467, sobre a zona semanal `btc|semanal|z61` (0,006372–0,006448, score 80, 11 toques) e o fundo semanal de 0,00641 de novembro de 2020. Nenhum nível manual cobria a região, e o cartão mostrava como suporte a faixa 0,00602–0,006075, a 6% do preço, com o piso real a 1%. Entrou a faixa **0,00637–0,00647**, e a linha de suporte subiu de 0,00584 para **0,0064**, dentro dela. A linha antiga ficava 10% abaixo do preço e nunca tinha aberto registro, então a troca não apagou história nenhuma; a faixa 0,00579–0,005845 continua como suporte profundo. O teto (0,00698–0,00712 e a linha de 0,007) e as demais faixas foram reavaliados e ficaram como estavam.
 
@@ -1143,6 +1152,8 @@ Os níveis ficam em objetos próprios, e o array de pares apenas aponta para ele
 ```js
 const NIVEIS_BTC = {
   faixas: [
+    [0.00819, 0.00829, "faixa_0_00819_0_00829"],
+    [0.00729, 0.0074, "faixa_0_00729_0_0074"],
     [0.00698, 0.00712, "faixa_0_00698_0_00712"],
     [0.0066, 0.00672, "faixa_0_0066_0_00672"],
     [0.00637, 0.00647, "faixa_0_00637_0_00647"],
@@ -1150,10 +1161,10 @@ const NIVEIS_BTC = {
     [0.00579, 0.005845, "regiao_suporte_0_00579_0_005845"],
     [0.005255, 0.005305, "faixa_0_005255_0_005305"],
   ],
-  resistencia: 0.00700,
-  resistenciaLabel: "000700",
-  suporte: 0.00640,
-  suporteLabel: "000640",
+  resistencia: 0.00825,
+  resistenciaLabel: "000825",
+  suporte: 0.00730,
+  suporteLabel: "000730",
 };
 
 const PAIRS = [
