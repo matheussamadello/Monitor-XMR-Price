@@ -367,6 +367,8 @@ As faixas não mudam automaticamente com o ATR. A revisão preservou o número d
 | 437–441 | `regiao_suporte_437_441` | 437,58, 438,49, 440 |
 | 410–414 | `faixa_410_414` | 410,25, 411,52, 413,57 |
 
+A de 410–414 foi refinada na calibração de 2026-09-25 dentro da antiga faixa promovida de 399–423; as contagens da zona ampla de origem não são deste núcleo. O prompt a trata como contexto de queda profunda, não como nível de trabalho.
+
 Resistência pontual: **550**. Suporte pontual: **500**.
 
 **Faixa 540–548, acrescentada em 2026-09-28 por revisão manual.** A linha de 550 nasceu em 2026-09-05 do topo de 31/08, mas o preço nunca reagiu exatamente nela: reagiu logo abaixo, dos dois lados. Como teto, com topos de 541,80, 544,15, 544,83, 547,66 e 548,34 entre 31/08 e 13/09. Como piso, depois do rompimento de 18/09, com mínimas de 543,79, 542,00, 545,52, 545,41 e 540,00 entre 23/09 e 27/09. Desde agosto, 545 foi respeitado em 10 velas diárias e cruzado em 3; 550, em 6 e 3. A zona automática ainda é fraca (score 45, 2 toques) porque as mínimas recentes ainda não viraram pivôs confirmados — só o topo de 547,66 é pivô, por isso a tabela lista só ele. A linha de 550 foi **mantida**: trocar o número zeraria a história dela (rompida em 20/09, reteste confirmado em 24/09) no meio do reteste, e a tolerância de reteste, de cerca de 9, já cobre 541–559. A faixa acrescenta o que a linha não faz: aviso de preço dentro da região e alinhamento com as zonas. A linha deve ser revista quando o reteste se resolver.
@@ -1303,7 +1305,7 @@ Um consumidor robusto deve, no mínimo:
 7. evitar transformar cada item de `alertas_tecnicos` em uma notificação independente;
 8. fundir sinais relacionados para reduzir spam.
 
-O arquivo [`PROMPT_XMR_TECHNICAL_WATCH.md`](./PROMPT_XMR_TECHNICAL_WATCH.md) contém uma política pronta e mais seletiva para uma LLM ou agente transformar snapshots sucessivos do `relatorio.json` em alertas técnicos.
+O arquivo [`PROMPT_XMR_TECHNICAL_WATCH.md`](./PROMPT_XMR_TECHNICAL_WATCH.md) contém uma política pronta e mais seletiva para uma LLM ou agente transformar snapshots sucessivos do `relatorio.json` em alertas técnicos. Desde 2026-11-18 o prompt traz só o que o agente precisa para decidir: regras, campos, níveis atuais e avisos ainda válidos. O histórico das revisões de níveis, os casos que motivaram cada regra e as mudanças do painel ficam neste README, de onde saíram as notas datadas que o prompt acumulava (de 17 a 22 parágrafos por prompt, alguns já vencidos e enganando o agente).
 
 No prompt atual:
 
