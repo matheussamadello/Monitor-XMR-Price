@@ -4442,19 +4442,19 @@ function pgEstruturaVisual(v, recente, dec, id, titulo) {
   const resumo = v && !v.completa
     ? `${v.topos.length} de 4 topos e ${v.fundos.length} de 4 fundos disponíveis.` : "";
   const explicacao = pgExplicacaoEstruturaVisual(v, titulo);
-  const ajudaJanela = pgAjuda({ rotulo: "Sequência ampliada" },
-    `aj-janela-${id}`, explicacao + (resumo ? " " + resumo : ""));
+  // UM "?" so, ao lado do valor, como na linha da estrutura recente. Eram
+  // dois lado a lado, no rotulo e no valor, e abriam o mesmo texto.
   const ajuda = pgAjuda({ rotulo: v ? v.rotulo : "Sequência ampliada indisponível" },
-    `aj-sequencia-${id}`, explicacao);
+    `aj-sequencia-${id}`, explicacao + (resumo ? " " + resumo : ""));
   const sintese = `<p class="estrutura-sintese">${pgEsc(pgSinteseEstrutural(recente, v))}</p>`;
-  if (!v) return `<div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada${ajudaJanela}</span><strong class="fraco">Indisponível${ajuda}</strong></div>${sintese}</div>`;
+  if (!v) return `<div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="fraco">Indisponível${ajuda}</strong></div>${sintese}</div>`;
   const classe = v.tendencia === "alta" ? "alta" : v.tendencia === "baixa" ? "baixa" : "fraco";
   const contagem = (c) => `${c.subindo} subindo · ${c.caindo} caindo · ${c.iguais} iguais`;
   const lista = (pontos) => pontos.length
     ? pontos.map((p) => `${pgEsc(fmtDia(p.time))}: ${pgNum(p.preco, dec)}`).join("<br>")
     : "Nenhum confirmado";
   return `<div class="estrutura-ampliada">` +
-    `<div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada${ajudaJanela}</span>` +
+    `<div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span>` +
     `<strong class="${classe}">${pgEsc(v.rotulo)}${ajuda}</strong></div>` +
     sintese + `<details><summary>Ver pivôs e comparações</summary>` +
     `<p>Topos: ${pgEsc(contagem(v.comparacoes.topos))}<br>` +

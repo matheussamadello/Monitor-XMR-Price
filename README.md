@@ -738,6 +738,10 @@ Para **você**: um cartão por par com o resumo dos dois timeframes — último 
 
 Tudo isso é só apresentação: o relatório não mudou.
 
+**Coerência visual (2026-11-18).**
+
+- a sequência ampliada tinha dois "?" lado a lado, no rótulo e no valor, e os dois abriam o mesmo texto. Ficou só o do valor, como na linha da estrutura recente; com a sequência incompleta, ele também diz quantos topos e fundos já existem.
+
 **O ATR não aparece no cartão**, e a distância da EMA89 sai em porcentagem em vez de em múltiplos de ATR. Isso é só apresentação, e a razão é que ATR é unidade de **cálculo**, não leitura de relance: `0,0418` é muito ou pouco dependendo do par, enquanto `0,56%` se lê na hora.
 
 Internamente nada mudou. O ATR continua dimensionando a largura das zonas automáticas, medindo a obsolescência dos níveis manuais e servindo de unidade para as margens do prompt — 0,25 ATR para a travessia semanal, 1,0 ATR para a corroboração da perda diária. E o relatório continua publicando `atr14`, `atr14_pct` e `distancia_ema89_fechada_atr` para quem dimensiona stop e tamanho de posição.
