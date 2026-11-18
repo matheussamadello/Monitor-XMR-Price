@@ -173,6 +173,22 @@ const NIVEIS_USD = {
     label: "resistencia_macro_788_811",
     tipo: "resistencia_macro_manual",
   },
+  // Historico das revisoes depois da calibracao de 2026-09-25. Os testes
+  // leem daqui: quando cada faixa acrescentada entrou ("desde"; as sem
+  // entrada sao da calibracao), o ATR diario que limitou a largura dela
+  // quando nao foi o de referencia de setembro ("atr"), e as linhas
+  // pontuais anteriores, cada uma valendo ate a data em "ate" (exclusive).
+  // niveisEm() reconstroi daqui a configuracao de qualquer data. Revisar
+  // niveis mexe so neste objeto, no README e no prompt.
+  revisoes: {
+    faixas: {
+      faixa_558_568: { desde: "2026-09-28" },
+      faixa_540_548: { desde: "2026-09-28" },
+      faixa_517_520: { desde: "2026-09-28" },
+    },
+    linhasAnteriores: [
+    ],
+  },
 };
 
 // RECALIBRADO em 2026-09-05, com o XMR/BTC a 0.006643.
@@ -235,6 +251,24 @@ const NIVEIS_BTC = {
   resistenciaLabel: "000825",
   suporte: 0.00730,
   suporteLabel: "000730",
+  // Historico das revisoes depois da calibracao de 2026-09-25. Os testes
+  // leem daqui: quando cada faixa acrescentada entrou ("desde"; as sem
+  // entrada sao da calibracao), o ATR diario que limitou a largura dela
+  // quando nao foi o de referencia de setembro ("atr"), e as linhas
+  // pontuais anteriores, cada uma valendo ate a data em "ate" (exclusive).
+  // niveisEm() reconstroi daqui a configuracao de qualquer data. Revisar
+  // niveis mexe so neste objeto, no README e no prompt.
+  revisoes: {
+    faixas: {
+      faixa_0_00819_0_00829: { desde: "2026-11-14" },
+      faixa_0_00729_0_0074: { desde: "2026-11-14" },
+      faixa_0_00637_0_00647: { desde: "2026-09-28" },
+    },
+    linhasAnteriores: [
+      { ate: "2026-09-28", resistencia: 0.007, resistenciaLabel: "000700", suporte: 0.00584, suporteLabel: "000584" },
+      { ate: "2026-11-14", resistencia: 0.007, resistenciaLabel: "000700", suporte: 0.0064, suporteLabel: "000640" },
+    ],
+  },
 };
 
 const PAIRS = [
@@ -1545,6 +1579,25 @@ export function alinhamentoNiveis(niveis, zonas) {
       ? "desalinhado"
       : "parcial";
   return { situacao, corroboradas, total: faixas.length, semZona };
+}
+
+// Os niveis como estavam numa data (AAAA-MM-DD), pelo historico em
+// niveis.revisoes: sem as faixas que entraram depois dela e com as linhas
+// pontuais da epoca. Serve aos testes que conferem capturas gravadas
+// contra a configuracao de quando foram feitas; o monitor so usa a atual.
+export function niveisEm(niveis, data) {
+  const rev = niveis.revisoes || {};
+  const faixas = niveis.faixas.filter(([, , label]) => !(rev.faixas?.[label]?.desde > data));
+  const linhas = (rev.linhasAnteriores || []).find((l) => data < l.ate) || niveis;
+  const out = {
+    faixas,
+    resistencia: linhas.resistencia,
+    resistenciaLabel: linhas.resistenciaLabel,
+    suporte: linhas.suporte,
+    suporteLabel: linhas.suporteLabel,
+  };
+  if (niveis.resistenciaMacro) out.resistenciaMacro = niveis.resistenciaMacro;
+  return out;
 }
 
 export function situacaoNiveis(niveis, preco, atr) {

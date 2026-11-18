@@ -1200,19 +1200,25 @@ Os níveis ficam em objetos próprios, e o array de pares apenas aponta para ele
 ```js
 const NIVEIS_BTC = {
   faixas: [
+    // [inferior, superior, label], de cima para baixo
     [0.00819, 0.00829, "faixa_0_00819_0_00829"],
     [0.00729, 0.0074, "faixa_0_00729_0_0074"],
-    [0.00698, 0.00712, "faixa_0_00698_0_00712"],
-    [0.0066, 0.00672, "faixa_0_0066_0_00672"],
-    [0.00637, 0.00647, "faixa_0_00637_0_00647"],
-    [0.00602, 0.006075, "faixa_0_00602_0_006075"],
-    [0.00579, 0.005845, "regiao_suporte_0_00579_0_005845"],
-    [0.005255, 0.005305, "faixa_0_005255_0_005305"],
+    // ...
   ],
   resistencia: 0.00825,
   resistenciaLabel: "000825",
   suporte: 0.00730,
   suporteLabel: "000730",
+  revisoes: {
+    faixas: {
+      faixa_0_00819_0_00829: { desde: "2026-11-14" },
+      // ...
+    },
+    linhasAnteriores: [
+      { ate: "2026-09-28", resistencia: 0.007, resistenciaLabel: "000700", suporte: 0.00584, suporteLabel: "000584" },
+      { ate: "2026-11-14", resistencia: 0.007, resistenciaLabel: "000700", suporte: 0.0064, suporteLabel: "000640" },
+    ],
+  },
 };
 
 const PAIRS = [
@@ -1234,6 +1240,17 @@ const PAIRS = [
 ```
 
 `NIVEIS_USD` tem a mesma forma, com o acréscimo de `resistenciaMacro`.
+
+**`revisoes` é o histórico das mudanças depois da calibração de 2026-09-25, e é dele que os testes leem.** Em `faixas`, cada faixa acrescentada depois da calibração tem a data em que entrou (`desde`) e, quando ficou mais larga que o teto da calibração de setembro (0,5 ATR diário de referência), o ATR diário que a limitou (`atr`). Em `linhasAnteriores`, cada par de linhas pontuais anterior, valendo até a data em `ate`. A função `niveisEm(niveis, data)` reconstrói daí a configuração de qualquer data: é assim que os testes de replay e de promoção comparam capturas antigas com a configuração de quando foram feitas.
+
+### Roteiro de uma revisão de níveis
+
+1. Em `monitor.mjs`, acrescente ou mova as faixas e as linhas, com o motivo em comentário, e registre a mudança em `revisoes`: a faixa nova com `desde` (e `atr`, se for mais larga que 0,5 ATR da referência de setembro); a linha movida com uma entrada nova em `linhasAnteriores`, com os valores antigos e `ate` igual à data da mudança.
+2. No README, a faixa na tabela e um parágrafo com a evidência. No prompt, a faixa na lista e, se a mudança deixar algum efeito passageiro, uma nota curta com a data em que ele acaba.
+3. Rode a bateria de testes. O retrato (`teste-retrato.txt`) muda com os níveis: confira que só mudaram linhas ligadas a eles e atualize com `node teste-retrato.mjs --atualizar`.
+4. Commit, push e, para ver no ar, rode o workflow do monitor.
+
+Até 2026-11-18 cada revisão também acrescentava a faixa ou a linha a listas dentro dos testes compartilhados (`teste-zonas.mjs` e `teste-auto-equivalencia.mjs`, nos três repositórios) e, no USD, reconstruía à mão a configuração anterior em `teste-promocao-zonas.mjs`. Uma faixa nova mexia em cerca de dez arquivos; agora mexe em três (`monitor.mjs`, README e prompt), mais o retrato. Se faltar a entrada em `revisoes`, `teste-zonas.mjs` falha e diz qual faixa; se uma linha mudar sem entrada em `linhasAnteriores`, ele falha na conferência das linhas da calibração.
 
 Ao alterar níveis pontuais, mantenha coerentes o valor e o respectivo label, porque os labels participam dos nomes de campos publicados pela máquina de estados.
 
