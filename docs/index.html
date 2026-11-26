@@ -225,12 +225,12 @@ dl{margin:0;display:grid;gap:8px}
 <script id="tema-inicial">try{var t=localStorage.getItem("tema");if(t==="claro"||(!t&&!matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.setAttribute("data-tema","claro")}catch(e){}</script>
 <body>
 <div class="pagina">
-<header class="topo"><h1>Monitor <b>XMR</b></h1><div class="carimbo"><time datetime="2026-11-26T05:53:00Z">2026-11-26 05:53 UTC</time><span class="idade" id="idade" data-ts="2026-11-26T05:53:00Z"></span><button type="button" class="btn-tema" id="btn-tema" aria-pressed="true" title="Alternar night mode" aria-label="Alternar night mode"><svg class="lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button></div></header>
+<header class="topo"><h1>Monitor <b>XMR</b></h1><div class="carimbo"><time datetime="2026-11-26T15:58:00Z">2026-11-26 15:58 UTC</time><span class="idade" id="idade" data-ts="2026-11-26T15:58:00Z"></span><button type="button" class="btn-tema" id="btn-tema" aria-pressed="true" title="Alternar night mode" aria-label="Alternar night mode"><svg class="lua" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button></div></header>
 <div class="sel-par" role="group" aria-label="Par exibido"><button type="button" data-sel="XMR/USD" aria-pressed="true">XMR/USD</button><button type="button" data-sel="XMR/BTC" aria-pressed="false">XMR/BTC</button></div>
 <section class="leituras"><h2>Contexto</h2><div class="leitura" data-par="XMR/USD"><span class="lp">XMR/USD</span><div class="lh neutro"><span class="lt">longo</span><span class="lr">acima da média, sem esticamento</span><button type="button" class="aj" aria-describedby="aj-usd-longo" aria-label="O que significa: acima da média, sem esticamento">?</button><span class="ajt" id="aj-usd-longo" role="tooltip">O fechamento está bem acima da média das últimas 89 semanas, sem exagero: é o estado normal de uma tendência de alta.</span><span class="lz">fechou a semana dentro da faixa manual de 517 a 520, bem acima da média longa (+35,2%), momentum normal, alta ainda forte</span></div><div class="lh atencao"><span class="lt">curto</span><span class="lr">rompimento falhou</span><button type="button" class="aj" aria-describedby="aj-usd-curto" aria-label="O que significa: rompimento falhou">?</button><span class="ajt" id="aj-usd-curto" role="tooltip">O preço atravessou um nível pontual manual e fechou de volta no lado anterior: o rompimento não se sustentou.</span><span class="lz">suporte de 500, fechamento 1,7% abaixo da média diária</span></div></div><div class="leitura" data-par="XMR/BTC"><span class="lp">XMR/BTC</span><div class="lh atencao"><span class="lt">longo</span><span class="lr">esticado, mas a alta ainda tem força</span><button type="button" class="aj" aria-describedby="aj-btc-longo" aria-label="O que significa: esticado, mas a alta ainda tem força">?</button><span class="ajt" id="aj-btc-longo" role="tooltip">Subiu bem mais que a média das últimas 89 semanas, mas a compra ainda manda no movimento. Esticado não é o mesmo que acabando.</span><span class="lz">fechou a semana 3,3% acima da faixa manual de 0,00819 a 0,00829, bem acima da média longa (+69,5%), momentum esticado, alta ainda forte</span></div><div class="lh atencao"><span class="lt">curto</span><span class="lr">nível rompido</span><button type="button" class="aj" aria-describedby="aj-btc-curto" aria-label="O que significa: nível rompido">?</button><span class="ajt" id="aj-btc-curto" role="tooltip">O nível pontual manual está rompido. Após um reteste ou recuperação, o afastamento pode encerrar o ciclo e manter este estado; o evento da vela continua registrado.</span><span class="lz">suporte de 0,00825, fechamento 19,6% acima da média diária</span></div></div><p class="nota"><b>Longo</b> compara o fechamento semanal com a média das últimas 89 semanas. <b>Curto</b> diz o que aconteceu no fechamento diário, o timeframe de timing, calibrado para 1 a 6 semanas e não para o dia. Perto e longe levam em conta o quanto cada par oscila; amarelo quer dizer <b>vale olhar</b>, não bom nem ruim. Não é recomendação.</p></section>
-<section class="pares"><article class="par" data-par="XMR/USD"><header><h2>XMR/USD</h2><div class="preco">521,66</div></header><div class="sr estrutura-ajuda"><span class="sr-i"><span class="sr-r">Suporte</span><b>517–520</b><small>−0,3%</small></span><span class="sr-i"><span class="sr-r">Resistência</span><b>540–548</b><small>+3,5%</small></span><button type="button" class="aj" aria-describedby="aj-sr-usd" aria-label="O que significa: Suporte e resistência">?</button><span class="ajt" id="aj-sr-usd" role="tooltip">Níveis manuais mais próximos abaixo e acima da cotação: faixas e linhas como a de 550. O papel vem da posição: linha rompida para cima vira suporte. O estado (rompido, em reteste) é o do fechamento diário.</span></div><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">517,21<small>2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="baixa">abaixo<small>1,66%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">46,5</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="baixa">26,3<small>+15,0 / −21,8</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="baixa">baixa<button type="button" class="aj" aria-describedby="aj-estrutura-usd-diario" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: baixa">?</button><span class="ajt" id="aj-estrutura-usd-diario" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes abaixo dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="fraco">Predomínio de contração<button type="button" class="aj" aria-describedby="aj-sequencia-usd-diario" aria-label="O que significa: Predomínio de contração">?</button><span class="ajt" id="aj-sequencia-usd-diario" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos caindo e fundos subindo (faixa estreitando) em pelo menos 2 das 3 comparações de cada grupo. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente de baixa dentro de sequência ampliada lateral</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 1 subindo · 2 caindo · 0 iguais<br>Fundos: 2 subindo · 1 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-10-07: 571,71<br>2026-10-22: 656,74<br>2026-10-29: 649,40<br>2026-11-04: 647,02</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-10-09: 483,00<br>2026-10-24: 562,34<br>2026-10-30: 572,49<br>2026-11-14: 455,00</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip" title="divergencia_bearish_oculta_confirmada">Divergência oculta de baixa no RSI, confirmada</span><span class="chip risco" title="rompimento_falhou_500">Rompimento de 500 falhou</span><span class="chip risco" title="estrutura_de_baixa">Estrutura recente de baixa</span><span class="chip risco" title="di_minus_dominante_com_estrutura_nao_altista">Vendedores no comando, sem estrutura recente de alta</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">517,21<small>semana até 2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>35,15%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="">54,2</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">35,3<small>+22,0 / −18,9</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="alta">alta<button type="button" class="aj" aria-describedby="aj-estrutura-usd-semanal" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: alta">?</button><span class="ajt" id="aj-estrutura-usd-semanal" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes acima dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="alta">Predomínio de alta<button type="button" class="aj" aria-describedby="aj-sequencia-usd-semanal" aria-label="O que significa: Predomínio de alta">?</button><span class="ajt" id="aj-sequencia-usd-semanal" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos e fundos subindo em pelo menos 2 das 3 comparações de cada grupo. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente e ampliada alinhadas em alta</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 2 subindo · 1 caindo · 0 iguais<br>Fundos: 2 subindo · 1 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-04-30: 437,58<br>2026-06-11: 426,32<br>2026-09-17: 633,90<br>2026-10-22: 656,74</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-05-07: 358,34<br>2026-06-04: 292,00<br>2026-06-25: 298,95<br>2026-10-08: 483,00</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip risco" title="rompimento_falhou">Rompimento falhou</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-usd"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRUSD" target="_blank" rel="noopener">KRAKEN:XMRUSD</a>.</span></div><p>Série da Kraken (KRAKEN:XMRUSD) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article><article class="par" data-par="XMR/BTC"><header><h2>XMR/BTC</h2><div class="preco">0,00858300</div></header><div class="sr estrutura-ajuda"><span class="sr-i"><span class="sr-r">Suporte</span><b>0,00819–0,00829</b><small>−3,4%</small></span><span class="sr-i"><span class="sr-r">Resistência</span><b class="fraco">nenhum nível manual</b></span><button type="button" class="aj" aria-describedby="aj-sr-btc" aria-label="O que significa: Suporte e resistência">?</button><span class="ajt" id="aj-sr-btc" role="tooltip">Níveis manuais mais próximos abaixo e acima da cotação: faixas e linhas como a de 0,00825. O papel vem da posição: linha rompida para cima vira suporte. O estado (rompido, em reteste) é o do fechamento diário.</span></div><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00857100<small>2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>19,56%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">61,9</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="alta">33,8<small>+20,6 / −10,8</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="alta">alta<button type="button" class="aj" aria-describedby="aj-estrutura-btc-diario" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: alta">?</button><span class="ajt" id="aj-estrutura-btc-diario" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes acima dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="alta">Predomínio de alta<button type="button" class="aj" aria-describedby="aj-sequencia-btc-diario" aria-label="O que significa: Predomínio de alta">?</button><span class="ajt" id="aj-sequencia-btc-diario" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos e fundos subindo em pelo menos 2 das 3 comparações de cada grupo. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente e ampliada alinhadas em alta</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 2 subindo · 1 caindo · 0 iguais<br>Fundos: 2 subindo · 1 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-09-21: 0,00776400<br>2026-10-07: 0,00680000<br>2026-10-22: 0,00801100<br>2026-11-04: 0,00828900</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-08-22: 0,00518500<br>2026-09-16: 0,00641100<br>2026-10-10: 0,00621900<br>2026-11-14: 0,00719600</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip" title="rompimento_confirmado_000825">Fechou acima de 0,00825: rompimento confirmado</span><span class="chip" title="rompido_000825">0,00825 rompido para cima</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00857100<small>semana até 2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>69,53%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="atencao">80,7</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">51,2<small>+28,9 / −6,2</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="alta">alta<button type="button" class="aj" aria-describedby="aj-estrutura-btc-semanal" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: alta">?</button><span class="ajt" id="aj-estrutura-btc-semanal" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes acima dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="alta">Alta consistente<button type="button" class="aj" aria-describedby="aj-sequencia-btc-semanal" aria-label="O que significa: Alta consistente">?</button><span class="ajt" id="aj-sequencia-btc-semanal" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos e fundos subindo nas 3 comparações de cada grupo. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente e ampliada alinhadas em alta</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 3 subindo · 0 caindo · 0 iguais<br>Fundos: 3 subindo · 0 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-04-30: 0,00530000<br>2026-06-11: 0,00670000<br>2026-09-17: 0,00776400<br>2026-10-29: 0,00828900</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-05-28: 0,00474600<br>2026-07-09: 0,00492600<br>2026-08-20: 0,00518500<br>2026-10-08: 0,00621900</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip" title="rompimento_confirmado_fraco_000825">Fechou acima de 0,00825, mas abriu abaixo: rompimento fraco</span><span class="chip" title="rsi_acima_70">RSI acima de 70</span><span class="chip" title="adx_subindo_com_di_plus_dominante">ADX subindo com compradores no comando</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-btc"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRBTC" target="_blank" rel="noopener">KRAKEN:XMRBTC</a>.</span></div><p>Série da Kraken (KRAKEN:XMRBTC) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article></section>
+<section class="pares"><article class="par" data-par="XMR/USD"><header><h2>XMR/USD</h2><div class="preco">455,00</div></header><div class="sr estrutura-ajuda"><span class="sr-i"><span class="sr-r">Suporte</span><b>437–441</b><small>−3,1%</small></span><span class="sr-i"><span class="sr-r">Resistência</span><b>463–473</b><small>+1,8%</small></span><button type="button" class="aj" aria-describedby="aj-sr-usd" aria-label="O que significa: Suporte e resistência">?</button><span class="ajt" id="aj-sr-usd" role="tooltip">Níveis manuais mais próximos abaixo e acima da cotação: faixas e linhas como a de 550. O papel vem da posição: linha rompida para cima vira suporte. O estado (rompido, em reteste) é o do fechamento diário.</span></div><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">517,21<small>2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="baixa">abaixo<small>1,66%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">46,5</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="baixa">26,3<small>+15,0 / −21,8</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="baixa">baixa<button type="button" class="aj" aria-describedby="aj-estrutura-usd-diario" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: baixa">?</button><span class="ajt" id="aj-estrutura-usd-diario" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes abaixo dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="fraco">Predomínio de contração<button type="button" class="aj" aria-describedby="aj-sequencia-usd-diario" aria-label="O que significa: Predomínio de contração">?</button><span class="ajt" id="aj-sequencia-usd-diario" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos caindo e fundos subindo (faixa estreitando) em pelo menos 2 das 3 comparações de cada grupo. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente de baixa dentro de sequência ampliada lateral</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 1 subindo · 2 caindo · 0 iguais<br>Fundos: 2 subindo · 1 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-10-07: 571,71<br>2026-10-22: 656,74<br>2026-10-29: 649,40<br>2026-11-04: 647,02</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-10-09: 483,00<br>2026-10-24: 562,34<br>2026-10-30: 572,49<br>2026-11-14: 455,00</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip" title="toque_suporte_intradiario_500">Tocou 500 na vela em formação, sem fechar abaixo</span><span class="chip" title="divergencia_bearish_oculta_confirmada">Divergência oculta de baixa no RSI, confirmada</span><span class="chip risco" title="rompimento_falhou_500">Rompimento de 500 falhou</span><span class="chip risco" title="estrutura_de_baixa">Estrutura recente de baixa</span><span class="chip risco" title="di_minus_dominante_com_estrutura_nao_altista">Vendedores no comando, sem estrutura recente de alta</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">517,21<small>semana até 2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>35,15%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="">54,2</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">35,3<small>+22,0 / −18,9</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="alta">alta<button type="button" class="aj" aria-describedby="aj-estrutura-usd-semanal" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: alta">?</button><span class="ajt" id="aj-estrutura-usd-semanal" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes acima dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="alta">Predomínio de alta<button type="button" class="aj" aria-describedby="aj-sequencia-usd-semanal" aria-label="O que significa: Predomínio de alta">?</button><span class="ajt" id="aj-sequencia-usd-semanal" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos e fundos subindo em pelo menos 2 das 3 comparações de cada grupo. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente e ampliada alinhadas em alta</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 2 subindo · 1 caindo · 0 iguais<br>Fundos: 2 subindo · 1 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-04-30: 437,58<br>2026-06-11: 426,32<br>2026-09-17: 633,90<br>2026-10-22: 656,74</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-05-07: 358,34<br>2026-06-04: 292,00<br>2026-06-25: 298,95<br>2026-10-08: 483,00</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip" title="toque_suporte_intradiario_500">Tocou 500 na vela em formação, sem fechar abaixo</span><span class="chip risco" title="rompimento_falhou">Rompimento falhou</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-usd"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRUSD" target="_blank" rel="noopener">KRAKEN:XMRUSD</a>.</span></div><p>Série da Kraken (KRAKEN:XMRUSD) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article><article class="par" data-par="XMR/BTC"><header><h2>XMR/BTC</h2><div class="preco">0,00756600</div></header><div class="sr estrutura-ajuda"><span class="sr-i"><span class="sr-r">Suporte</span><b>0,00729–0,00740</b><small>−2,2%</small></span><span class="sr-i"><span class="sr-r">Resistência</span><b>0,00819–0,00829</b><small>+8,2%</small></span><button type="button" class="aj" aria-describedby="aj-sr-btc" aria-label="O que significa: Suporte e resistência">?</button><span class="ajt" id="aj-sr-btc" role="tooltip">Níveis manuais mais próximos abaixo e acima da cotação: faixas e linhas como a de 0,00825. O papel vem da posição: linha rompida para cima vira suporte. O estado (rompido, em reteste) é o do fechamento diário.</span></div><div class="tfs"><div class="tf"><h3>Diário</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00857100<small>2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>19,56%</small></dd></div><div class="m"><dt>RSI(21)</dt><dd class="">61,9</dd></div><div class="m"><dt>ADX / DI (28/42)</dt><dd class="alta">33,8<small>+20,6 / −10,8</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="alta">alta<button type="button" class="aj" aria-describedby="aj-estrutura-btc-diario" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: alta">?</button><span class="ajt" id="aj-estrutura-btc-diario" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes acima dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="alta">Predomínio de alta<button type="button" class="aj" aria-describedby="aj-sequencia-btc-diario" aria-label="O que significa: Predomínio de alta">?</button><span class="ajt" id="aj-sequencia-btc-diario" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos e fundos subindo em pelo menos 2 das 3 comparações de cada grupo. Atrasa de propósito: com fractal 5/5, cada pivô só se confirma após 5 velas fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente e ampliada alinhadas em alta</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 2 subindo · 1 caindo · 0 iguais<br>Fundos: 2 subindo · 1 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-09-21: 0,00776400<br>2026-10-07: 0,00680000<br>2026-10-22: 0,00801100<br>2026-11-04: 0,00828900</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-08-22: 0,00518500<br>2026-09-16: 0,00641100<br>2026-10-10: 0,00621900<br>2026-11-14: 0,00719600</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip" title="rompimento_confirmado_000825">Fechou acima de 0,00825: rompimento confirmado</span><span class="chip" title="toque_suporte_intradiario_000730">Tocou 0,0073 na vela em formação, sem fechar abaixo</span><span class="chip" title="rompido_000825">0,00825 rompido para cima</span></div></div><div class="tf"><h3>Semanal</h3><dl><div class="m"><dt>Último fechamento</dt><dd class="">0,00857100<small>semana até 2026-11-25</small></dd></div><div class="m"><dt>EMA89 (fechado)</dt><dd class="alta">acima<small>69,53%</small></dd></div><div class="m"><dt>RSI(14)</dt><dd class="atencao">80,7</dd></div><div class="m"><dt>ADX / DI (14/21)</dt><dd class="alta">51,2<small>+28,9 / −6,2</small></dd></div><div class="m estrutura-ajuda"><dt>Estrutura dos últimos pivôs confirmados</dt><dd class="alta">alta<button type="button" class="aj" aria-describedby="aj-estrutura-btc-semanal" aria-label="O que significa: Estrutura dos últimos pivôs confirmados: alta">?</button><span class="ajt" id="aj-estrutura-btc-semanal" role="tooltip">Últimos 2 topos e 2 fundos confirmados: topo e fundo mais recentes acima dos anteriores. É a estrutura recente, não a tendência geral: compare com a sequência ampliada. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></dd></div></dl><div class="estrutura-ampliada"><div class="estrutura-resumo estrutura-ajuda"><span>Sequência ampliada</span><strong class="alta">Alta consistente<button type="button" class="aj" aria-describedby="aj-sequencia-btc-semanal" aria-label="O que significa: Alta consistente">?</button><span class="ajt" id="aj-sequencia-btc-semanal" role="tooltip">Últimos 4 topos e 4 fundos confirmados, janela mais ampla que a da estrutura recente: se as duas discordarem, é diferença de horizonte, não contradição. Agora: topos e fundos subindo nas 3 comparações de cada grupo. Atrasa de propósito: com fractal 2/2, cada pivô só se confirma após 2 velas semanais fechadas à direita.</span></strong></div><p class="estrutura-sintese">Estrutura recente e ampliada alinhadas em alta</p><details><summary>Ver pivôs e comparações</summary><p>Topos: 3 subindo · 0 caindo · 0 iguais<br>Fundos: 3 subindo · 0 caindo · 0 iguais</p><p><b>Topos, do mais antigo ao mais recente</b><br>2026-04-30: 0,00530000<br>2026-06-11: 0,00670000<br>2026-09-17: 0,00776400<br>2026-10-29: 0,00828900</p><p><b>Fundos, do mais antigo ao mais recente</b><br>2026-05-28: 0,00474600<br>2026-07-09: 0,00492600<br>2026-08-20: 0,00518500<br>2026-10-08: 0,00621900</p><p>Cada grupo de 4 pivôs gera 3 comparações. “Consistente” exige 3 de 3 em ambos os grupos; “predomínio” exige pelo menos 2 de 3 em cada grupo. Empates são neutros. Essa contagem não é uma probabilidade de acerto.</p></details></div><div class="chips"><span class="chip" title="rompimento_confirmado_fraco_000825">Fechou acima de 0,00825, mas abriu abaixo: rompimento fraco</span><span class="chip" title="toque_suporte_intradiario_000730">Tocou 0,0073 na vela em formação, sem fechar abaixo</span><span class="chip" title="rsi_acima_70">RSI acima de 70</span><span class="chip" title="adx_subindo_com_di_plus_dominante">ADX subindo com compradores no comando</span></div></div></div><div class="grafico"><div class="tv-barra" role="group" aria-label="Timeframe do gráfico"><button type="button" class="tv-tf" data-tf="D" aria-pressed="true">Diário</button><button type="button" class="tv-tf" data-tf="W" aria-pressed="false">Semanal</button></div><div class="tv" id="tv-btc"><span class="tv-off">Gráfico indisponível — abra em <a href="https://www.tradingview.com/chart/?symbol=KRAKEN%3AXMRBTC" target="_blank" rel="noopener">KRAKEN:XMRBTC</a>.</span></div><p>Série da Kraken (KRAKEN:XMRBTC) desenhada pelo TradingView — a mesma fonte do relatório acima.</p></div></article></section>
 <section class="relatorio"><h2>Relatório completo</h2>
-<pre>timestamp: 2026-11-26 05:53 UTC
+<pre>timestamp: 2026-11-26 15:58 UTC
 fonte: Kraken OHLC — interval=1440 (diario) e interval=10080 (semanal)
 indicadores: RSI e DMI/ADX por Wilder/RMA com periodos por timeframe (RSI diario 21, semanal 14; DMI/ADX diario 28/42, semanal 14/21), EMA(89) exponencial
 nota: campos *_fechado usam apenas velas fechadas; *_provisorio inclui a vela em formacao
@@ -240,17 +240,17 @@ nota: a linha "eventos:" existe so no bloco diario; no semanal ela se chama "eve
 
 XMR/USD
 timeframe: diario
-preco_atual: 521.66
+preco_atual: 455.00
 vela_atual_em_formacao: sim
 candle_atual_data: 2026-11-26
 candle_atual_open: 516.95
-candle_atual_high: 521.66
-candle_atual_low: 510.88
-candle_atual_close_provisorio: 521.66
-candle_atual_var_pct_desde_abertura: 0.91
+candle_atual_high: 528.56
+candle_atual_low: 436.68
+candle_atual_close_provisorio: 455.00
+candle_atual_var_pct_desde_abertura: -11.98
 ema89: 525.94
 posicao_vs_ema89: abaixo
-distancia_ema89_pct: -0.81
+distancia_ema89_pct: -13.49
 
 # principais: calculados SOMENTE com velas fechadas
 rsi_length: 21
@@ -271,10 +271,10 @@ atr14_pct: 7.51
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi_provisorio: 47.21
-di_plus_provisorio: 14.82
-di_minus_provisorio: 21.53
-adx_provisorio: 26.06
+rsi_provisorio: 38.98
+di_plus_provisorio: 13.70
+di_minus_provisorio: 25.26
+adx_provisorio: 26.33
 
 candle_fechado_1: data=2026-11-25 open=509.60 high=525.00 low=494.38 close=517.21 direcao=alta corpo=7.61 sombra_sup=7.79 sombra_inf=15.22 volume=12094.2417
 candle_fechado_2: data=2026-11-24 open=486.02 high=515.00 low=477.91 close=509.56 direcao=alta corpo=23.54 sombra_sup=5.44 sombra_inf=8.11 volume=7313.3636
@@ -307,18 +307,18 @@ resistencia_macro_788_811_tipo: resistencia_macro_manual
 resistencia_macro_788_811_inferior: 797.00
 resistencia_macro_788_811_superior: 803.00
 resistencia_macro_788_811_estado: abaixo
-resistencia_macro_788_811_distancia_pct: -34.79
+resistencia_macro_788_811_distancia_pct: -43.13
 
-fracao_periodo_decorrida: 0.245
+fracao_periodo_decorrida: 0.666
 volume_parcial: sim
-volume_atual: 2532.9986
+volume_atual: 12814.0602
 volume_ultima_fechada: 12094.2417
 volume_media20: 10605.2266
 volume_vs_media_pct: 14.04
 volume_referencia: ultima_vela_fechada
 volume_classificacao: normal
 volume_tendencia_3_fechadas: irregular
-trades_vela_atual: 1877
+trades_vela_atual: 12084
 
 estrutura_preco: LH_LL
 estrutura_tendencia: baixa
@@ -331,18 +331,19 @@ pivos_fundos_recentes: 2026-10-24=562.34 2026-10-30=572.49 2026-11-14=455.00
 
 divergencia_rsi: bearish_oculta_confirmada
 divergencia_rsi_detalhe_1: tipo=bearish_oculta lado=topo status=confirmada pivo_anterior=2026-10-29 preco_anterior=649.40 rsi_anterior=57.96 pivo_atual=2026-11-04 preco_atual=647.02 rsi_atual=63.58
-divergencia_rsi_provisoria: nenhuma
+divergencia_rsi_provisoria: bullish_regular_PROVISORIA
+divergencia_rsi_provisoria_detalhe_1: tipo=bullish_regular lado=fundo status=PROVISORIA pivo_anterior=2026-11-14 preco_anterior=455.00 rsi_anterior=34.53 pivo_atual=2026-11-26 preco_atual=436.68 rsi_atual=38.98
 
 corpo_pct_range: 24.85
 sombra_sup_pct_range: 25.44
 sombra_inf_pct_range: 49.71
 sombra_sup_vs_corpo: 1.02
 sombra_inf_vs_corpo: 2.00
-candle_atual_corpo_pct_range: 43.69
-candle_atual_sombra_sup_pct_range: 0.00
-candle_atual_sombra_inf_pct_range: 56.31
-candle_atual_sombra_sup_vs_corpo: 0.00
-candle_atual_sombra_inf_vs_corpo: 1.29
+candle_atual_corpo_pct_range: 67.42
+candle_atual_sombra_sup_pct_range: 12.64
+candle_atual_sombra_inf_pct_range: 19.94
+candle_atual_sombra_sup_vs_corpo: 0.19
+candle_atual_sombra_inf_vs_corpo: 0.30
 
 eventos: nenhum cruzamento nesta vela
 mediana_corpo_20: 15.170000
@@ -354,34 +355,34 @@ padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: divergencia_bearish_oculta_confirmada, rompimento_falhou_500
+alertas_tecnicos: toque_suporte_intradiario_500, divergencia_bearish_oculta_confirmada, rompimento_falhou_500
 
 zonas_automaticas_total: 6
-zona_auto_1: id=usd|diario|z66 tipo=suporte status=ativa estado=em_teste score=66 estrutural=523.207070-526.792930 operacional=517.125000-532.875000 centro=525.000000 toques=4 rejeicoes=2 role_reversal=nao dist_pct=-0.64 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_2: id=usd|diario|z26 tipo=resistencia status=ativa estado=abaixo score=43 estrutural=546.038776-549.281224 operacional=539.445100-555.874900 centro=547.660000 toques=3 rejeicoes=1 role_reversal=nao dist_pct=-4.75 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_3: id=usd|diario|z58 tipo=suporte status=ativa estado=abaixo score=69 estrutural=560.620434-574.209566 operacional=558.904283-575.926749 centro=567.415516 toques=5 rejeicoes=3 role_reversal=sim dist_pct=-8.06 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_4: id=usd|diario|z18 tipo=suporte status=ativa estado=acima score=85 estrutural=498.058075-502.811925 operacional=492.928475-507.941525 centro=500.435000 toques=7 rejeicoes=3 role_reversal=sim dist_pct=4.24 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_5: id=usd|diario|z42 tipo=suporte status=ativa estado=acima score=86 estrutural=481.370467-492.369533 operacional=479.566950-494.173050 centro=486.870000 toques=4 rejeicoes=3 role_reversal=nao dist_pct=7.15 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_6: id=usd|diario|z17 tipo=suporte status=ativa estado=acima score=84 estrutural=468.613418-471.386582 operacional=462.950000-477.050000 centro=470.000000 toques=6 rejeicoes=3 role_reversal=sim dist_pct=10.99 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_1: id=usd|diario|z17 tipo=suporte status=ativa estado=abaixo score=84 estrutural=468.613418-471.386582 operacional=462.950000-477.050000 centro=470.000000 toques=6 rejeicoes=3 role_reversal=sim dist_pct=-3.19 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_2: id=usd|diario|z42 tipo=suporte status=ativa estado=abaixo score=86 estrutural=481.370467-492.369533 operacional=479.566950-494.173050 centro=486.870000 toques=4 rejeicoes=3 role_reversal=nao dist_pct=-6.55 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_3: id=usd|diario|z18 tipo=suporte status=ativa estado=abaixo score=85 estrutural=498.058075-502.811925 operacional=492.928475-507.941525 centro=500.435000 toques=7 rejeicoes=3 role_reversal=sim dist_pct=-9.08 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_4: id=usd|diario|z73 tipo=suporte status=ativa estado=em_teste score=69 estrutural=453.112070-456.887930 operacional=448.175000-461.825000 centro=455.000000 toques=2 rejeicoes=2 role_reversal=nao dist_pct=0.00 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_5: id=usd|diario|z16 tipo=suporte status=ativa estado=acima score=83 estrutural=436.264032-441.315968 operacional=432.208150-445.371850 centro=438.790000 toques=7 rejeicoes=4 role_reversal=sim dist_pct=3.69 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_6: id=usd|diario|z57 tipo=suporte status=ativa estado=acima score=85 estrutural=424.568526-428.071474 operacional=419.925200-432.714800 centro=426.320000 toques=3 rejeicoes=2 role_reversal=sim dist_pct=6.73 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: nenhuma
 confluencia_pullback: nenhuma
-riscos_tecnicos: divergencia_bearish_confirmada
+riscos_tecnicos: divergencia_bearish_confirmada, suporte_sob_pressao
 deterioracao_tendencia: estrutura_de_baixa, rompimento_falhou, di_minus_dominante_com_estrutura_nao_altista
 
 XMR/BTC
 timeframe: diario
-preco_atual: 0.00858300
+preco_atual: 0.00756600
 vela_atual_em_formacao: sim
 candle_atual_data: 2026-11-26
 candle_atual_open: 0.00857100
-candle_atual_high: 0.00859500
-candle_atual_low: 0.00841100
-candle_atual_close_provisorio: 0.00858300
-candle_atual_var_pct_desde_abertura: 0.14
+candle_atual_high: 0.00873400
+candle_atual_low: 0.00720800
+candle_atual_close_provisorio: 0.00756600
+candle_atual_var_pct_desde_abertura: -11.73
 ema89: 0.00716908
 posicao_vs_ema89: acima
-distancia_ema89_pct: 19.72
+distancia_ema89_pct: 5.54
 
 # principais: calculados SOMENTE com velas fechadas
 rsi_length: 21
@@ -402,10 +403,10 @@ atr14_pct: 5.29
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento diario. NAO sao a referencia principal.
-rsi_provisorio: 62.04
-di_plus_provisorio: 20.23
-di_minus_provisorio: 11.20
-adx_provisorio: 33.69
+rsi_provisorio: 48.72
+di_plus_provisorio: 18.15
+di_minus_provisorio: 19.29
+adx_provisorio: 33.08
 
 candle_fechado_1: data=2026-11-25 open=0.00853700 high=0.00871400 low=0.00847900 close=0.00857100 direcao=alta corpo=0.00003400 sombra_sup=0.00014300 sombra_inf=0.00005800 volume=2728.8826
 candle_fechado_2: data=2026-11-24 open=0.00792600 high=0.00857400 low=0.00785700 close=0.00854300 direcao=alta corpo=0.00061700 sombra_sup=0.00003100 sombra_inf=0.00006900 volume=2635.3834
@@ -430,16 +431,16 @@ niveis_manuais_faixas_corroboradas: 7 de 8
 niveis_manuais_faixas_sem_zona: faixa_0_00729_0_0074
 zonas_candidatas_a_faixa: nenhuma
 
-fracao_periodo_decorrida: 0.245
+fracao_periodo_decorrida: 0.666
 volume_parcial: sim
-volume_atual: 527.6494
+volume_atual: 3658.3019
 volume_ultima_fechada: 2728.8826
 volume_media20: 2373.2111
 volume_vs_media_pct: 14.99
 volume_referencia: ultima_vela_fechada
 volume_classificacao: normal
 volume_tendencia_3_fechadas: crescente
-trades_vela_atual: 2517
+trades_vela_atual: 16321
 
 estrutura_preco: HH_HL
 estrutura_tendencia: alta
@@ -451,18 +452,19 @@ pivos_topos_recentes: 2026-10-07=0.00680000 2026-10-22=0.00801100 2026-11-04=0.0
 pivos_fundos_recentes: 2026-09-16=0.00641100 2026-10-10=0.00621900 2026-11-14=0.00719600
 
 divergencia_rsi: nenhuma
-divergencia_rsi_provisoria: nenhuma
+divergencia_rsi_provisoria: bearish_regular_PROVISORIA
+divergencia_rsi_provisoria_detalhe_1: tipo=bearish_regular lado=topo status=PROVISORIA pivo_anterior=2026-11-04 preco_anterior=0.00828900 rsi_anterior=62.73 pivo_atual=2026-11-26 preco_atual=0.00873400 rsi_atual=48.72
 
 corpo_pct_range: 14.47
 sombra_sup_pct_range: 60.85
 sombra_inf_pct_range: 24.68
 sombra_sup_vs_corpo: 4.21
 sombra_inf_vs_corpo: 1.71
-candle_atual_corpo_pct_range: 6.52
-candle_atual_sombra_sup_pct_range: 6.52
-candle_atual_sombra_inf_pct_range: 86.96
-candle_atual_sombra_sup_vs_corpo: 1.00
-candle_atual_sombra_inf_vs_corpo: 13.33
+candle_atual_corpo_pct_range: 65.86
+candle_atual_sombra_sup_pct_range: 10.68
+candle_atual_sombra_inf_pct_range: 23.46
+candle_atual_sombra_sup_vs_corpo: 0.16
+candle_atual_sombra_inf_vs_corpo: 0.36
 
 eventos: nenhum cruzamento nesta vela
 mediana_corpo_20: 0.00015700
@@ -474,33 +476,36 @@ padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: rompimento_confirmado_000825, rompido_000825
+alertas_tecnicos: rompimento_confirmado_000825, toque_suporte_intradiario_000730, rompido_000825
 
-zonas_automaticas_total: 3
-zona_auto_1: id=btc|diario|z89 tipo=resistencia status=ativa estado=acima score=60 estrutural=0.00826837-0.00830963 operacional=0.00817556-0.00840244 centro=0.00828900 toques=2 rejeicoes=1 role_reversal=nao dist_pct=3.55 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_2: id=btc|diario|z66 tipo=resistencia status=ativa estado=acima score=92 estrutural=0.00820761-0.00825039 operacional=0.00811556-0.00834244 centro=0.00822900 toques=4 rejeicoes=3 role_reversal=nao dist_pct=4.30 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_3: id=btc|diario|z86 tipo=resistencia status=ativa estado=acima score=60 estrutural=0.00799212-0.00802988 operacional=0.00789756-0.00812444 centro=0.00801100 toques=2 rejeicoes=1 role_reversal=nao dist_pct=7.14 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zonas_automaticas_total: 6
+zona_auto_1: id=btc|diario|z65 tipo=resistencia status=ativa estado=abaixo score=79 estrutural=0.00774131-0.00778669 operacional=0.00765056-0.00787744 centro=0.00776400 toques=3 rejeicoes=2 role_reversal=nao dist_pct=-2.55 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_2: id=btc|diario|z86 tipo=resistencia status=ativa estado=abaixo score=60 estrutural=0.00799212-0.00802988 operacional=0.00789756-0.00812444 centro=0.00801100 toques=2 rejeicoes=1 role_reversal=nao dist_pct=-5.55 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_3: id=btc|diario|z66 tipo=resistencia status=ativa estado=abaixo score=92 estrutural=0.00820761-0.00825039 operacional=0.00811556-0.00834244 centro=0.00822900 toques=4 rejeicoes=3 role_reversal=nao dist_pct=-8.06 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_4: id=btc|diario|z93 tipo=suporte status=candidata estado=acima score=42 estrutural=0.00717466-0.00721734 operacional=0.00708806-0.00730394 centro=0.00719600 toques=1 rejeicoes=1 role_reversal=nao dist_pct=5.14 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_5: id=btc|diario|z24 tipo=resistencia status=enfraquecida estado=acima score=82 estrutural=0.00698024-0.00711376 operacional=0.00694129-0.00715270 centro=0.00704700 toques=5 rejeicoes=4 role_reversal=nao dist_pct=7.36 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_6: id=btc|diario|z19 tipo=resistencia status=enfraquecida estado=acima score=55 estrutural=0.00660683-0.00681717 operacional=0.00661012-0.00681144 centro=0.00671078 toques=2 rejeicoes=1 role_reversal=nao dist_pct=12.74 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
 
 confluencia_entrada: rompimento_confirmado_por_fechamento, estrutura_de_alta_preservada, di_plus_dominante
 confluencia_pullback: tendencia_hh_hl_preservada, di_plus_ainda_dominante
-riscos_tecnicos: nenhum
+riscos_tecnicos: suporte_sob_pressao
 deterioracao_tendencia: nenhuma
 
 ========== GRAFICO SEMANAL ==========
 
 XMR/USD
 timeframe: semanal
-preco_atual: 521.66
+preco_atual: 455.00
 vela_atual_em_formacao: sim
 candle_atual_data: 2026-11-26
 candle_atual_open: 516.95
-candle_atual_high: 521.66
-candle_atual_low: 510.88
-candle_atual_close_provisorio: 521.66
-candle_atual_var_pct_desde_abertura: 0.91
+candle_atual_high: 528.56
+candle_atual_low: 436.68
+candle_atual_close_provisorio: 455.00
+candle_atual_var_pct_desde_abertura: -11.98
 ema89: 382.68
 posicao_vs_ema89: acima
-distancia_ema89_pct: 36.32
+distancia_ema89_pct: 18.90
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi_length: 14
@@ -528,10 +533,10 @@ atr14_pct: 15.07
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi_provisorio: 54.70
-di_plus_provisorio: 21.77
-di_minus_provisorio: 18.67
-adx_provisorio: 34.01
+rsi_provisorio: 46.76
+di_plus_provisorio: 20.49
+di_minus_provisorio: 17.30
+adx_provisorio: 34.05
 
 candle_fechado_1: data=2026-11-19 open=504.73 high=525.00 low=422.00 close=517.21 direcao=alta corpo=12.48 sombra_sup=7.79 sombra_inf=82.73 volume=85753.2948
 candle_fechado_2: data=2026-11-12 open=582.10 high=583.66 low=455.00 close=504.76 direcao=baixa corpo=77.34 sombra_sup=1.56 sombra_inf=49.76 volume=90365.9151
@@ -564,18 +569,18 @@ resistencia_macro_788_811_tipo: resistencia_macro_manual
 resistencia_macro_788_811_inferior: 797.00
 resistencia_macro_788_811_superior: 803.00
 resistencia_macro_788_811_estado: abaixo
-resistencia_macro_788_811_distancia_pct: -34.79
+resistencia_macro_788_811_distancia_pct: -43.13
 
-fracao_periodo_decorrida: 0.035
+fracao_periodo_decorrida: 0.095
 volume_parcial: sim
-volume_atual: 2532.9986
+volume_atual: 12814.0602
 volume_ultima_fechada: 85753.2948
 volume_media20: 63471.8874
 volume_vs_media_pct: 35.10
 volume_referencia: ultima_vela_fechada
 volume_classificacao: acima_da_media
 volume_tendencia_3_fechadas: irregular
-trades_vela_atual: 1877
+trades_vela_atual: 12084
 
 estrutura_preco: HH_HL
 estrutura_tendencia: alta
@@ -594,11 +599,11 @@ sombra_sup_pct_range: 7.56
 sombra_inf_pct_range: 80.32
 sombra_sup_vs_corpo: 0.62
 sombra_inf_vs_corpo: 6.63
-candle_atual_corpo_pct_range: 43.69
-candle_atual_sombra_sup_pct_range: 0.00
-candle_atual_sombra_inf_pct_range: 56.31
-candle_atual_sombra_sup_vs_corpo: 0.00
-candle_atual_sombra_inf_vs_corpo: 1.29
+candle_atual_corpo_pct_range: 67.42
+candle_atual_sombra_sup_pct_range: 12.64
+candle_atual_sombra_inf_pct_range: 19.94
+candle_atual_sombra_sup_vs_corpo: 0.19
+candle_atual_sombra_inf_vs_corpo: 0.30
 
 eventos_semanal: nenhum cruzamento nesta vela
 mediana_corpo_20: 20.515000
@@ -610,34 +615,34 @@ padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: hammer
 padrao_em_formacao: nenhum
-alertas_tecnicos: nenhum
+alertas_tecnicos: toque_suporte_intradiario_500
 
 zonas_automaticas_total: 6
-zona_auto_1: id=usd|semanal|z33 tipo=resistencia status=ativa estado=abaixo score=61 estrutural=630.630129-637.169871 operacional=624.391500-643.408500 centro=633.900000 toques=2 rejeicoes=2 role_reversal=nao dist_pct=-17.71 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_2: id=usd|semanal|z37 tipo=resistencia status=enfraquecida estado=abaixo score=36 estrutural=653.290623-660.189377 operacional=646.888900-666.591100 centro=656.740000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-20.57 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_3: id=usd|semanal|z15 tipo=resistencia status=enfraquecida estado=abaixo score=30 estrutural=796.046466-803.733534 operacional=787.891650-811.888350 centro=799.890000 toques=1 rejeicoes=1 role_reversal=nao dist_pct=-34.78 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=sim confluencia_qualquer=sim
-zona_auto_4: id=usd|semanal|z31 tipo=suporte status=ativa estado=em_teste score=84 estrutural=514.639117-520.560883 operacional=509.836000-525.364000 centro=517.600000 toques=4 rejeicoes=2 role_reversal=nao dist_pct=0.78 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_5: id=usd|semanal|z30 tipo=suporte status=ativa estado=acima score=80 estrutural=497.170719-502.829281 operacional=492.500000-507.500000 centro=500.000000 toques=4 rejeicoes=2 role_reversal=nao dist_pct=4.33 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_6: id=usd|semanal|z36 tipo=suporte status=ativa estado=acima score=55 estrutural=479.785161-486.214839 operacional=475.755000-490.245000 centro=483.000000 toques=2 rejeicoes=1 role_reversal=nao dist_pct=8.00 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_1: id=usd|semanal|z29 tipo=suporte status=ativa estado=em_teste score=92 estrutural=452.082939-459.877061 operacional=449.140300-462.819700 centro=455.980000 toques=6 rejeicoes=4 role_reversal=nao dist_pct=-0.21 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_2: id=usd|semanal|z14 tipo=resistencia status=ativa estado=abaixo score=92 estrutural=467.004376-472.495624 operacional=462.703750-476.796250 centro=469.750000 toques=6 rejeicoes=4 role_reversal=nao dist_pct=-3.14 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_3: id=usd|semanal|z36 tipo=suporte status=ativa estado=abaixo score=55 estrutural=479.785161-486.214839 operacional=475.755000-490.245000 centro=483.000000 toques=2 rejeicoes=1 role_reversal=nao dist_pct=-5.80 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_4: id=usd|semanal|z28 tipo=suporte status=ativa estado=acima score=62 estrutural=434.346479-440.813521 operacional=431.016300-444.143700 centro=437.580000 toques=3 rejeicoes=1 role_reversal=nao dist_pct=3.98 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_5: id=usd|semanal|z13 tipo=resistencia status=ativa estado=acima score=78 estrutural=417.230916-429.089084 operacional=416.812600-429.507400 centro=423.160000 toques=7 rejeicoes=3 role_reversal=nao dist_pct=7.52 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_6: id=usd|semanal|z24 tipo=suporte status=enfraquecida estado=acima score=66 estrutural=375.102939-386.017061 operacional=374.851600-386.268400 centro=380.560000 toques=6 rejeicoes=3 role_reversal=nao dist_pct=19.56 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
 
 confluencia_entrada: estrutura_de_alta_preservada, di_plus_dominante
 confluencia_pullback: tendencia_hh_hl_preservada, di_plus_ainda_dominante
-riscos_tecnicos: nenhum
+riscos_tecnicos: suporte_sob_pressao
 deterioracao_tendencia: rompimento_falhou
 
 XMR/BTC
 timeframe: semanal
-preco_atual: 0.00858300
+preco_atual: 0.00756600
 vela_atual_em_formacao: sim
 candle_atual_data: 2026-11-26
 candle_atual_open: 0.00857100
-candle_atual_high: 0.00859500
-candle_atual_low: 0.00841100
-candle_atual_close_provisorio: 0.00858300
-candle_atual_var_pct_desde_abertura: 0.14
+candle_atual_high: 0.00873400
+candle_atual_low: 0.00720800
+candle_atual_close_provisorio: 0.00756600
+candle_atual_var_pct_desde_abertura: -11.73
 ema89: 0.00505579
 posicao_vs_ema89: acima
-distancia_ema89_pct: 69.77
+distancia_ema89_pct: 49.65
 
 # principais: calculados SOMENTE com velas semanais fechadas
 rsi_length: 14
@@ -665,10 +670,10 @@ atr14_pct: 9.81
 
 # PROVISORIOS: incluem a vela em formacao e PODEM MUDAR ate o
 # fechamento semanal. NAO sao a referencia principal.
-rsi_provisorio: 80.77
-di_plus_provisorio: 28.38
-di_minus_provisorio: 6.07
-adx_provisorio: 51.87
+rsi_provisorio: 61.82
+di_plus_provisorio: 25.32
+di_minus_provisorio: 6.55
+adx_provisorio: 51.59
 
 candle_fechado_1: data=2026-11-19 open=0.00801200 high=0.00871400 low=0.00735000 close=0.00857100 direcao=alta corpo=0.00055900 sombra_sup=0.00014300 sombra_inf=0.00066200 volume=29120.7612
 candle_fechado_2: data=2026-11-12 open=0.00786600 high=0.00803900 low=0.00719600 close=0.00803600 direcao=alta corpo=0.00017000 sombra_sup=0.00000300 sombra_inf=0.00067000 volume=13537.2389
@@ -693,16 +698,16 @@ niveis_manuais_faixas_corroboradas: 7 de 8
 niveis_manuais_faixas_sem_zona: faixa_0_00602_0_006075
 zonas_candidatas_a_faixa: nenhuma
 
-fracao_periodo_decorrida: 0.035
+fracao_periodo_decorrida: 0.095
 volume_parcial: sim
-volume_atual: 527.6494
+volume_atual: 3658.3019
 volume_ultima_fechada: 29120.7612
 volume_media20: 10410.6306
 volume_vs_media_pct: 179.72
 volume_referencia: ultima_vela_fechada
 volume_classificacao: expansao_forte
 volume_tendencia_3_fechadas: crescente
-trades_vela_atual: 2517
+trades_vela_atual: 16321
 
 estrutura_preco: HH_HL
 estrutura_tendencia: alta
@@ -721,11 +726,11 @@ sombra_sup_pct_range: 10.48
 sombra_inf_pct_range: 48.53
 sombra_sup_vs_corpo: 0.26
 sombra_inf_vs_corpo: 1.18
-candle_atual_corpo_pct_range: 6.52
-candle_atual_sombra_sup_pct_range: 6.52
-candle_atual_sombra_inf_pct_range: 86.96
-candle_atual_sombra_sup_vs_corpo: 1.00
-candle_atual_sombra_inf_vs_corpo: 13.33
+candle_atual_corpo_pct_range: 65.86
+candle_atual_sombra_sup_pct_range: 10.68
+candle_atual_sombra_inf_pct_range: 23.46
+candle_atual_sombra_sup_vs_corpo: 0.16
+candle_atual_sombra_inf_vs_corpo: 0.36
 
 eventos_semanal: nenhum cruzamento nesta vela
 mediana_corpo_20: 0.00013300
@@ -737,19 +742,19 @@ padroes_enfraquecimento: nenhum
 tres_soldados_diagnostico: nao_aplicavel
 padrao_candles: nenhum
 padrao_em_formacao: nenhum
-alertas_tecnicos: rompimento_confirmado_fraco_000825, rsi_acima_70, adx_subindo_com_di_plus_dominante
+alertas_tecnicos: rompimento_confirmado_fraco_000825, toque_suporte_intradiario_000730, rsi_acima_70, adx_subindo_com_di_plus_dominante
 
 zonas_automaticas_total: 6
-zona_auto_1: id=btc|semanal|z44 tipo=resistencia status=ativa estado=em_teste score=78 estrutural=0.00859696-0.00868104 operacional=0.00850942-0.00876859 centro=0.00863900 toques=9 rejeicoes=4 role_reversal=nao dist_pct=-0.65 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_2: id=btc|semanal|z45 tipo=resistencia status=ativa estado=abaixo score=78 estrutural=0.00872596-0.00881004 operacional=0.00863648-0.00889952 centro=0.00876800 toques=8 rejeicoes=5 role_reversal=nao dist_pct=-2.11 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_3: id=btc|semanal|z23 tipo=resistencia status=enfraquecida estado=abaixo score=70 estrutural=0.00888796-0.00909004 operacional=0.00885417-0.00912384 centro=0.00898900 toques=9 rejeicoes=6 role_reversal=sim dist_pct=-4.52 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_4: id=btc|semanal|z43 tipo=resistencia status=ativa estado=acima score=74 estrutural=0.00811952-0.00833048 operacional=0.00811144-0.00835849 centro=0.00823496 toques=9 rejeicoes=4 role_reversal=nao dist_pct=4.23 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
-zona_auto_5: id=btc|semanal|z8 tipo=resistencia status=ativa estado=acima score=74 estrutural=0.00796896-0.00815104 operacional=0.00795011-0.00819225 centro=0.00807118 toques=12 rejeicoes=7 role_reversal=nao dist_pct=6.34 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
-zona_auto_6: id=btc|semanal|z7 tipo=resistencia status=ativa estado=acima score=74 estrutural=0.00771279-0.00783921 operacional=0.00765936-0.00789264 centro=0.00777600 toques=11 rejeicoes=4 role_reversal=nao dist_pct=10.38 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_1: id=btc|semanal|z7 tipo=resistencia status=ativa estado=abaixo score=74 estrutural=0.00771279-0.00783921 operacional=0.00765936-0.00789264 centro=0.00777600 toques=11 rejeicoes=4 role_reversal=nao dist_pct=-2.70 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_2: id=btc|semanal|z8 tipo=resistencia status=ativa estado=abaixo score=74 estrutural=0.00796896-0.00815104 operacional=0.00795011-0.00819225 centro=0.00807118 toques=12 rejeicoes=7 role_reversal=nao dist_pct=-6.26 confluencia_manual=nao confluencia_faixa=nao confluencia_macro=nao confluencia_qualquer=nao
+zona_auto_3: id=btc|semanal|z43 tipo=resistencia status=ativa estado=abaixo score=74 estrutural=0.00811952-0.00833048 operacional=0.00811144-0.00835849 centro=0.00823496 toques=9 rejeicoes=4 role_reversal=nao dist_pct=-8.12 confluencia_manual=sim confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_4: id=btc|semanal|z32 tipo=resistencia status=ativa estado=em_teste score=81 estrutural=0.00736796-0.00754204 operacional=0.00734317-0.00756683 centro=0.00745500 toques=10 rejeicoes=5 role_reversal=sim dist_pct=1.49 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_5: id=btc|semanal|z22 tipo=resistencia status=ativa estado=acima score=75 estrutural=0.00712527-0.00719273 operacional=0.00705162-0.00726639 centro=0.00715900 toques=3 rejeicoes=2 role_reversal=nao dist_pct=5.69 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
+zona_auto_6: id=btc|semanal|z21 tipo=resistencia status=ativa estado=acima score=69 estrutural=0.00692496-0.00717404 operacional=0.00692686-0.00713784 centro=0.00703235 toques=7 rejeicoes=4 role_reversal=nao dist_pct=7.59 confluencia_manual=nao confluencia_faixa=sim confluencia_macro=nao confluencia_qualquer=sim
 
 confluencia_entrada: estrutura_de_alta_preservada, di_plus_dominante
 confluencia_pullback: tendencia_hh_hl_preservada, di_plus_ainda_dominante
-riscos_tecnicos: nenhum
+riscos_tecnicos: suporte_sob_pressao
 deterioracao_tendencia: nenhuma
 
 GATILHOS ATIVOS: btc_rompe_000825
